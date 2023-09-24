@@ -29,6 +29,7 @@ DIGIT [0-9]
 " " { }
 
 as { printf("Found KW_AS: %s\n", yytext); }
+and { printf("Found KW_AND: %s\n", yytext); }
 binary { printf("Found KW_BINARY: %s\n", yytext); }
 ByRef { printf("Found KW_BYREF: %s\n", yytext); }
 ByVal { printf("Found KW_BYVAL: %s\n", yytext); }
@@ -56,6 +57,7 @@ return { printf("Found KW_RETURN: %s\n", yytext); }
 On { printf("Found KW_ON: %s\n", yytext); }
 Option { printf("Found KW_OPTION: %s\n", yytext); }
 Optional { printf("Found KW_OPTIONAL: %s\n", yytext); }
+Or { printf("Found KW_OR: %s\n", yytext); }
 ParamArray { printf("Found KW_PARAMARRAY: %s\n", yytext); }
 Print { printf("Found KW_PRINT: %s\n", yytext); }
 Private { printf("Found KW_PRIVATE: %s\n", yytext); }
@@ -74,5 +76,5 @@ Then { printf("Found KW_THEN: %s\n", yytext); }
 Time { printf("Found KW_TIME: %s\n", yytext); }
 To { printf("Found KW_TO: %s\n", yytext); }
 While { printf("Found KW_WHILE: %s\n", yytext); }
-Where { printf("Found KW_WHILE: %s\n", yytext); }
+Where { printf("Found KW_WHERE: %s\n", yytext); }
 Loop { printf("Found KW_LOOP: %s\n", yytext); }
