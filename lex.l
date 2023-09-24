@@ -74,4 +74,5 @@ Then { printf("Found KW_THEN: %s\n", yytext); }
 Time { printf("Found KW_TIME: %s\n", yytext); }
 To { printf("Found KW_TO: %s\n", yytext); }
 While { printf("Found KW_WHILE: %s\n", yytext); }
+Where { printf("Found KW_WHILE: %s\n", yytext); }
 Loop { printf("Found KW_LOOP: %s\n", yytext); }
