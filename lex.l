@@ -94,14 +94,12 @@ Char { printf("Found TYPE_CHAR: %s\n", yytext); }
 String { printf("Found TYPE_STRING: %s\n", yytext); }
 Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 
-
 "+" { printf("Found OPERATOR_PLUS: %s\n", yytext); }
 "-" { printf("Found OPERATOR_MINUS: %s\n", yytext); }
 "*" { printf("Found OPERATOR_MUL: %s\n", yytext); }
 "/" { printf("Found OPERATOR_DIV: %s\n", yytext); }
 "^" { printf("Found OPERATOR_EXPONENT: %s\n", yytext); }
 "\" { printf("Found OPERATOR_INTEGER_DIVISION: %s\n", yytext); }
-
 
 "=" { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); }
 "==" { printf("Found OPERATOR_EQUAL: %s\n", yytext); }
@@ -110,7 +108,6 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 ">" { printf("Found OPERATOR_MORE: %s\n", yytext); }
 "<=" { printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext); }
 ">=" { printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext); }
-
 "<<" { printf("Found OPERATOR_BIT_LEFT_SHIFT: %s\n", yytext); }
 ">>" { printf("Found OPERATOR_BIT_RIGHT_SHIFT: %s\n", yytext); }
 
@@ -123,3 +120,6 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 "\=" { printf("Found OPERATOR_DIV_NUM_ASSIGNMENT: %s\n", yytext); }
 "<<=" { printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext); }
 ">>=" { printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext); }
+"(" { printf("Found LEFT_BRACKET: %s\n", yytext); }
+")" { printf("Found RIGHT_BRACKET: %s\n", yytext); }
+
