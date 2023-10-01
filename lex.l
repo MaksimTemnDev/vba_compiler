@@ -78,3 +78,22 @@ To { printf("Found KW_TO: %s\n", yytext); }
 While { printf("Found KW_WHILE: %s\n", yytext); }
 Where { printf("Found KW_WHERE: %s\n", yytext); }
 Loop { printf("Found KW_LOOP: %s\n", yytext); }
+Integer { printf("Found TYPE_INTEGER: %s\n", yytext); }
+Char { printf("Found TYPE_CHAR: %s\n", yytext); }
+String { printf("Found TYPE_STRING: %s\n", yytext); }
+
+"+" { printf("Found OPERATOR_PLUS: %s\n", yytext); }
+"-" { printf("Found OPERATOR_MINUS: %s\n", yytext); }
+"*" { printf("Found OPERATOR_MUL: %s\n", yytext); }
+"/" { printf("Found OPERATOR_DIV: %s\n", yytext); }
+
+"=" { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); }
+"==" { printf("Found OPERATOR_EQUAL: %s\n", yytext); }
+"<>" { printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext); }
+"<" { printf("Found OPERATOR_LESS: %s\n", yytext); }
+">" { printf("Found OPERATOR_MORE: %s\n", yytext); }
+"<=" { printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext); }
+">=" { printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext); }
+
+"(" { printf("Found LEFT_BRACKET: %s\n", yytext); }
+")" { printf("Found RIGHT_BRACKET: %s\n", yytext); }
