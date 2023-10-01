@@ -120,6 +120,151 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 "\=" { printf("Found OPERATOR_DIV_NUM_ASSIGNMENT: %s\n", yytext); }
 "<<=" { printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext); }
 ">>=" { printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext); }
+
+"." { printf("Found OPERATOR_POINT: %s\n", yytext); }
+
 "(" { printf("Found LEFT_BRACKET: %s\n", yytext); }
 ")" { printf("Found RIGHT_BRACKET: %s\n", yytext); }
+"[" { printf("Found LEFT_SQUARE_BRACKET: %s\n", yytext); }
+"]" { printf("Found RIGHT_SQUARE_BRACKET: %s\n", yytext); }
 
+"," { printf("Found COMMA: %s\n", yytext); }
+
+
+ '[^\n]* { printf("Found COMMENT: %s\n", yytext); }
+ 
+ \" { strcpy(str,""); BEGIN(STRING); }
+<STRING>[^\\\"\n]+ { strcat(str,yytext); }
+<STRING>\n  { lineNumber++; }
+<STRING>\\n  { strcat(str,"\n"); }
+<STRING>\\r  { strcat(str,"\r"); }
+<STRING>\\t  { strcat(str,"\t"); }
+<STRING>\\0  { strcat(str,"\0"); }
+<STRING>\\\\ { strcat(str,"\\"); }
+<STRING>\\\" { strcat(str,"\""); }
+<STRING>\\x[0-7][a-zA-Z0-9] {
+    char string[2];
+    convertCharacterCodeToString(yytext, 2, string);
+    strcat(str, string);
+}
+<STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
+<STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+<STRING>\\ { printf("STRING Error in line %d: slash", lineNumber); }
+
+
+\' { strcpy(str,""); BEGIN(CHAR); }
+<CHAR>[^\\\']+ { strcat(str,yytext); }
+<CHAR>\\n { strcat(str,"\n"); }
+<CHAR>\\r { strcat(str,"\r"); }
+<CHAR>\\t { strcat(str,"\t"); }
+<CHAR>\\0 { strcat(str,"\0"); }
+<CHAR>\\\\ { strcat(str,"\\"); }
+<CHAR>\\\' { strcat(str,"\'"); }
+<CHAR>\\x[0-7][a-zA-Z0-9] {
+    char string[2];
+    convertCharacterCodeToString(yytext, 2, string);
+    strcat(str, string);
+}
+<CHAR>\' {
+    if(strlen(str) <= 1) {
+        printf("Found CHAR: %c\n", str[0]);
+    }
+    else {
+        printf("CHAR Error in line %d: more than one char in quote", lineNumber);
+    }
+    BEGIN(INITIAL);
+}
+<CHAR><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark", lineNumber); BEGIN(INITIAL);}
+<CHAR>\\ { printf("CHAR Error in line %d: slash", lineNumber); }
+
+
+[0-9][_0-9]*(Decimal)? {
+
+    removeType("Decimal");
+    removeUnderline();
+    printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
+}
+
+0b([_0-1])+(Byte)? {
+
+    removeType("Byte");
+    removeUnderline();
+    if(strlen(str) > 2)
+    {
+         printf("Found BYTE_NUMBER: %d\n", strtol(str + 2, NULL, 2));
+    }
+    else
+    {
+        printf("NUMBER Error in line %d: incorrect format\n", lineNumber);
+    }
+}
+
+[0-9][_0-9]*\.([0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?)?(Double)? {
+    removeType("Double");
+    removeUnderline();
+    printf("Found DOUBLE: %lf\n", atof(str), str);
+}
+
+[0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?(Double)? {
+    removeType("Double");
+    removeUnderline();
+    printf("Found DOUBLE: %lf\n", atof(str));
+}
+
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
+
+%%
+
+void convertCharacterCodeToString(char characterCode[], int startPosition, char *string)
+{
+    string[0] = strtol(characterCode + startPosition,NULL, 16);
+    string[1] = '\0';
+}
+
+void removeUnderline()
+{
+  int pos = 0;
+  for(int i = 0; i < strlen(yytext); i++)
+  {
+        if(yytext[i] != '_')
+        {
+            str[pos++] = yytext[i];
+        }
+  }
+
+  str[pos] = '\0';
+  strcpy(yytext, str);
+}
+
+void removeType(char *typeName)
+{
+    strcpy(str, yytext);
+    char* p = strstr(str, typeName);
+    if(p != NULL)
+    {
+        int pos = strlen(str)  - strlen(typeName);
+        str[pos] = 0;
+    }
+}
+
+int main(int argc, char** argv) {
+
+    if (argc != 2) {
+        printf("Filename is not found");
+        return 1;
+    }
+
+    const char *filename= argv[1];
+    
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("File opening error");
+        return 1;
+    }
+
+    yyin = file;
+    yylex();
+    fclose(file);
+
+    return 0;
+}
