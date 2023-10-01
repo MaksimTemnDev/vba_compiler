@@ -50,6 +50,7 @@ Len { printf("Found KW_LEN: %s\n", yytext); }
 Lock { printf("Found KW_Lock: %s\n", yytext); }
 Me { printf("Found KW_ME: %s\n", yytext); }
 Mid { printf("Found KW_MID: %s\n", yytext); }
+Mod { printf("Found KW_MOD: %s\n", yytext); }
 New { printf("Found KW_NEW: %s\n", yytext); }
 Next { printf("Found KW_NEXT: %s\n", yytext); }
 null { printf("Found KW_NULL: %s\n", yytext); }
@@ -78,3 +79,47 @@ To { printf("Found KW_TO: %s\n", yytext); }
 While { printf("Found KW_WHILE: %s\n", yytext); }
 Where { printf("Found KW_WHERE: %s\n", yytext); }
 Loop { printf("Found KW_LOOP: %s\n", yytext); }
+Xor { printf("Found KW_Xor: %s\n", yytext); }
+
+
+Boolean { printf("Found TYPE_BOOLEAN: %s\n", yytext); }
+Byte { printf("Found TYPE_BYTE: %s\n", yytext); }
+Integer { printf("Found TYPE_INTEGER: %s\n", yytext); }
+Single { printf("Found TYPE_SINGLE: %s\n", yytext); }
+Short { printf("Found TYPE_SHORT: %s\n", yytext); }
+Double { printf("Found TYPE_DOUBLE: %s\n", yytext); }
+Decimal { printf("Found TYPE_DECIMAL: %s\n", yytext); }
+Date { printf("Found TYPE_DATE: %s\n", yytext); }
+Char { printf("Found TYPE_CHAR: %s\n", yytext); }
+String { printf("Found TYPE_STRING: %s\n", yytext); }
+Object { printf("Found TYPE_OJECT: %s\n", yytext); }
+
+
+"+" { printf("Found OPERATOR_PLUS: %s\n", yytext); }
+"-" { printf("Found OPERATOR_MINUS: %s\n", yytext); }
+"*" { printf("Found OPERATOR_MUL: %s\n", yytext); }
+"/" { printf("Found OPERATOR_DIV: %s\n", yytext); }
+"^" { printf("Found OPERATOR_EXPONENT: %s\n", yytext); }
+"\" { printf("Found OPERATOR_INTEGER_DIVISION: %s\n", yytext); }
+
+
+"=" { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); }
+"==" { printf("Found OPERATOR_EQUAL: %s\n", yytext); }
+"<>" { printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext); }
+"<" { printf("Found OPERATOR_LESS: %s\n", yytext); }
+">" { printf("Found OPERATOR_MORE: %s\n", yytext); }
+"<=" { printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext); }
+">=" { printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext); }
+
+"<<" { printf("Found OPERATOR_BIT_LEFT_SHIFT: %s\n", yytext); }
+">>" { printf("Found OPERATOR_BIT_RIGHT_SHIFT: %s\n", yytext); }
+
+"+=" { printf("Found OPERATOR_PLUS_ASSIGNMENT: %s\n", yytext); }
+"-=" { printf("Found OPERATOR_MINUS_ASSIGNMENT: %s\n", yytext); }
+"*=" { printf("Found OPERATOR_MUL_ASSIGNMENT: %s\n", yytext); }
+"/=" { printf("Found OPERATOR_DIV_ASSIGNMENT: %s\n", yytext); }
+"^=" { printf("Found OPERATOR_EXP_ASSIGNMENT: %s\n", yytext); }
+"&=" { printf("Found OPERATOR_BIT_AND_ASSIGNMENT: %s\n", yytext); }
+"\=" { printf("Found OPERATOR_DIV_NUM_ASSIGNMENT: %s\n", yytext); }
+"<<=" { printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext); }
+">>=" { printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext); }
