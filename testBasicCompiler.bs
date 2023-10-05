@@ -29,7 +29,21 @@ Sub Main()
         
         ' символы Unicode
         Dim unicode_Q = "\u{0051}"
-
+        
+        ' Escape-последовательности
+        Dim newline = "\n"         
+        Dim tab = "\t"             ' Табуляция
+        Dim backslash = "\\"       ' Обратный слеш
+        Dim single_quote = "\'"    ' Одинарная кавычка
+        Dim double_quote = "\"""    ' Двойная кавычка
+        Dim hex_escape = "\x41"    ' \xHH - ASCII символы в шестнадцатеричной форме \x7F - предел)
+        Dim unicode_symb = '\u{100__6___}';  //\u{XXXX} - Unicode символы \u{10FFFF} - предел
+        
+        ' Строковые литералы аналогично
+        Dim quote_escape = "Это строка с символами \"" внутри"
+        Dim ascii_escape = "ASCII символы: \x48\x65\x6C\x6C\x6F"
+        Dim unicode_escape = "Символы Unicode: \u{0042} \u{0043} \u{0041}"
+    
         'Escape-последовательности в строке
         Dim escaped_string = "Это строка с символами: \\n (новая строка), \\t (табуляция)"
         
@@ -71,5 +85,5 @@ Sub Main()
         mutable_variable -= 3
         mutable_variable *= 2
         mutable_variable /= 4
-        
+
     End Sub
