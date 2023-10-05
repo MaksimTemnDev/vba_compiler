@@ -1,5 +1,5 @@
 Sub Main()
-	' задание целого числа 
+        ' задание целого числа 
         Dim x as Integer = -1
         Dim x as Integer = - 1
         Dim x as Integer = -  1
@@ -25,5 +25,51 @@ Sub Main()
         Dim number = 90946
         Dim number1 = &H16342
         'Dim num2 = &B0001_0110_0011_0100_0010
-	Dim number3 = &O261502
-End Sub
+        Dim number3 = &O261502
+        
+        ' символы Unicode
+        Dim unicode_Q = "\u{0051}"
+
+        'Escape-последовательности в строке
+        Dim escaped_string = "Это строка с символами: \\n (новая строка), \\t (табуляция)"
+        
+        ' символы
+        Dim char1 = "A"
+        Dim char2 = "Б"
+        Dim escaped_char = "\n"
+        Dim unicode_char = "\u{276__4__________}"
+        
+        ' строковые константы
+        Dim string1 = "Привет, мир!"
+        Dim string2 = "Это строка с ""кавычками"" внутри" 
+        
+        Dim string3 = "" ' пустая строка
+        Dim string4 = "\0" ' ноль-символ
+        
+        ' множественная строка
+        'Dim x = "hello  
+        'world"  
+        
+        ' Арифметические операции
+        Dim integer1 = 10
+        Dim integer2 = 12
+        Dim sum = integer1 + integer2
+        Dim difference = integer2 - integer1
+        Dim product = integer1 * 5
+        Dim quotient = integer2 / 2
+    
+        ' Операции сравнения
+        Dim is_equal = integer1 = integer2
+        Dim is_not_equal = integer1 <> integer2
+        Dim more = integer2 > integer1
+        Dim less_or_equal = integer1 <= 42
+        Dim more_or_equal = integer2 >= 33
+    
+        ' операции присваивания
+        Dim mutable_variable = 10
+        mutable_variable += 5
+        mutable_variable -= 3
+        mutable_variable *= 2
+        mutable_variable /= 4
+        
+    End Sub
