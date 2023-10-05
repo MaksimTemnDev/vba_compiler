@@ -1,0 +1,29 @@
+Sub Main()
+	' задание целого числа 
+        Dim x as Integer = -1
+        Dim x as Integer = - 1
+        Dim x as Integer = -  1
+        
+        ' вариации целого числа в разных системах счисления
+        Dim y As Integer = 90946
+        Dim y1 As Integer = &H16342
+        'Dim y2 As Integer = &B0001_0110_0011_0100_0010
+        'Dim y3 As Integer = &O261502
+        
+        ' вариации целого числа в разных системах счисления с нижним подчеркиванием
+        'Dim z As Integer = 90_946
+        'Dim z1 As Integer = &H0001_6342
+        'Dim z2 As Integer = &O26_1502
+        
+        ' вариации целого числа с идентификатором I в конце числа
+        Dim num = 90946I
+        Dim num1 = &H16342I
+        'Dim num2 = &B0001_0110_0011_0100_0010I
+        Dim num3 = &O261502I
+        
+        ' вариации целого числа без явного указания идентификатора
+        Dim number = 90946
+        Dim number1 = &H16342
+        'Dim num2 = &B0001_0110_0011_0100_0010
+	Dim number3 = &O261502
+End Sub
