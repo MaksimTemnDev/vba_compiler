@@ -1,4 +1,5 @@
-Sub Main()
+Module VBModule
+    Sub Main()
         ' задание целого числа 
         Dim x as Integer = -1
         Dim x as Integer = - 1
@@ -37,7 +38,7 @@ Sub Main()
         Dim single_quote = "\'"    ' Одинарная кавычка
         Dim double_quote = "\"""    ' Двойная кавычка
         Dim hex_escape = "\x41"    ' \xHH - ASCII символы в шестнадцатеричной форме \x7F - предел)
-        Dim unicode_symb = '\u{100__6___}';  //\u{XXXX} - Unicode символы \u{10FFFF} - предел
+        Dim unicode_symb = "\u{100__6___}"  ' \u{XXXX} - Unicode символы \u{10FFFF} - предел
         
         ' Строковые литералы аналогично
         Dim quote_escape = "Это строка с символами \"" внутри"
@@ -85,5 +86,22 @@ Sub Main()
         mutable_variable -= 3
         mutable_variable *= 2
         mutable_variable /= 4
-
+        
+        ' Структура if-else с присутствием else
+        Dim tmp = 5
+        If tmp > 0 Then
+            tmp += 5
+        ElseIf tmp < 0 Then 
+            tmp -= 5
+        End If
+        
+        ' с отсутствием else
+        If tmp > 0 Then
+            tmp += 5
+        End If
+        
+        ' написание if в одну строку
+        If tmp > 1 Then tmp += 2 : tmp *= 5 : tmp -= 1
+        
     End Sub
+End Module
