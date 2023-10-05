@@ -87,6 +87,7 @@ Module VBModule
         mutable_variable *= 2
         mutable_variable /= 4
         
+        ' Развилки
         ' Структура if-else с присутствием else
         Dim tmp = 5
         If tmp > 0 Then
@@ -102,6 +103,83 @@ Module VBModule
         
         ' написание if в одну строку
         If tmp > 1 Then tmp += 2 : tmp *= 5 : tmp -= 1
+        
+        ' оператор if с несколькими условиями через and и or
+        If tmp >= 2 and tmp < 5 or tmp = 0 Then
+            tmp += 2
+        End If
+        
+        ' Циклы
+        ' простой цикл While
+        Dim index As Integer = 0
+        While index <= 10
+            index += 1
+        End While
+        
+        ' цикл While с оператором Continue
+        Dim index1 As Integer = 0
+        While index1 < 100
+            index1 += 1
+            If index1 >= 5 And index1 <= 8 Then
+                Continue While
+            End If
+        End While
+        
+        ' цикл While с оператором Exit
+        Dim index2 As Integer = 0
+        While index2 < 100
+            index2 += 1
+            If index2 = 10 Then
+                Exit While
+            End If
+        End While
+    
+        ' цикл Do Loop с Until
+        Dim index3 As Integer = 0
+        Do
+            index3 += 1
+        Loop Until index3 > 10
+        
+        ' цикл Do Loop с While 
+        Dim index4 As Integer = 0
+        Do While index4 <= 10
+            index4 += 1
+        Loop
+        
+        ' цикл Do Loop с оператором Exit
+        Dim index5 As Integer = 0
+        Do While index5 <= 100
+            If index5 > 10 Then
+                Exit Do
+            End If
+        
+            index5 += 1
+        Loop
+        
+        ' цикл For Next с увеличением счетчика
+        Dim temp = 0
+        For index As Integer = 1 To 5
+            temp += index
+        Next
+        
+        ' цикл For Next с уменьшением счетчика
+        Dim temp1 = 0
+        For number As Double = 2 To 0 Step -0.25
+            temp1 -= number
+        Next
+        
+        ' вложенные циклы с массивами
+        
+        ' цикл For с операторами Continue и Exit
+        For index As Integer = 1 To 100
+            If index >= 5 AndAlso index <= 8 Then
+                Continue For
+            End If
+        
+            If index = 10 Then
+                Exit For
+            End If
+        Next
         
     End Sub
 End Module
