@@ -31,12 +31,15 @@ DIGIT [0-9]
 as { printf("Found KW_AS: %s\n", yytext); }
 and { printf("Found KW_AND: %s\n", yytext); }
 binary { printf("Found KW_BINARY: %s\n", yytext); }
+Continue { printf("Found KW_CONTINUE: %s\n", yytext); }
 ByRef { printf("Found KW_BYREF: %s\n", yytext); }
 ByVal { printf("Found KW_BYVAL: %s\n", yytext); }
-Date { printf("Found KW_DATE: %s\n", yytext); }
 Do { printf("Found KW_DO: %s\n", yytext); }
 else { printf("Found KW_ELSE: %s\n", yytext); }
+ElseIf { printf("Found KW_ELSEIF: %s\n", yytext); }
+End { printf("Found KW_END: %s\n", yytext); }
 enum { printf("Found KW_ENUM: %s\n", yytext); }
+Exit { printf("Found KW_EXIT: %s\n", yytext); }
 Empty { printf("Found KW_EMPTY: %s\n", yytext); }
 False { printf("Found KW_FALSE: %s\n", yytext); }
 Error { printf("Found KW_ERROR: %s\n", yytext); }
@@ -72,7 +75,6 @@ Set { printf("Found KW_SET: %s\n", yytext); }
 Static { printf("Found KW_STATIC: %s\n", yytext); }
 True  { printf("Found KW_TRUE: %s\n", yytext); }
 Step { printf("Found KW_STEP: %s\n", yytext); }
-String { printf("Found KW_STRING: %s\n", yytext); }
 Then { printf("Found KW_THEN: %s\n", yytext); }
 Time { printf("Found KW_TIME: %s\n", yytext); }
 To { printf("Found KW_TO: %s\n", yytext); }
@@ -99,7 +101,7 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 "*" { printf("Found OPERATOR_MUL: %s\n", yytext); }
 "/" { printf("Found OPERATOR_DIV: %s\n", yytext); }
 "^" { printf("Found OPERATOR_EXPONENT: %s\n", yytext); }
-"\" { printf("Found OPERATOR_INTEGER_DIVISION: %s\n", yytext); }
+"\\" { printf("Found OPERATOR_INTEGER_DIVISION: %s\n", yytext); }
 
 "=" { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); }
 "==" { printf("Found OPERATOR_EQUAL: %s\n", yytext); }
@@ -117,7 +119,7 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 "/=" { printf("Found OPERATOR_DIV_ASSIGNMENT: %s\n", yytext); }
 "^=" { printf("Found OPERATOR_EXP_ASSIGNMENT: %s\n", yytext); }
 "&=" { printf("Found OPERATOR_BIT_AND_ASSIGNMENT: %s\n", yytext); }
-"\=" { printf("Found OPERATOR_DIV_NUM_ASSIGNMENT: %s\n", yytext); }
+"\\=" { printf("Found OPERATOR_DIV_NUM_ASSIGNMENT: %s\n", yytext); }
 "<<=" { printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext); }
 ">>=" { printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext); }
 
@@ -131,7 +133,7 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 "," { printf("Found COMMA: %s\n", yytext); }
 
 
- '[^\n]* { printf("Found COMMENT: %s\n", yytext); }
+'[^\n]* { printf("Found COMMENT: %s\n", yytext); }
  
  \" { strcpy(str,""); BEGIN(STRING); }
 <STRING>[^\\\"\n]+ { strcat(str,yytext); }
@@ -150,32 +152,6 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 <STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error in line %d: slash", lineNumber); }
-
-
-\' { strcpy(str,""); BEGIN(CHAR); }
-<CHAR>[^\\\']+ { strcat(str,yytext); }
-<CHAR>\\n { strcat(str,"\n"); }
-<CHAR>\\r { strcat(str,"\r"); }
-<CHAR>\\t { strcat(str,"\t"); }
-<CHAR>\\0 { strcat(str,"\0"); }
-<CHAR>\\\\ { strcat(str,"\\"); }
-<CHAR>\\\' { strcat(str,"\'"); }
-<CHAR>\\x[0-7][a-zA-Z0-9] {
-    char string[2];
-    convertCharacterCodeToString(yytext, 2, string);
-    strcat(str, string);
-}
-<CHAR>\' {
-    if(strlen(str) <= 1) {
-        printf("Found CHAR: %c\n", str[0]);
-    }
-    else {
-        printf("CHAR Error in line %d: more than one char in quote", lineNumber);
-    }
-    BEGIN(INITIAL);
-}
-<CHAR><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark", lineNumber); BEGIN(INITIAL);}
-<CHAR>\\ { printf("CHAR Error in line %d: slash", lineNumber); }
 
 
 [0-9][_0-9]*(Decimal)? {
