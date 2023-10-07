@@ -36,7 +36,7 @@ Module VBModule
         Dim tab = "\t"             ' Табуляция
         Dim backslash = "\\"       ' Обратный слеш
         Dim single_quote = "\'"    ' Одинарная кавычка
-        Dim double_quote = "\"""    ' Двойная кавычка
+        Dim double_quote = "\''"    ' Двойная кавычка
         Dim hex_escape = "\x41"    ' \xHH - ASCII символы в шестнадцатеричной форме \x7F - предел)
         Dim unicode_symb = "\u{100__6___}"  ' \u{XXXX} - Unicode символы \u{10FFFF} - предел
         
@@ -180,6 +180,8 @@ Module VBModule
                 Exit For
             End If
         Next
-        
+		
+		' тест массива
+        Dim numbers = New Integer() {1, 2, 4, 8}
     End Sub
 End Module

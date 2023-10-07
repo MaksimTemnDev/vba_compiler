@@ -3,9 +3,9 @@
 
 DIGIT [0-9]
 
-%x CHAR
+
 %x STRING
-%x ML_COMMENT
+%x ARRAY
 
 %{
 	#include <stdio.h>
@@ -13,16 +13,17 @@ DIGIT [0-9]
     #include <string.h>
     #include <ctype.h>
 
-    char str[1024];
+	void removeUnderline();
+    void removeType(char *typeName);
+	void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
+	char str[1024];
     int lineNumber = 1;
 %}
 
 %%
 
 %{
-    void removeUnderline();
-    void removeType(char *typeName);
-	void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
+    
 %}
 
 \n { lineNumber++; }
@@ -153,6 +154,10 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error in line %d: slash", lineNumber); }
 
+\{ {strcpy(str,"["); BEGIN(ARRAY); }
+<ARRAY>[^}]+ { strcat(str,yytext); }
+<ARRAY>\} { printf("Found ARRAY: %s]\n", str); BEGIN(INITIAL);}
+<ARRAY><<EOF>> { printf("ARRAY Error in line %d: there is no closing brace\n", lineNumber); BEGIN(INITIAL);}
 
 [0-9][_0-9]*(Decimal)? {
 
