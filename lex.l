@@ -29,26 +29,26 @@ DIGIT [0-9]
 \n { lineNumber++; }
 " " { }
 
-as { printf("Found KW_AS: %s\n", yytext); }
-and { printf("Found KW_AND: %s\n", yytext); }
-binary { printf("Found KW_BINARY: %s\n", yytext); }
+As { printf("Found KW_AS: %s\n", yytext); }
+And { printf("Found KW_AND: %s\n", yytext); }
+Binary { printf("Found KW_BINARY: %s\n", yytext); }
 Continue { printf("Found KW_CONTINUE: %s\n", yytext); }
 ByRef { printf("Found KW_BYREF: %s\n", yytext); }
 ByVal { printf("Found KW_BYVAL: %s\n", yytext); }
 Do { printf("Found KW_DO: %s\n", yytext); }
-else { printf("Found KW_ELSE: %s\n", yytext); }
+Else { printf("Found KW_ELSE: %s\n", yytext); }
 ElseIf { printf("Found KW_ELSEIF: %s\n", yytext); }
 End { printf("Found KW_END: %s\n", yytext); }
-enum { printf("Found KW_ENUM: %s\n", yytext); }
+Enum { printf("Found KW_ENUM: %s\n", yytext); }
 Exit { printf("Found KW_EXIT: %s\n", yytext); }
 Empty { printf("Found KW_EMPTY: %s\n", yytext); }
 False { printf("Found KW_FALSE: %s\n", yytext); }
 Error { printf("Found KW_ERROR: %s\n", yytext); }
-for { printf("Found KW_FOR: %s\n", yytext); }
-if { printf("Found KW_IF: %s\n", yytext); }
+For { printf("Found KW_FOR: %s\n", yytext); }
+If { printf("Found KW_IF: %s\n", yytext); }
 Friend { printf("Found KW_FRIEND: %s\n", yytext); }
 Get { printf("Found KW_GET: %s\n", yytext); }
-let { printf("Found KW_LET: %s\n", yytext); }
+Let { printf("Found KW_LET: %s\n", yytext); }
 Is { printf("Found KW_IS: %s\n", yytext); }
 Len { printf("Found KW_LEN: %s\n", yytext); }
 Lock { printf("Found KW_Lock: %s\n", yytext); }
@@ -57,8 +57,8 @@ Mid { printf("Found KW_MID: %s\n", yytext); }
 Mod { printf("Found KW_MOD: %s\n", yytext); }
 New { printf("Found KW_NEW: %s\n", yytext); }
 Next { printf("Found KW_NEXT: %s\n", yytext); }
-null { printf("Found KW_NULL: %s\n", yytext); }
-return { printf("Found KW_RETURN: %s\n", yytext); }
+Null { printf("Found KW_NULL: %s\n", yytext); }
+Return { printf("Found KW_RETURN: %s\n", yytext); }
 On { printf("Found KW_ON: %s\n", yytext); }
 Option { printf("Found KW_OPTION: %s\n", yytext); }
 Optional { printf("Found KW_OPTIONAL: %s\n", yytext); }
@@ -159,6 +159,7 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 <ARRAY>\} { printf("Found ARRAY: %s]\n", str); BEGIN(INITIAL);}
 <ARRAY><<EOF>> { printf("ARRAY Error in line %d: there is no closing brace\n", lineNumber); BEGIN(INITIAL);}
 
+
 [0-9][_0-9]*(Decimal)? {
 
     removeType("Decimal");
@@ -193,6 +194,7 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 }
 
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
+[a-zA-Z0-9_]+\(\d\) { printf("Found ARRAY_ELEMENT_ACCESS_OPERATOR: %s\n", yytext); }
 
 %%
 
