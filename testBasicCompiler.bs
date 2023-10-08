@@ -181,10 +181,14 @@ Module VBModule
             End If
         Next
 		
-		' тест массива
+		' тест массива и доступа к нему
         Dim numbers = New Integer() {1, 2, 4, 8}
 		Dim characters() As Char = {"a"c, "b"c, "c"c, "d"c}
 		numbers(2)
 		characters(3)
+		
+		' тест работы с консолью
+		Console.WriteLine("Введите цвет консоли (синий или зеленый):")
+		Dim line = Console.ReadLine()
     End Sub
 End Module
