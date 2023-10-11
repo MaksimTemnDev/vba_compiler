@@ -6,6 +6,7 @@ DIGIT [0-9]
 
 %x STRING
 %x ARRAY
+%x NUMBER
 
 %{
 	#include <stdio.h>
@@ -84,7 +85,6 @@ Where { printf("Found KW_WHERE: %s\n", yytext); }
 Loop { printf("Found KW_LOOP: %s\n", yytext); }
 Xor { printf("Found KW_Xor: %s\n", yytext); }
 
-
 Boolean { printf("Found TYPE_BOOLEAN: %s\n", yytext); }
 Byte { printf("Found TYPE_BYTE: %s\n", yytext); }
 Integer { printf("Found TYPE_INTEGER: %s\n", yytext); }
@@ -95,7 +95,17 @@ Decimal { printf("Found TYPE_DECIMAL: %s\n", yytext); }
 Date { printf("Found TYPE_DATE: %s\n", yytext); }
 Char { printf("Found TYPE_CHAR: %s\n", yytext); }
 String { printf("Found TYPE_STRING: %s\n", yytext); }
-Object { printf("Found TYPE_OJECT: %s\n", yytext); }
+Object { printf("Found TYPE_OBJECT: %s\n", yytext); }
+
+vbCrLf|(Chr(13) + Chr(10)) { printf("Found TYPE_CR_LF: %s\n", yytext); }
+vbCr|(Chr(13)) { printf("Found TYPE_CR: %s\n", yytext); }
+vbLf|(Chr(10)) { printf("Found TYPE_LF: %s\n", yytext); }
+vbNewLine|(Chr(13) + Chr(10))|(Chr(13)) { printf("Found TYPE_NEW_LINE: %s\n", yytext); }
+vbNullChar|(Chr(0)) { printf("Found TYPE_NULL_CHAR: %s\n", yytext); }
+vbNullString { printf("Found TYPE_NULL_STRING: %s\n", yytext); }
+vbObjectError|(-2147221504) { printf("Found TYPE_OBJECT_ERROR: %s\n", yytext); }
+vbTab|(Chr(9)) { printf("Found TYPE_TAB: %s\n", yytext); }
+vbBack|(Chr(8)) { printf("Found TYPE_BACK: %s\n", yytext); }
 
 "+" { printf("Found OPERATOR_PLUS: %s\n", yytext); }
 "-" { printf("Found OPERATOR_MINUS: %s\n", yytext); }
@@ -159,6 +169,7 @@ Object { printf("Found TYPE_OJECT: %s\n", yytext); }
 <ARRAY>\} { printf("Found ARRAY: %s]\n", str); BEGIN(INITIAL);}
 <ARRAY><<EOF>> { printf("ARRAY Error in line %d: there is no closing brace\n", lineNumber); BEGIN(INITIAL);}
 
+\s(&(H|B|O|))?[0-9_]+I? { printf("Found INTEGER_NUMBER: %s\n", yytext);}
 
 [0-9][_0-9]*(Decimal)? {
 
