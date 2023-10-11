@@ -97,15 +97,15 @@ Char { printf("Found TYPE_CHAR: %s\n", yytext); }
 String { printf("Found TYPE_STRING: %s\n", yytext); }
 Object { printf("Found TYPE_OBJECT: %s\n", yytext); }
 
-vbCrLf|(Chr(13) + Chr(10)) { printf("Found TYPE_CR_LF: %s\n", yytext); }
-vbCr|(Chr(13)) { printf("Found TYPE_CR: %s\n", yytext); }
-vbLf|(Chr(10)) { printf("Found TYPE_LF: %s\n", yytext); }
-vbNewLine|(Chr(13) + Chr(10))|(Chr(13)) { printf("Found TYPE_NEW_LINE: %s\n", yytext); }
-vbNullChar|(Chr(0)) { printf("Found TYPE_NULL_CHAR: %s\n", yytext); }
+vbCrLf|(Chr\(13\) + Chr\(10\)) { printf("Found TYPE_CR_LF: %s\n", yytext); }
+vbCr|(Chr\(13\)) { printf("Found TYPE_CR: %s\n", yytext); }
+vbLf|(Chr\(10\)) { printf("Found TYPE_LF: %s\n", yytext); }
+vbNewLine|(Chr\(13\) + Chr\(10\)) { printf("Found TYPE_NEW_LINE: %s\n", yytext); }
+vbNullChar|(Chr\(0\)) { printf("Found TYPE_NULL_CHAR: %s\n", yytext); }
 vbNullString { printf("Found TYPE_NULL_STRING: %s\n", yytext); }
 vbObjectError|(-2147221504) { printf("Found TYPE_OBJECT_ERROR: %s\n", yytext); }
-vbTab|(Chr(9)) { printf("Found TYPE_TAB: %s\n", yytext); }
-vbBack|(Chr(8)) { printf("Found TYPE_BACK: %s\n", yytext); }
+vbTab|(Chr\(9\)) { printf("Found TYPE_TAB: %s\n", yytext); }
+vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 
 "+" { printf("Found OPERATOR_PLUS: %s\n", yytext); }
 "-" { printf("Found OPERATOR_MINUS: %s\n", yytext); }
