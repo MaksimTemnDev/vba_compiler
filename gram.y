@@ -4,22 +4,21 @@
 
 %%
 
+Statement: Statement
+	| Expression Statement
+	| DimStmt Statement
+	| IfStmt Statement
+        ;
 
-%%
-for_stmt : FOR_‘(‘_expr‘;’’expr’;’’expr’)’stmt
-	| FOR ‘(’_var_decl ’,’expr’;’expr’)’ stmt
-	
+DimStmt: DIM Declaration
+	| DIM '=' Expression
 	;
-stmt : ‘,’
-         | ‘,’
-         | if_stmt
-         | for_stmt
-         | …’{’ stmt_list ‘}’				
 
-
-
-
-
+IfStmt: IF Expression THEN Statement END IF
+	| IF Expression THEN Statement ELSE Statement 
+	| IF Expression THEN TernarStatement
+	| IF Expression THEN Statement ELSEIF Expression THEN Statement END IF
+	;
 
 %right ‘=’
 %left ’-’,’+’
