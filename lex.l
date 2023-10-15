@@ -39,6 +39,7 @@ Continue { printf("Found KW_CONTINUE: %s\n", yytext); }
 ByRef { printf("Found KW_BYREF: %s\n", yytext); }
 ByVal { printf("Found KW_BYVAL: %s\n", yytext); }
 Do { printf("Found KW_DO: %s\n", yytext); }
+Dim { printf("Found KW_DIM: %s\n", yytext); }
 Else { printf("Found KW_ELSE: %s\n", yytext); }
 ElseIf { printf("Found KW_ELSEIF: %s\n", yytext); }
 End { printf("Found KW_END: %s\n", yytext); }
@@ -49,12 +50,15 @@ False { printf("Found KW_FALSE: %s\n", yytext); }
 Error { printf("Found KW_ERROR: %s\n", yytext); }
 For { printf("Found KW_FOR: %s\n", yytext); }
 If { printf("Found KW_IF: %s\n", yytext); }
+InStr { printf("Found KW_INSTR: %s\n", yytext); }
 Friend { printf("Found KW_FRIEND: %s\n", yytext); }
 Get { printf("Found KW_GET: %s\n", yytext); }
 Let { printf("Found KW_LET: %s\n", yytext); }
 Is { printf("Found KW_IS: %s\n", yytext); }
 Len { printf("Found KW_LEN: %s\n", yytext); }
+Left { printf("Found KW_LEFT: %s\n", yytext); }
 Lock { printf("Found KW_Lock: %s\n", yytext); }
+Lcase { printf("Found KW_LCASE: %s\n", yytext); }
 Me { printf("Found KW_ME: %s\n", yytext); }
 Mid { printf("Found KW_MID: %s\n", yytext); }
 Mod { printf("Found KW_MOD: %s\n", yytext); }
@@ -74,10 +78,13 @@ Property { printf("Found KW_PROPERTY: %s\n", yytext); }
 PtrSafe { printf("Found KW_PTRSAFE: %s\n", yytext); }
 Public { printf("Found KW_PUBLIC: %s\n", yytext); }
 Resume { printf("Found KW_RESUME: %s\n", yytext); }
+Replace { printf("Found KW_REPLACE: %s\n", yytext); }
+Right { printf("Found KW_RIGHT: %s\n", yytext); }
 Seek { printf("Found KW_SEEK: %s\n", yytext); }
 Set { printf("Found KW_SET: %s\n", yytext); }
 Static { printf("Found KW_STATIC: %s\n", yytext); }
 True  { printf("Found KW_TRUE: %s\n", yytext); }
+Ucase  { printf("Found KW_UCASE: %s\n", yytext); }
 Step { printf("Found KW_STEP: %s\n", yytext); }
 Then { printf("Found KW_THEN: %s\n", yytext); }
 Time { printf("Found KW_TIME: %s\n", yytext); }
@@ -86,6 +93,9 @@ While { printf("Found KW_WHILE: %s\n", yytext); }
 Where { printf("Found KW_WHERE: %s\n", yytext); }
 Loop { printf("Found KW_LOOP: %s\n", yytext); }
 Xor { printf("Found KW_Xor: %s\n", yytext); }
+writeLine {printf("Found Console_Function_writeLine: %s\n", yytext);}
+readLine {printf("Found Console_Function_readLine: %s\n", yytext);}
+write {printf("Found Console_Function_write: %s\n", yytext);}
 
 Boolean { printf("Found TYPE_BOOLEAN: %s\n", yytext); }
 Byte { printf("Found TYPE_BYTE: %s\n", yytext); }
@@ -115,6 +125,7 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 "/" { printf("Found OPERATOR_DIV: %s\n", yytext); }
 "^" { printf("Found OPERATOR_EXPONENT: %s\n", yytext); }
 "\\" { printf("Found OPERATOR_INTEGER_DIVISION: %s\n", yytext); }
+"&" { printf("Found OPERATOR_ampersand: %s\n", yytext); }
 
 "=" { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); }
 "==" { printf("Found OPERATOR_EQUAL: %s\n", yytext); }

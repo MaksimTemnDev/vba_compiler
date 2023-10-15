@@ -188,7 +188,20 @@ Module VBModule
 		characters(3)
 		
 		' тест работы с консолью
-		Console.WriteLine("Введите цвет консоли (синий или зеленый):")
-		Dim line = Console.ReadLine()
+		writeLine("Введите цвет консоли (синий или зеленый):")
+		Dim line = readLine()
+		Dim line2 = write()
+		
+		' тест работы операций над строками, их участие в выражениях
+		Dim nString = "string" + "second"
+		Dim nString2 = "string" + "second" + "new one"
+		Dim nString3 = "string" & "second"
+		Dim sampleStr As String
+		sampleStr = "Hello" & " World"
+		Dim StringName As String = "lorem ipsum dolor sit amet"
+        StringName = StringName.Replace("i", "o")
+        writeLine(Mid(StringName, InStr(StringName, " "), 6))
+		write(Left(nstring2, 3))
+		write(Right(nstring3, 4))
     End Sub
 End Module
