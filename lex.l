@@ -157,31 +157,19 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 "," { printf("Found COMMA: %s\n", yytext); }
 
 
-'[^\n]* { printf("Found COMMENT: %s\n", yytext); }
+'.* { printf("Found COMMENT: %s\n", yytext); }
  
  \" { strcpy(str,""); BEGIN(STRING); }
-<STRING>[^\\\"\n]+ { strcat(str,yytext); }
-<STRING>\n  { lineNumber++; }
-<STRING>\\n  { strcat(str,"\n"); }
-<STRING>\\r  { strcat(str,"\r"); }
-<STRING>\\t  { strcat(str,"\t"); }
-<STRING>\\0  { strcat(str,"\0"); }
-<STRING>\\\\ { strcat(str,"\\"); }
-<STRING>\\\" { strcat(str,"\""); }
-<STRING>\\x[0-7][a-zA-Z0-9] {
-    char string[2];
-    convertCharacterCodeToString(yytext, 2, string);
-    strcat(str, string);
-}
+<STRING>\"\" { strcat(str, """"); }
+<STRING>([^\"]+)? { strcat(str,yytext); }
 <STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
-<STRING>\\ { printf("STRING Error in line %d: slash", lineNumber); }
+
 
 \{ {strcpy(str,"["); BEGIN(ARRAY); }
 <ARRAY>[^}]+ { strcat(str,yytext); }
 <ARRAY>\} { printf("Found ARRAY: %s]\n", str); BEGIN(INITIAL);}
 <ARRAY><<EOF>> { printf("ARRAY Error in line %d: there is no closing brace\n", lineNumber); BEGIN(INITIAL);}
-
 
 
 [0-9][_0-9]*(Decimal)? {
