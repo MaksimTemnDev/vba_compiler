@@ -16,7 +16,20 @@ stmt : ‘,’
          | for_stmt
          | …’{’ stmt_list ‘}’				
 
+ArrayStatement: '{' StatementList '}'
+               | '{' '}'
+               ;
 
+StatementList: Statement
+             | StatementList Statement
+             ;
+			 
+Statement: StatementErase
+         | BaseExpression StatementErase
+         | DimStmt StatementErase
+         | WhileStatement
+         | DoWhileStatement
+         ;
 
 
 
