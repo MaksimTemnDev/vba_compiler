@@ -14,6 +14,21 @@ DimStmt: DIM Declaration
 	| DIM '=' Expression
 	;
 
+ArrayStatement: '{' StatementList '}'
+               | '{' '}'
+               ;
+
+StatementList: Statement
+             | StatementList Statement
+             ;
+       
+Statement: StatementErase
+         | BaseExpression StatementErase
+         | DimStmt StatementErase
+         | WhileStatement
+         | DoWhileStatement
+         ;
+
 IfStmt: IF Expression THEN Statement END IF
 	| IF Expression THEN Statement ELSE Statement 
 	| IF Expression THEN TernarStatement
