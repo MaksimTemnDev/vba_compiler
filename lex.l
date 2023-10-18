@@ -33,6 +33,7 @@ DIGIT [0-9]
 
 As { printf("Found KW_AS: %s\n", yytext); }
 And { printf("Found KW_AND: %s\n", yytext); }
+AndAlso { printf("Found KW_AND_ALSO: %s\n", yytext); }
 Binary { printf("Found KW_BINARY: %s\n", yytext); }
 Continue { printf("Found KW_CONTINUE: %s\n", yytext); }
 ByRef { printf("Found KW_BYREF: %s\n", yytext); }
@@ -56,6 +57,7 @@ Let { printf("Found KW_LET: %s\n", yytext); }
 Is { printf("Found KW_IS: %s\n", yytext); }
 Len { printf("Found KW_LEN: %s\n", yytext); }
 Left { printf("Found KW_LEFT: %s\n", yytext); }
+Like { printf("Found KW_LIKE: %s\n", yytext); }
 Lock { printf("Found KW_Lock: %s\n", yytext); }
 Lcase { printf("Found KW_LCASE: %s\n", yytext); }
 Me { printf("Found KW_ME: %s\n", yytext); }
@@ -63,12 +65,14 @@ Mid { printf("Found KW_MID: %s\n", yytext); }
 Mod { printf("Found KW_MOD: %s\n", yytext); }
 New { printf("Found KW_NEW: %s\n", yytext); }
 Next { printf("Found KW_NEXT: %s\n", yytext); }
+Not { printf("Found KW_NOT: %s\n", yytext); }
 Null { printf("Found KW_NULL: %s\n", yytext); }
 Return { printf("Found KW_RETURN: %s\n", yytext); }
 On { printf("Found KW_ON: %s\n", yytext); }
 Option { printf("Found KW_OPTION: %s\n", yytext); }
 Optional { printf("Found KW_OPTIONAL: %s\n", yytext); }
 Or { printf("Found KW_OR: %s\n", yytext); }
+OrElse { printf("Found KW_OR_ELSE: %s\n", yytext); }
 ParamArray { printf("Found KW_PARAMARRAY: %s\n", yytext); }
 Print { printf("Found KW_PRINT: %s\n", yytext); }
 Private { printf("Found KW_PRIVATE: %s\n", yytext); }
