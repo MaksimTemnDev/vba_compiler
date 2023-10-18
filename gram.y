@@ -1,6 +1,18 @@
 %{
 
 %}
+%left '^'
+%left UnarPlus UnarMinus
+%right '*' '/'
+%right '\'
+%right 'Mod'
+%right '+' '-'
+%right '&'
+%left '<<' '>>'
+%right '=' '<>' '<' '<=' Is IsNot Like TypeOf..Is
+%left '>' '>='
+%left Or
+%left And
 
 %%
 
