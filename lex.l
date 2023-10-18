@@ -16,9 +16,8 @@ DIGIT [0-9]
     #include <ctype.h>
 	
 
-	void removeUnderline();
-    void removeType(char *typeName);
-	void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
+	void delete_();
+    void eraseType(char *typeName);
 	char str[1024];
     int lineNumber = 1;
 %}
@@ -174,15 +173,15 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 
 [0-9][_0-9]*(Decimal)? {
 
-    removeType("Decimal");
-    removeUnderline();
+    eraseType("Decimal");
+    delete_();
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
 }
 
 0b([_0-1])+(Byte)? {
 
-    removeType("Byte");
-    removeUnderline();
+    eraseType("Byte");
+    delete_();
     if(strlen(str) > 2)
     {
          printf("Found BYTE_NUMBER: %d\n", strtol(str + 2, NULL, 2));
@@ -194,14 +193,14 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 }
 
 [0-9][_0-9]*\.([0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?)?(Double)? {
-    removeType("Double");
-    removeUnderline();
+    eraseType("Double");
+    delete_();
     printf("Found DOUBLE: %lf\n", atof(str), str);
 }
 
 [0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?(Double)? {
-    removeType("Double");
-    removeUnderline();
+    eraseType("Double");
+    delete_();
     printf("Found DOUBLE: %lf\n", atof(str));
 }
 
@@ -210,13 +209,9 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 
 %%
 
-void convertCharacterCodeToString(char characterCode[], int startPosition, char *string)
-{
-    string[0] = strtol(characterCode + startPosition,NULL, 16);
-    string[1] = '\0';
-}
 
-void removeUnderline()
+
+void delete_()
 {
   int pos = 0;
   for(int i = 0; i < strlen(yytext); i++)
@@ -231,7 +226,7 @@ void removeUnderline()
   strcpy(yytext, str);
 }
 
-void removeType(char *typeName)
+void eraseType(char *typeName)
 {
     strcpy(str, yytext);
     char* p = strstr(str, typeName);
