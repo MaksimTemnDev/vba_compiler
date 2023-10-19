@@ -28,6 +28,8 @@ DimStmt: DIM Declaration
 
 ArrayStatement: '{' StatementList '}'
                | '{' '}'
+			   | DimStmt Statement '('')' AsStatement TypeStatement
+			   | NewStatement TypeStatement '('Statement')' '{'StatementList'}'
                ;
 
 StatementList: Statement
@@ -67,6 +69,22 @@ ForStatement: FOR Statement '=' Statement TO Statement Statement NEXT
 	| FOR Statement '=' Statement TO Statement IF Expression THEN CONTINUE FOR END IF NEXT
 	| FOR Statement '=' Statement TO Statement IF Expression THEN EXIT FOR END IF NEXT
 	;
+	
+ArrayElementStatement: Statement '(' Statement ')'
+                     ;
+
+NewStatement: New
+	        ;
+			
+writeLineStatement: writeLine '(' StatementList ')'
+				  : writeLine '(' StatementErase ')'
+				  ;
+				 
+writeStatement: write '(' StatementList ')'
+			  ;
+
+readLineStatement: readLine '(' ')'
+				 ;
 
 %right ‘=’
 %left ’-’,’+’
