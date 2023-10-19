@@ -1,6 +1,10 @@
-%{
+%token END
+%token WHILE DO LOOP UNTIL FOR TO STEP CONTINUE EXIT
+%token IF THEN ELSE ELSEIF
+%token TRUE FALSE
+%token DIM
+%token NEW
 
-%}
 %left '^'
 %left UnarPlus UnarMinus
 %right '*' '/'
@@ -11,8 +15,9 @@
 %left '<<' '>>'
 %right '=' '<>' '<' '<=' Is IsNot Like TypeOf..Is
 %left '>' '>='
-%left Or
-%left And
+%left OR ORELSE
+%left AND ANDALSO
+%nonassoc '{' '}'
 
 %%
 
