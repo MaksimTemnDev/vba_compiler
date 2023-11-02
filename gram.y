@@ -4,6 +4,18 @@
 %token TRUE FALSE
 %token DIM
 %token NEW
+%token IDENTIFIER
+%token TYPE_BOOLEAN
+%token TYPE_BYTE
+%token TYPE_INTEGER
+%token TYPE_SINGLE
+%token TYPE_SHORT
+%token TYPE_DOUBLE
+%token TYPE_DECIMAL
+%token TYPE_DATE
+%token TYPE_CHAR
+%token TYPE_STRING
+%token TYPE_OBJECT
 
 %left '^'
 %left UnarPlus UnarMinus
@@ -27,8 +39,29 @@ Statement: Statement
 	| IfStmt Statement
         ;
 
-DimStmt: DIM Declaration
-	| DIM '=' Expression
+DimStmt: DIM IDENTIFIERlist Declaration
+	| DIM IDENTIFIER '=' Expression
+	;
+
+IDENTIFIERlist: IDENTIFIERlist ',' IDENTIFIER
+			  | IDENTIFIER
+			  ;
+
+Declaration: AS Type
+		   | IDENTIFIERlist Declaration
+		   ;
+
+Type: TYPE_BOOLEAN
+	| TYPE_BYTE
+	| TYPE_INTEGER
+	| TYPE_SINGLE
+	| TYPE_SHORT
+	| TYPE_DOUBLE
+	| TYPE_DECIMAL
+	| TYPE_DATE
+	| TYPE_CHAR
+	| TYPE_STRING
+	| TYPE_OBJECT
 	;
 
 ArrayStatement: '{' StatementList '}'
