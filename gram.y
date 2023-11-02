@@ -37,10 +37,18 @@ Statement: Statement
 	| Expression Statement
 	| DimStmt Statement
 	| IfStmt Statement
-        ;
+    | StatementErase
+    | BaseExpression StatementErase
+    | DimStmt StatementErase
+    | WhileStatement StatementErase
+    | DoLoopWhileStatement StatementErase
+	| DoLoopUntilStatement StatementErase
+	| ForStatement StatementErase
+    ;
 
 DimStmt: DIM IDENTIFIERlist Declaration
 	| DIM IDENTIFIER '=' Expression
+	| DIM IDENTIFIER '('TYPE_INTEGER')' AS Type
 	;
 
 IDENTIFIERlist: IDENTIFIERlist ',' IDENTIFIER
@@ -66,22 +74,13 @@ Type: TYPE_BOOLEAN
 
 ArrayStatement: '{' StatementList '}'
                | '{' '}'
-			   | DimStmt Statement '('')' AsStatement TypeStatement
-			   | NewStatement TypeStatement '('Statement')' '{'StatementList'}'
+			   | Statement '('')' AS Type
+			   | NewStatement Type '('')' '{'StatementList'}'
                ;
 
 StatementList: Statement
-             | StatementList Statement
+             | StatementList ',' Statement
              ;
-       
-Statement: StatementErase
-         | BaseExpression StatementErase
-         | DimStmt StatementErase
-         | WhileStatement StatementErase
-         | DoLoopWhileStatement StatementErase
-	 | DoLoopUntilStatement StatementErase
-	 | ForStatement StatementErase
-         ;
 
 IfStmt: IF Expression THEN Statement END IF
 	| IF Expression THEN Statement ELSE Statement 
@@ -123,31 +122,3 @@ writeStatement: write '(' StatementList ')'
 
 readLineStatement: readLine '(' ')'
 				 ;
-
-%right ‘=’
-%left ’-’,’+’
-%left ‘*’,’/’,’%’
-%left ‘.’
-%left ‘[’,’]’
-%left UMINUS
-%nonasoc‘(’,’)’
-%%
-expr: CONST_INT
-        | CONST_STRING
-        | CONST_DOUBLE
-        | CONST_FLOAT
-        | ID
-        | expr ‘+’ expr
-        | expr ‘-’ expr
-        | expr ‘*’ expr
-        | expr ‘-’
-        | expr ‘/’ expr
-        | expr ‘=’ ‘(’ ’[‘ expr‘]’’ )’
-        | ‘(‘ expr‘ )’
-        | ‘[’expr’]’
-        | expr’.’ID
-        | ID’(’expr-list’)’
-        | expr’:’ID’(’expr-list’)’
-        | ‘-’expr ‘%’ prec UMINUS
-
-%%
