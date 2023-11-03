@@ -28,7 +28,7 @@ DIGIT [0-9]
     
 %}
 
-\n { lineNumber++; }
+\n { printf("Found TOKEN_LINE: \n"); lineNumber++; }
 " " { }
 
 As { printf("Found KW_AS: %s\n", yytext); }
@@ -175,14 +175,14 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 <ARRAY><<EOF>> { printf("ARRAY Error in line %d: there is no closing brace\n", lineNumber); BEGIN(INITIAL);}
 
 
-[0-9][_0-9]*(Decimal)? {
+[0-9][0-9]*(Decimal)? {
 
     eraseType("Decimal");
     delete_();
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
 }
 
-0b([_0-1])+(Byte)? {
+0b([0-1])+(Byte)? {
 
     eraseType("Byte");
     delete_();
@@ -196,13 +196,13 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
     }
 }
 
-[0-9][_0-9]*\.([0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?)?(Double)? {
+[0-9][0-9]*\.([0-9][0-9]*([eE][+-]?[0-9][0-9]*)?)?(Double)? {
     eraseType("Double");
     delete_();
     printf("Found DOUBLE: %lf\n", atof(str), str);
 }
 
-[0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?(Double)? {
+[0-9][0-9]*([eE][+-]?[0-9][0-9]*)?(Double)? {
     eraseType("Double");
     delete_();
     printf("Found DOUBLE: %lf\n", atof(str));
