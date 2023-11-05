@@ -19,6 +19,7 @@ DIGIT [0-9]
 	void delete_();
     void eraseType(char *typeName);
 	char str[1024];
+	char strNew[1024];
     int lineNumber = 1;
 %}
 
@@ -169,10 +170,9 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 
 
-\{ {strcpy(str,"["); BEGIN(ARRAY); }
-<ARRAY>[^}]+ { strcat(str,yytext); }
-<ARRAY>\} { printf("Found ARRAY: %s]\n", str); BEGIN(INITIAL);}
-<ARRAY><<EOF>> { printf("ARRAY Error in line %d: there is no closing brace\n", lineNumber); BEGIN(INITIAL);}
+\{ {printf("Found ARRAY_Start: %s\n", yytext);}
+\}	 {printf("Found ARRAY_End: %s\n", yytext);}
+
 
 
 [0-9][0-9]*(Decimal)? {
@@ -209,7 +209,6 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 }
 
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
-[a-zA-Z0-9_]+\(\d\) { printf("Found ARRAY_ELEMENT_ACCESS_OPERATOR: %s\n", yytext); }
 
 %%
 
