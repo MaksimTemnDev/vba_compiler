@@ -211,6 +211,11 @@ Module VBModule
 		Exit Function
 	End Function
 	
+	'Тест для RETURN
+	Function MyReturn(ByVal j As Integer) As Double
+		Return 3.88 * j
+	End Function
+	
 	'Тест работы с процедурой
 	Sub Addition(ByRef x As Integer, ByVal y As Integer)
 		x=x+y
