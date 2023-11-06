@@ -182,7 +182,7 @@ Module VBModule
         Next
 		
 		' тест массива и доступа к нему
-        Dim numbers = New Integer() {1, 2, 4, 8}
+        Dim numbers = New Integer() {1, 2, numberTwo(index3), 8}
 		Dim characters() As Char = {"a"c, "b"c, "c"c, "d"c}
 		numbers(2)
 		characters(3)
@@ -204,4 +204,15 @@ Module VBModule
 		write(Left(nstring2, 3))
 		write(Right(nstring3, 4))
     End Sub
+	
+	'Тест работы с функцией
+	Function MyFunction(ByVal j As Integer) As Double
+		MyFunction = 3.87 * j
+		Exit Function
+	End Function
+	
+	'Тест работы с процедурой
+	Sub Addition(ByRef x As Integer, ByVal y As Integer)
+		x=x+y
+	End Sub
 End Module
