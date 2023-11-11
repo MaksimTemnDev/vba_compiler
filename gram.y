@@ -16,6 +16,7 @@
 %token TYPE_CHAR
 %token TYPE_STRING
 %token TYPE_OBJECT
+%token TOKEN_LINE
 
 %left '^'
 %left UnarPlus UnarMinus
@@ -82,6 +83,30 @@ StatementList: Statement
              | StatementList ',' Statement
              ;
 
+ExpressionList: Expression
+			  | ExpressionList ',' Expression
+
+Expression:
+		  | IDENTIFIER
+		  | '('Expression')'
+		  | IDENTIFIER '('ExpressionList')'
+		  | IDENTIFIER '('')'
+		  | Expression '=' EndList Expression
+		  | Expression '+' EndList Expression
+		  | Expression '-' EndList Expression
+		  | Expression '/' EndList Expression
+		  | Expression '*' EndList Expression
+		  | Expression '\' EndList Expression
+		  | Expression 'Mod' EndList Expression
+		  | Expression '>' EndList Expression
+		  | Expression '<' EndList Expression
+		  | Expression '>=' EndList Expression
+		  | Expression '=<' EndList Expression
+		  | Expression '<>' EndList Expression
+		  | Expression '<<' EndList Expression
+		  | Expression '>>' EndList Expression
+		  ;
+
 IfStmt: IF Expression THEN Statement END IF
 	| IF Expression THEN Statement ELSE Statement 
 	| IF Expression THEN TernarStatement
@@ -122,3 +147,7 @@ writeStatement: write '(' StatementList ')'
 
 readLineStatement: readLine '(' ')'
 				 ;
+				 
+EndList: TOKEN_LINE
+	   | EndList TOKEN_LINE
+	   ;
