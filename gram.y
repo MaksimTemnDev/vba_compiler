@@ -47,7 +47,7 @@ Statement: Statement
 	| ForStatement StatementErase
     ;
 
-DimStmt: DIM IDENTIFIERlist Declaration
+DimStmt: DIM Declaration 
 	| DIM IDENTIFIER '=' Expression
 	| DIM IDENTIFIER '('TYPE_INTEGER')' AS Type
 	;
@@ -56,8 +56,8 @@ IDENTIFIERlist: IDENTIFIERlist ',' IDENTIFIER
 			  | IDENTIFIER
 			  ;
 
-Declaration: AS Type
-		   | IDENTIFIERlist Declaration
+Declaration: IDENTIFIERlist AS Type
+		   | Declaration ',' Declaration
 		   ;
 
 Type: TYPE_BOOLEAN
