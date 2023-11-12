@@ -133,7 +133,7 @@ ForStatement: FOR Statement '=' Statement TO Statement Statement NEXT
 	| FOR Statement '=' Statement TO Statement IF Expression THEN EXIT FOR END IF NEXT
 	;
 	
-ArrayElementStatement: Statement '(' Statement ')'
+ArrayElementExpression: IDENTIFIER '('')'
                      ;
 			
 writeLineStatement: writeLine '(' StatementList ')'
