@@ -35,21 +35,21 @@
 %%
 
 Statement: Statement
-	| Expression Statement
-	| DimStmt Statement
-	| IfStmt Statement
-    | StatementErase
-    | BaseExpression StatementErase
-    | DimStmt StatementErase
-    | WhileStatement StatementErase
-    | DoLoopWhileStatement StatementErase
-	| DoLoopUntilStatement StatementErase
-	| ForStatement StatementErase
+	| EndList
+	| Expression EndList
+	| DimStmt
+	| IfStmt
+    | DimStmt
+    | WhileStatement
+    | DoLoopWhileStatement
+	| DoLoopUntilStatement
+	| ForStatement
     ;
 
 DimStmt: DIM Declaration 
 	| DIM IDENTIFIER '=' Expression
 	| DIM IDENTIFIER '('TYPE_INTEGER')' AS Type
+	| DIM IDENTIFIER '('TYPE_INTEGER')'
 	;
 
 IDENTIFIERlist: IDENTIFIERlist ',' IDENTIFIER
@@ -76,7 +76,7 @@ Type: TYPE_BOOLEAN
 ArrayStatement: '{' StatementList '}'
                | '{' '}'
 			   | Statement '('')' AS Type
-			   | NewStatement Type '('')' '{'StatementList'}'
+			   | New Type '('')' '{'StatementList'}'
                ;
 
 StatementList: Statement
@@ -93,6 +93,7 @@ Expression:
 		  | IDENTIFIER '('')'
 		  | Expression '=' EndList Expression
 		  | Expression '+' EndList Expression
+		  | Expression '&' EndList Expression
 		  | Expression '-' EndList Expression
 		  | Expression '/' EndList Expression
 		  | Expression '*' EndList Expression
@@ -134,12 +135,8 @@ ForStatement: FOR Statement '=' Statement TO Statement Statement NEXT
 	
 ArrayElementStatement: Statement '(' Statement ')'
                      ;
-
-NewStatement: New
-	        ;
 			
 writeLineStatement: writeLine '(' StatementList ')'
-				  : writeLine '(' StatementErase ')'
 				  ;
 				 
 writeStatement: write '(' StatementList ')'
