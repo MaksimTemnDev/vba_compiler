@@ -17,6 +17,8 @@
 %token TYPE_STRING
 %token TYPE_OBJECT
 %token TOKEN_LINE
+%token Function
+%token Sub
 
 %left '^'
 %left UnarPlus UnarMinus
@@ -44,6 +46,7 @@ Statement: Statement
     | DoLoopWhileStatement
 	| DoLoopUntilStatement
 	| ForStatement
+	| FunctionDeclaration
     ;
 
 DimStmt: DIM Declaration 
@@ -83,6 +86,10 @@ StatementList: Statement
              | StatementList ',' Statement
              ;
 
+BodyStmt: EndList StatementList
+		| EndList
+		;
+
 ExpressionList: Expression
 			  | ExpressionList ',' Expression
 
@@ -107,6 +114,12 @@ Expression:
 		  | Expression '<<' EndList Expression
 		  | Expression '>>' EndList Expression
 		  ;
+
+FunctionDeclaration: Function IDENTIFIER '(' EndList ')' EndList BodyStmt
+                   | Function IDENTIFIER '(' EndList ')' EndList AS Type EndList BodyStmt
+                   | Function IDENTIFIER '(' EndList Declaration  EndList ')' EndList BodyStmt
+                   | Function IDENTIFIER '(' EndList Declaration  EndList ')' EndList AS Type EndList BodyStmt
+                   ;
 
 IfStmt: IF Expression THEN Statement END IF
 	| IF Expression THEN Statement ELSE Statement 
