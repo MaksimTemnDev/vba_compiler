@@ -86,9 +86,13 @@ StatementList: Statement
              | StatementList ',' Statement
              ;
 
-BodyStmt: EndList StatementList
-		| EndList
+BodyStmt: EndList StatementList Return Expression EndList END Function
+		| EndList Return Expression END Function
 		;
+		
+SubBobyStmt: EndList StatementList
+		   | EndList
+		   ;
 
 ExpressionList: Expression
 			  | ExpressionList ',' Expression
@@ -120,6 +124,10 @@ FunctionDeclaration: Function IDENTIFIER '(' EndList ')' EndList BodyStmt
                    | Function IDENTIFIER '(' EndList Declaration  EndList ')' EndList BodyStmt
                    | Function IDENTIFIER '(' EndList Declaration  EndList ')' EndList AS Type EndList BodyStmt
                    ;
+				   
+SubDeclaration: Sub IDENTIFIER '(' EndList ')' EndList BodyStmt
+              | Sub IDENTIFIER '(' EndList Declaration  EndList ')' EndList BodyStmt
+              ;
 
 IfStmt: IF Expression THEN Statement END IF
 	| IF Expression THEN Statement ELSE Statement 
