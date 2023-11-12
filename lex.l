@@ -49,6 +49,7 @@ Exit { printf("Found KW_EXIT: %s\n", yytext); }
 Empty { printf("Found KW_EMPTY: %s\n", yytext); }
 False { printf("Found KW_FALSE: %s\n", yytext); }
 Error { printf("Found KW_ERROR: %s\n", yytext); }
+Function { printf("Found KW_FUNCTION: %s\n", yytext); }
 For { printf("Found KW_FOR: %s\n", yytext); }
 If { printf("Found KW_IF: %s\n", yytext); }
 InStr { printf("Found KW_INSTR: %s\n", yytext); }
@@ -86,6 +87,7 @@ Replace { printf("Found KW_REPLACE: %s\n", yytext); }
 Right { printf("Found KW_RIGHT: %s\n", yytext); }
 Seek { printf("Found KW_SEEK: %s\n", yytext); }
 Set { printf("Found KW_SET: %s\n", yytext); }
+Sub { printf("Found KW_SUB: %s\n", yytext); }
 Static { printf("Found KW_STATIC: %s\n", yytext); }
 True  { printf("Found KW_TRUE: %s\n", yytext); }
 Ucase  { printf("Found KW_UCASE: %s\n", yytext); }
