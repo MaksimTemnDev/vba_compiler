@@ -3,7 +3,7 @@
 %token IF THEN ELSE ELSEIF
 %token TRUE FALSE
 %token DIM
-%token NEW
+%token NEW AS RETURN NEXT
 %token IDENTIFIER
 %token TYPE_BOOLEAN
 %token TYPE_BYTE
@@ -23,25 +23,23 @@
 %left '^'
 %left UnarPlus UnarMinus
 %right '*' '/'
-%right '\'
-%right 'Mod'
+%right '\\'
+%right MOD
 %right '+' '-'
 %right '&'
-%left '<<' '>>'
-%right '=' '<>' '<' '<=' Is IsNot Like TypeOf..Is
-%left '>' '>='
+%left BIT_LEFT_SHIFT BIT_RIGHT_SHIFT
+%right '=' NOT_EQUAL '<' LESS_OR_SAME Is IsNot Like TypeOf
+%left '>' MORE_OR_SAME
 %left OR ORELSE
 %left AND ANDALSO
 %nonassoc '{' '}'
 
 %%
 
-Statement: Statement
-	| EndList
+Statement: EndList
 	| Expression EndList
 	| DimStmt
 	| IfStmt
-    | DimStmt
     | WhileStatement
     | DoLoopWhileStatement
 	| DoLoopUntilStatement
@@ -79,15 +77,15 @@ Type: TYPE_BOOLEAN
 ArrayStatement: '{' StatementList '}'
                | '{' '}'
 			   | Statement '('')' AS Type
-			   | New Type '('')' '{'StatementList'}'
+			   | NEW Type '('')' '{'StatementList'}'
                ;
 
 StatementList: Statement
              | StatementList ',' Statement
              ;
 
-BodyStmt: EndList StatementList Return Expression EndList END Function
-		| EndList Return Expression END Function
+BodyStmt: EndList StatementList RETURN Expression EndList END Function
+		| EndList RETURN Expression END Function
 		;
 		
 SubBobyStmt: EndList StatementList
@@ -97,8 +95,7 @@ SubBobyStmt: EndList StatementList
 ExpressionList: Expression
 			  | ExpressionList ',' Expression
 
-Expression:
-		  | IDENTIFIER
+Expression: IDENTIFIER
 		  | '('Expression')'
 		  | IDENTIFIER '('ExpressionList')'
 		  | IDENTIFIER '('')'
@@ -108,15 +105,15 @@ Expression:
 		  | Expression '-' EndList Expression
 		  | Expression '/' EndList Expression
 		  | Expression '*' EndList Expression
-		  | Expression '\' EndList Expression
-		  | Expression 'Mod' EndList Expression
+		  | Expression '\\' EndList Expression
+		  | Expression MOD EndList Expression
 		  | Expression '>' EndList Expression
 		  | Expression '<' EndList Expression
-		  | Expression '>=' EndList Expression
-		  | Expression '=<' EndList Expression
-		  | Expression '<>' EndList Expression
-		  | Expression '<<' EndList Expression
-		  | Expression '>>' EndList Expression
+		  | Expression MORE_OR_SAME EndList Expression
+		  | Expression LESS_OR_SAME EndList Expression
+		  | Expression NOT_EQUAL EndList Expression
+		  | Expression BIT_LEFT_SHIFT EndList Expression
+		  | Expression BIT_RIGHT_SHIFT EndList Expression
 		  ;
 
 FunctionDeclaration: Function IDENTIFIER '(' EndList ')' EndList BodyStmt
@@ -156,15 +153,6 @@ ForStatement: FOR Statement '=' Statement TO Statement Statement NEXT
 	
 ArrayElementExpression: IDENTIFIER '('')'
                      ;
-			
-writeLineStatement: writeLine '(' StatementList ')'
-				  ;
-				 
-writeStatement: write '(' StatementList ')'
-			  ;
-
-readLineStatement: readLine '(' ')'
-				 ;
 				 
 EndList: TOKEN_LINE
 	   | EndList TOKEN_LINE
