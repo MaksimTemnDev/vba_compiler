@@ -31,6 +31,7 @@ DIGIT [0-9]
 
 \n { printf("Found TOKEN_LINE: \n"); lineNumber++; }
 " " { }
+[\r\t\f\v ]+ {}
 
 As { printf("Found KW_AS: %s\n", yytext); }
 And { printf("Found KW_AND: %s\n", yytext); }
@@ -165,7 +166,7 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 
 '.* { printf("Found COMMENT: %s\n", yytext); }
  
- \" { strcpy(str,""); BEGIN(STRING); }
+\" { strcpy(str,""); BEGIN(STRING); }
 <STRING>\"\" { strcat(str, """"); }
 <STRING>([^\"]+)? { strcat(str,yytext); }
 <STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
@@ -177,17 +178,15 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 
 
 
-[0-9][0-9]*(Decimal)? {
+[0-9]+(Decimal)? {
 
     eraseType("Decimal");
-    delete_();
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
 }
 
 0b([0-1])+(Byte)? {
 
     eraseType("Byte");
-    delete_();
     if(strlen(str) > 2)
     {
          printf("Found BYTE_NUMBER: %d\n", strtol(str + 2, NULL, 2));
@@ -198,15 +197,13 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
     }
 }
 
-[0-9][0-9]*\.([0-9][0-9]*([eE][+-]?[0-9][0-9]*)?)?(Double)? {
+[0-9]+\.([0-9]*([eE][+-]?[0-9]+)?)?(Double)? {
     eraseType("Double");
-    delete_();
     printf("Found DOUBLE: %lf\n", atof(str), str);
 }
 
-[0-9][0-9]*([eE][+-]?[0-9][0-9]*)?(Double)? {
+[0-9]+([eE][+-]?[0-9]+)?(Double)? {
     eraseType("Double");
-    delete_();
     printf("Found DOUBLE: %lf\n", atof(str));
 }
 
@@ -214,22 +211,6 @@ vbBack|(Chr\(8\)) { printf("Found TYPE_BACK: %s\n", yytext); }
 
 %%
 
-
-
-void delete_()
-{
-  int pos = 0;
-  for(int i = 0; i < strlen(yytext); i++)
-  {
-        if(yytext[i] != '_')
-        {
-            str[pos++] = yytext[i];
-        }
-  }
-
-  str[pos] = '\0';
-  strcpy(yytext, str);
-}
 
 void eraseType(char *typeName)
 {
