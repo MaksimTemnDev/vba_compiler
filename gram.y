@@ -36,30 +36,36 @@
 
 %%
 
-Statement: EndList
-	| Expression EndList
-	| DimStmt
+GlobalCode: FunctionDeclaration
+		  | SubDeclaration
+		  ;
+
+Statement: DimStmt
 	| IfStmt
     | WhileStatement
     | DoLoopWhileStatement
 	| DoLoopUntilStatement
 	| ForStatement
-	| FunctionDeclaration
+	| ArrayStatement
     ;
 
-DimStmt: DIM Declaration 
-	| DIM IDENTIFIER '=' Expression
-	| DIM IDENTIFIER '('TYPE_INTEGER')' AS Type
-	| DIM IDENTIFIER '('TYPE_INTEGER')'
+DimStmt: DIM DimSingle
+	   | DimArray
+	   ;
+
+DimSingle: IDENTIFIERlist '=' Expression
+	| IDENTIFIERlist '('TYPE_INTEGER')' AS Type
+	| IDENTIFIERlist '('TYPE_INTEGER')'
+	| IDENTIFIERlist AS Type
 	;
 
-IDENTIFIERlist: IDENTIFIERlist ',' IDENTIFIER
-			  | IDENTIFIER
-			  ;
+DimArray: ArrayIDdeclaration
+	    | ArrayIDdeclaration AS Type
+		;
 
-Declaration: IDENTIFIERlist AS Type
-		   | Declaration ',' Declaration
-		   ;
+IDENTIFIERlist: IDENTIFIER
+ 			  | IDENTIFIERlist ',' IDENTIFIER
+			  ;
 
 Type: TYPE_BOOLEAN
 	| TYPE_BYTE
@@ -76,29 +82,30 @@ Type: TYPE_BOOLEAN
 
 ArrayStatement: '{' StatementList '}'
                | '{' '}'
-			   | Statement '('')' AS Type
 			   | NEW Type '('')' '{'StatementList'}'
                ;
 
-StatementList: Statement
-             | StatementList ',' Statement
+ArrayIDdeclaration: ArrayElementExpression
+				  | ArrayIDdeclaration ',' ArrayElementExpression
+				  ;
+
+StatementList: Statement EndList
+             | StatementList ',' Statement EndList
              ;
 
-BodyStmt: EndList StatementList RETURN Expression EndList END Function
-		| EndList RETURN Expression END Function
+BodyStmt: StatementList RETURN Expression EndList END Function
+		| RETURN Expression END Function
 		;
 		
 SubBobyStmt: EndList StatementList
-		   | EndList
+		   |
 		   ;
 
 ExpressionList: Expression
 			  | ExpressionList ',' Expression
+			  ;
 
-Expression: IDENTIFIER
-		  | '('Expression')'
-		  | IDENTIFIER '('ExpressionList')'
-		  | IDENTIFIER '('')'
+Expression: ArrayElementExpression
 		  | Expression '=' EndList Expression
 		  | Expression '+' EndList Expression
 		  | Expression '&' EndList Expression
@@ -107,6 +114,7 @@ Expression: IDENTIFIER
 		  | Expression '*' EndList Expression
 		  | Expression '\\' EndList Expression
 		  | Expression MOD EndList Expression
+		  | IDENTIFIER '('ExpressionList')'
 		  | Expression '>' EndList Expression
 		  | Expression '<' EndList Expression
 		  | Expression MORE_OR_SAME EndList Expression
@@ -114,22 +122,24 @@ Expression: IDENTIFIER
 		  | Expression NOT_EQUAL EndList Expression
 		  | Expression BIT_LEFT_SHIFT EndList Expression
 		  | Expression BIT_RIGHT_SHIFT EndList Expression
+		  | '('Expression')'
 		  ;
+		  
 
 FunctionDeclaration: Function IDENTIFIER '(' EndList ')' EndList BodyStmt
                    | Function IDENTIFIER '(' EndList ')' EndList AS Type EndList BodyStmt
-                   | Function IDENTIFIER '(' EndList Declaration  EndList ')' EndList BodyStmt
-                   | Function IDENTIFIER '(' EndList Declaration  EndList ')' EndList AS Type EndList BodyStmt
+                   | Function IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' EndList BodyStmt
+                   | Function IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' EndList AS Type EndList BodyStmt
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '(' EndList ')' EndList BodyStmt
-              | Sub IDENTIFIER '(' EndList Declaration  EndList ')' EndList BodyStmt
+SubDeclaration: Sub IDENTIFIER '(' EndList ')' SubBobyStmt
+              | Sub IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' SubBobyStmt
               ;
 
-IfStmt: IF Expression THEN Statement END IF
-	| IF Expression THEN Statement ELSE Statement 
-	| IF Expression THEN TernarStatement
-	| IF Expression THEN Statement ELSEIF Expression THEN Statement END IF
+IfStmt: IF Expression THEN EndList Statement EndList END IF
+	| IF Expression THEN EndList Statement EndList ELSE EndList Statement 
+	| IF Expression THEN EndList TernarStatement
+	| IF Expression THEN EndList Statement EndList ELSEIF Expression THEN EndList Statement EndList END IF
 	;
 
 WhileStatement: WHILE Expression Statement END WHILE
@@ -137,7 +147,7 @@ WhileStatement: WHILE Expression Statement END WHILE
 	| WHILE IF Expression THEN Statement EXIT WHILE END IF END WHILE
 	;
 
-DoLoopUntilStatement: DO Statement LOOP UNTIL Expression
+DoLoopUntilStatement: DO EndList ExpressionList EndList LOOP UNTIL Expression TOKEN_LINE
 	;
 
 DoLoopWhileStatement: DO WHILE Expression Statement LOOP
