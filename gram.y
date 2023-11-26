@@ -79,9 +79,13 @@ Type: TYPE_BOOLEAN
 	| TYPE_OBJECT
 	;
 
-ArrayStatement: '{' StatementList '}'
+ArrayBody: IDENTIFIERlist
+		 | '{' '}'
+		 ;
+
+ArrayStatement: '{' ArrayBody '}'
                | '{' '}'
-			   | NEW Type '('')' '{'StatementList'}'
+			   | NEW Type '('')' '{'ArrayBody'}'
                ;
 
 ArrayIDdeclaration: ArrayElementExpression
