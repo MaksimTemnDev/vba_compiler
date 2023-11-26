@@ -38,6 +38,7 @@
 
 GlobalCode: FunctionDeclaration
 		  | SubDeclaration
+		  | DimStmt
 		  ;
 
 Statement: DimStmt
@@ -50,12 +51,10 @@ Statement: DimStmt
     ;
 
 DimStmt: DIM DimSingle
-	   | DimArray
+	   | DIM DimArray
 	   ;
 
 DimSingle: IDENTIFIERlist '=' Expression
-	| IDENTIFIERlist '('TYPE_INTEGER')' AS Type
-	| IDENTIFIERlist '('TYPE_INTEGER')'
 	| IDENTIFIERlist AS Type
 	;
 
