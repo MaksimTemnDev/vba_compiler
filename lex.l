@@ -30,7 +30,6 @@ DIGIT [0-9]
 %}
 
 \n { printf("Found TOKEN_LINE: \n"); lineNumber++; }
-" " { }
 [\r\t\f\v ]+ {}
 
 As { printf("Found KW_AS: %s\n", yytext); }
@@ -89,6 +88,7 @@ Right { printf("Found KW_RIGHT: %s\n", yytext); }
 Seek { printf("Found KW_SEEK: %s\n", yytext); }
 Set { printf("Found KW_SET: %s\n", yytext); }
 Sub { printf("Found KW_SUB: %s\n", yytext); }
+Super { printf("Found KW_SUPER: %s\n", yytext); }
 Static { printf("Found KW_STATIC: %s\n", yytext); }
 True  { printf("Found KW_TRUE: %s\n", yytext); }
 Ucase  { printf("Found KW_UCASE: %s\n", yytext); }
@@ -170,8 +170,9 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
  
 \" { strcpy(str,""); BEGIN(STRING); }
 <STRING>\"\" { strcat(str, """"); }
-<STRING>([^\"]+)? { strcat(str,yytext); }
+<STRING>([^\n\"]+)? { strcat(str,yytext); }
 <STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
+<STRING>\n { printf("STRING Error in line %d: there is line translation\n", lineNumber); BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 
 
@@ -199,7 +200,7 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
     }
 }
 
-[0-9]+\.([0-9]*([eE][+-]?[0-9]+)?)?(Double)? {
+[0-9]*\.([0-9]*([eE][+-]?[0-9]+)?)?(Double)? {
     eraseType("Double");
     printf("Found DOUBLE: %lf\n", atof(str), str);
 }
