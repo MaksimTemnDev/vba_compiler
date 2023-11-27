@@ -19,6 +19,7 @@
 %token TOKEN_LINE
 %token Function
 %token Sub
+%token Iif
 
 %left '^'
 %left UnarPlus UnarMinus
@@ -144,6 +145,8 @@ IfStmt: IF Expression THEN EndList Statement EndList END IF
 	| IF Expression THEN EndList TernarStatement
 	| IF Expression THEN EndList Statement EndList ELSEIF Expression THEN EndList Statement EndList END IF
 	;
+
+TernarStatement: Iif '('Expression ',' Expression ',' Expression')'
 
 WhileStatement: WHILE Expression Statement END WHILE
 	| WHILE IF Expression THEN Statement CONTINUE WHILE END IF END WHILE
