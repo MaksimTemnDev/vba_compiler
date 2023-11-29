@@ -20,6 +20,19 @@
 %token Function
 %token Sub
 %token Iif
+%token KW_STATIC
+
+%token STRING
+%token DECIMAL_NUMBER
+%token BYTE_NUMBER
+%token DOUBLE
+%token ARRAY_ELEMENT_ACCESS_OPERATOR
+%token BOOLEAN
+%token SINGLE
+%token SHORT
+%token DATE
+%token CHAR
+%token OBJECT
 
 %left '^'
 %left UnarPlus UnarMinus
@@ -49,6 +62,7 @@ Statement: DimStmt
 	| DoLoopUntilStatement
 	| ForStatement
 	| ArrayStatement
+	| StaticStmt
     ;
 
 DimStmt: DIM DimSingle
@@ -66,6 +80,10 @@ DimArray: ArrayIDdeclaration
 IDENTIFIERlist: IDENTIFIER
  			  | IDENTIFIERlist ',' IDENTIFIER
 			  ;
+
+StaticStmt: KW_STATIC DimSingle
+	      | KW_STATIC DimArray
+	      ;
 
 Type: TYPE_BOOLEAN
 	| TYPE_BYTE
@@ -127,6 +145,7 @@ Expression: ArrayElementExpression
 		  | Expression BIT_LEFT_SHIFT EndList Expression
 		  | Expression BIT_RIGHT_SHIFT EndList Expression
 		  | '('Expression')'
+		  | TernarOperator
 		  ;
 		  
 
@@ -142,11 +161,11 @@ SubDeclaration: Sub IDENTIFIER '(' EndList ')' SubBobyStmt
 
 IfStmt: IF Expression THEN EndList Statement EndList END IF
 	| IF Expression THEN EndList Statement EndList ELSE EndList Statement 
-	| IF Expression THEN EndList TernarStatement
+	| IF Expression THEN EndList TernarOperator
 	| IF Expression THEN EndList Statement EndList ELSEIF Expression THEN EndList Statement EndList END IF
 	;
 
-TernarStatement: Iif '('Expression ',' Expression ',' Expression')'
+TernarOperator: Iif '('Expression ',' Expression ',' Expression')'
 
 WhileStatement: WHILE Expression Statement END WHILE
 	| WHILE IF Expression THEN Statement CONTINUE WHILE END IF END WHILE
