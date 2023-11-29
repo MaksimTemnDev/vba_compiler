@@ -147,6 +147,15 @@ Expression: ArrayElementExpression
 		  | Expression BIT_RIGHT_SHIFT EndList Expression
 		  | '('Expression')'
 		  | TernarOperator
+		  | SHORT
+		  | SINGLE
+		  | BOOLEAN
+		  | BYTE_NUMBER
+		  | DOUBLE
+		  | DATE
+		  | CHAR
+		  | DECIMAL_NUMBER
+		  | OBJECT
 		  ;
 		  
 
