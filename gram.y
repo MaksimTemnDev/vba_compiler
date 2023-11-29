@@ -63,6 +63,7 @@ Statement: DimStmt
 	| ForStatement
 	| ArrayStatement
 	| StaticStmt
+	| Expression TOKEN_LINE
     ;
 
 DimStmt: DIM DimSingle
@@ -159,10 +160,10 @@ SubDeclaration: Sub IDENTIFIER '(' EndList ')' SubBobyStmt
               | Sub IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' SubBobyStmt
               ;
 
-IfStmt: IF Expression THEN EndList Statement EndList END IF
-	| IF Expression THEN EndList Statement EndList ELSE EndList Statement 
-	| IF Expression THEN EndList TernarOperator
-	| IF Expression THEN EndList Statement EndList ELSEIF Expression THEN EndList Statement EndList END IF
+IfStmt: IF Expression THEN EndList StatementList END IF
+	| IF Expression THEN EndList StatementList ELSE EndList StatementList END IF
+	| IF Expression THEN EndList TernarOperator END IF
+	| IF Expression THEN EndList StatementList ELSEIF Expression THEN EndList StatementList END IF
 	;
 
 TernarOperator: Iif '('Expression ',' Expression ',' Expression')'
