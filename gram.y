@@ -177,23 +177,31 @@ IfStmt: IF Expression THEN EndList StatementList END IF
 
 TernarOperator: Iif '('Expression ',' Expression ',' Expression')'
 
-WhileStatement: WHILE Expression Statement END WHILE
-	| WHILE IF Expression THEN Statement CONTINUE WHILE END IF END WHILE
+WhileStatement: WHILE Expression EndList StatementList END WHILE
+	| WHILE Expression EndList IF Expression THEN EndList StatementList CONTINUE WHILE EndList END IF EndList StatementList END WHILE
 	| WHILE IF Expression THEN Statement EXIT WHILE END IF END WHILE
 	;
 
-DoLoopUntilStatement: DO EndList ExpressionList EndList LOOP UNTIL Expression TOKEN_LINE
-	;
+DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP
+					| DO UNTIL Expression EndList StatementList DOOption EndList StatementList LOOP
+					;
+	
+DOOption: EXITDO
+		| CONTINUEDO
+		;
 
-DoLoopWhileStatement: DO WHILE Expression Statement LOOP
-	| DO WHILE Expression IF Expression THEN EXIT DO END IF Statement LOOP
-	| DO WHILE Expression IF Expression THEN CONTINUE DO END IF Statement LOOP
+DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP
+	| DO WHILE Expression EndList StatementList DOOption EndList StatementList LOOP
 	;	
+	
+EXITDO: EXIT DO;
 
-ForStatement: FOR Statement '=' Statement TO Statement Statement NEXT
-	| FOR Statement '=' Statement TO Statement STEP Statement Statement NEXT
-	| FOR Statement '=' Statement TO Statement IF Expression THEN CONTINUE FOR END IF NEXT
-	| FOR Statement '=' Statement TO Statement IF Expression THEN EXIT FOR END IF NEXT
+CONTINUEDO: CONTINUE DO;
+
+ForStatement: FOR Statement '=' Statement TO Statement EndList StatementList NEXT
+	| FOR Statement '=' Statement TO Statement STEP Statement EndList StatementList NEXT
+	| FOR Statement '=' Statement TO Statement EndList StatementList IF Expression THEN EndList CONTINUE FOR EndList END IF EndList StatementList NEXT
+	| FOR Statement '=' Statement TO Statement EndList StatementList IF Expression THEN EndList EXIT FOR EndList END IF EndList StatementList NEXT
 	;
 	
 ArrayElementExpression: IDENTIFIER '('')'
