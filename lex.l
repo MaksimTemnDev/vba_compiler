@@ -181,15 +181,14 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 
 
 
-[0-9]+(Decimal)? {
+[0-9]+ {
 
     eraseType("Decimal");
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
 }
 
-0b([0-1])+(Byte)? {
+0b([0-1])+ {
 
-    eraseType("Byte");
     if(strlen(str) > 2)
     {
          printf("Found BYTE_NUMBER: %d\n", strtol(str + 2, NULL, 2));
@@ -200,13 +199,11 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
     }
 }
 
-[0-9]*\.([0-9]*([eE][+-]?[0-9]+)?)?(Double)? {
-    eraseType("Double");
+[0-9]+\.([0-9]+|([eE][+-]?[0-9]+)+)* {
     printf("Found DOUBLE: %lf\n", atof(str), str);
 }
 
-[0-9]+([eE][+-]?[0-9]+)?(Double)? {
-    eraseType("Double");
+[0-9]+([eE][+-]?[0-9]+)? {
     printf("Found DOUBLE: %lf\n", atof(str));
 }
 
