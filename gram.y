@@ -175,7 +175,7 @@ IfStmt: IF Expression THEN EndList StatementList END IF
 	| IF Expression THEN EndList StatementList ELSEIF Expression THEN EndList StatementList END IF
 	;
 
-TernarOperator: Iif '('Expression ',' Expression ',' Expression')'
+TernarOperator: Iif '('Expression ',' Expression ',' Expression')';
 
 WhileStatement: WHILE Expression EndList StatementList END WHILE
 	| WHILE Expression EndList IF Expression THEN EndList StatementList CONTINUE WHILE EndList END IF EndList StatementList END WHILE
