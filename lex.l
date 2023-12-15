@@ -199,11 +199,11 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
     }
 }
 
-[0-9]+\.([0-9]+|([eE][+-]?[0-9]+)+)* {
+[0-9]+\.([0-9]+|([eE]?[+-]?[0-9]+)+)* {
     printf("Found DOUBLE: %lf\n", atof(str), str);
 }
 
-[0-9]+([eE][+-]?[0-9]+)? {
+[0-9]+([eE]?[+-]?[0-9]+)? {
     printf("Found DOUBLE: %lf\n", atof(str));
 }
 
