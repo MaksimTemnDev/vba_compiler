@@ -50,19 +50,22 @@
 
 %%
 
-GlobalCode: FunctionDeclaration
-		  | SubDeclaration
-		  | DimStmt
+GlobalCodeList: GlobalCode
+			  | GlobalCodeList GlobalCode
+			  ;
+
+GlobalCode: FunctionDeclaration EndList
+		  | SubDeclaration EndList
+		  | DimStmt EndList
 		  ;
 
-Statement: DimStmt
-	| IfStmt
-    | WhileStatement
-    | DoLoopWhileStatement
-	| DoLoopUntilStatement
-	| ForStatement
-	| ArrayStatement
-	| StaticStmt
+Statement: DimStmt TOKEN_LINE
+	| IfStmt TOKEN_LINE
+    | WhileStatement TOKEN_LINE
+    | DoLoopWhileStatement TOKEN_LINE
+	| DoLoopUntilStatement TOKEN_LINE
+	| ForStatement TOKEN_LINE
+	| StaticStmt TOKEN_LINE
 	| Expression TOKEN_LINE
     ;
 
@@ -112,17 +115,13 @@ ArrayIDdeclaration: ArrayElementExpression
 				  | ArrayIDdeclaration ',' ArrayElementExpression
 				  ;
 
-StatementList: Statement EndList
-             | StatementList ',' Statement EndList
+StatementList: Statement
+             | StatementList Statement
              ;
 
 BodyStmt: StatementList RETURN Expression EndList END Function
 		| RETURN Expression END Function
 		;
-		
-SubBobyStmt: EndList StatementList
-		   |
-		   ;
 
 ExpressionList: Expression
 			  | ExpressionList ',' Expression
@@ -145,6 +144,7 @@ Expression: ArrayElementExpression
 		  | Expression NOT_EQUAL EndList Expression
 		  | Expression BIT_LEFT_SHIFT EndList Expression
 		  | Expression BIT_RIGHT_SHIFT EndList Expression
+		  | ArrayStatement
 		  | '('Expression')'
 		  | TernarOperator
 		  | SHORT
@@ -165,8 +165,8 @@ FunctionDeclaration: Function IDENTIFIER '(' EndList ')' EndList BodyStmt
                    | Function IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' EndList AS Type EndList BodyStmt
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '(' EndList ')' SubBobyStmt
-              | Sub IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' SubBobyStmt
+SubDeclaration: Sub IDENTIFIER '(' EndList ')' EndList StatementList
+              | Sub IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' EndList StatementList
               ;
 
 IfStmt: IF Expression THEN EndList StatementList END IF
