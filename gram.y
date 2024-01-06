@@ -54,19 +54,19 @@ GlobalCodeList: GlobalCode
 			  | GlobalCodeList GlobalCode
 			  ;
 
-GlobalCode: FunctionDeclaration EndList
-		  | SubDeclaration EndList
-		  | DimStmt EndList
+GlobalCode: FunctionDeclaration
+		  | SubDeclaration
+		  | DimStmt
 		  ;
 
-Statement: DimStmt TOKEN_LINE
-	| IfStmt TOKEN_LINE
-    | WhileStatement TOKEN_LINE
-    | DoLoopWhileStatement TOKEN_LINE
-	| DoLoopUntilStatement TOKEN_LINE
-	| ForStatement TOKEN_LINE
-	| StaticStmt TOKEN_LINE
-	| Expression TOKEN_LINE
+Statement: DimStmt EndList
+	| IfStmt EndList
+    | WhileStatement EndList
+    | DoLoopWhileStatement EndList
+	| DoLoopUntilStatement EndList
+	| ForStatement EndList
+	| StaticStmt EndList
+	| Expression EndList
     ;
 
 DimStmt: DIM DimSingle
@@ -119,31 +119,32 @@ StatementList: Statement
              | StatementList Statement
              ;
 
-BodyStmt: StatementList RETURN Expression EndList END Function
-		| RETURN Expression END Function
+BodyStmt: StatementList RETURN Expression EndList END Function EndList
+		| RETURN Expression END Function EndList
 		;
+		
 
 ExpressionList: Expression
 			  | ExpressionList ',' Expression
 			  ;
 
 Expression: ArrayElementExpression
-		  | Expression '=' EndList Expression
-		  | Expression '+' EndList Expression
-		  | Expression '&' EndList Expression
-		  | Expression '-' EndList Expression
-		  | Expression '/' EndList Expression
-		  | Expression '*' EndList Expression
-		  | Expression '\\' EndList Expression
-		  | Expression MOD EndList Expression
+		  | Expression '='   Expression
+		  | Expression '+'   Expression
+		  | Expression '&'   Expression
+		  | Expression '-'   Expression
+		  | Expression '/'   Expression
+		  | Expression '*'   Expression
+		  | Expression '\\'   Expression
+		  | Expression MOD   Expression
 		  | IDENTIFIER '('ExpressionList')'
-		  | Expression '>' EndList Expression
-		  | Expression '<' EndList Expression
-		  | Expression MORE_OR_SAME EndList Expression
-		  | Expression LESS_OR_SAME EndList Expression
-		  | Expression NOT_EQUAL EndList Expression
-		  | Expression BIT_LEFT_SHIFT EndList Expression
-		  | Expression BIT_RIGHT_SHIFT EndList Expression
+		  | Expression '>'   Expression
+		  | Expression '<'   Expression
+		  | Expression MORE_OR_SAME   Expression
+		  | Expression LESS_OR_SAME   Expression
+		  | Expression NOT_EQUAL   Expression
+		  | Expression BIT_LEFT_SHIFT   Expression
+		  | Expression BIT_RIGHT_SHIFT   Expression
 		  | ArrayStatement
 		  | '('Expression')'
 		  | TernarOperator
@@ -165,8 +166,8 @@ FunctionDeclaration: Function IDENTIFIER '(' EndList ')' EndList BodyStmt
                    | Function IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' EndList AS Type EndList BodyStmt
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '(' EndList ')' EndList StatementList
-              | Sub IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' EndList StatementList
+SubDeclaration: Sub IDENTIFIER '('   ')'   StatementList END Sub EndList
+              | Sub IDENTIFIER '('   IDENTIFIERlist    ')'   StatementList END Sub EndList
               ;
 
 IfStmt: IF Expression THEN EndList StatementList END IF
@@ -192,16 +193,16 @@ DOOption: EXITDO
 
 DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP
 	| DO WHILE Expression EndList StatementList DOOption EndList StatementList LOOP
-	;	
+	;
 	
 EXITDO: EXIT DO;
 
 CONTINUEDO: CONTINUE DO;
 
-ForStatement: FOR Statement '=' Statement TO Statement EndList StatementList NEXT
-	| FOR Statement '=' Statement TO Statement STEP Statement EndList StatementList NEXT
-	| FOR Statement '=' Statement TO Statement EndList StatementList IF Expression THEN EndList CONTINUE FOR EndList END IF EndList StatementList NEXT
-	| FOR Statement '=' Statement TO Statement EndList StatementList IF Expression THEN EndList EXIT FOR EndList END IF EndList StatementList NEXT
+ForStatement: FOR Statement '=' Statement TO Statement StatementList NEXT
+	| FOR Statement '=' Statement TO Statement STEP Statement StatementList NEXT
+	| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList CONTINUE FOR EndList END IF EndList StatementList NEXT
+	| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList EXIT FOR EndList END IF EndList StatementList NEXT
 	;
 	
 ArrayElementExpression: IDENTIFIER '('')'
