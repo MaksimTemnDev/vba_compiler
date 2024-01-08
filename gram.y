@@ -42,7 +42,7 @@
 %right '+' '-'
 %right '&'
 %left BIT_LEFT_SHIFT BIT_RIGHT_SHIFT
-%right '=' NOT_EQUAL '<' LESS_OR_SAME Is IsNot Like TypeOf
+%right '=' NOT_EQUAL '<' LESS_OR_SAME Is IsNot Like TypeOf Not
 %left '>' MORE_OR_SAME
 %left OR ORELSE
 %left AND ANDALSO
@@ -60,14 +60,14 @@ GlobalCode: FunctionDeclaration
 		  ;
 
 Statement: DimStmt EndList
-	| IfStmt EndList
-    | WhileStatement EndList
-    | DoLoopWhileStatement EndList
-	| DoLoopUntilStatement EndList
-	| ForStatement EndList
-	| StaticStmt EndList
-	| Expression EndList
-    ;
+ 		 | IfStmt EndList
+   		 | WhileStatement EndList
+		 | DoLoopWhileStatement EndList
+		 | DoLoopUntilStatement EndList
+		 | ForStatement EndList
+		 | StaticStmt EndList
+		 | Expression EndList
+		 ;
 
 DimStmt: DIM DimSingle
 	   | DIM DimArray
@@ -81,9 +81,11 @@ DimArray: ArrayIDdeclaration
 	    | ArrayIDdeclaration AS Type
 		;
 
-IDENTIFIERlist: IDENTIFIER
- 			  | IDENTIFIERlist ',' IDENTIFIER
+IDENTIFIERlist: IDENTIFIEREndl
+ 			  | IDENTIFIERlist ',' IDENTIFIEREndl
 			  ;
+			  
+IDENTIFIEREndl: IDENTIFIER OptEndl
 
 StaticStmt: KW_STATIC DimSingle
 	      | KW_STATIC DimArray
@@ -129,22 +131,23 @@ ExpressionList: Expression
 			  ;
 
 Expression: ArrayElementExpression
-		  | Expression '='   Expression
-		  | Expression '+'   Expression
-		  | Expression '&'   Expression
-		  | Expression '-'   Expression
-		  | Expression '/'   Expression
-		  | Expression '*'   Expression
-		  | Expression '\\'   Expression
-		  | Expression MOD   Expression
+		  | Expression '=' OptEndl Expression
+		  | Expression '+' OptEndl Expression
+		  | Expression '&' OptEndl Expression
+		  | Expression '-' OptEndl Expression
+		  | Expression '/' OptEndl Expression
+		  | Expression '*' OptEndl Expression
+		  | Expression '\\' OptEndl Expression
+		  | Expression MOD OptEndl Expression
 		  | IDENTIFIER '('ExpressionList')'
-		  | Expression '>'   Expression
-		  | Expression '<'   Expression
-		  | Expression MORE_OR_SAME   Expression
-		  | Expression LESS_OR_SAME   Expression
-		  | Expression NOT_EQUAL   Expression
-		  | Expression BIT_LEFT_SHIFT   Expression
-		  | Expression BIT_RIGHT_SHIFT   Expression
+		  | Expression '>' OptEndl Expression
+		  | Expression '<' OptEndl Expression
+		  | Expression MORE_OR_SAME OptEndl Expression
+		  | Expression LESS_OR_SAME OptEndl Expression
+		  | Expression NOT_EQUAL OptEndl Expression
+		  | Expression BIT_LEFT_SHIFT OptEndl Expression
+		  | Expression BIT_RIGHT_SHIFT OptEndl Expression
+		  | UnarExpr
 		  | ArrayStatement
 		  | '('Expression')'
 		  | TernarOperator
@@ -158,16 +161,20 @@ Expression: ArrayElementExpression
 		  | DECIMAL_NUMBER
 		  | OBJECT
 		  ;
-		  
+		
+UnarExpr: UnarMinus	Expression
+		| UnarPlus Expression
+		| Not Expression
+		;
 
-FunctionDeclaration: Function IDENTIFIER '(' EndList ')' EndList BodyStmt
-                   | Function IDENTIFIER '(' EndList ')' EndList AS Type EndList BodyStmt
-                   | Function IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' EndList BodyStmt
-                   | Function IDENTIFIER '(' EndList IDENTIFIERlist  EndList ')' EndList AS Type EndList BodyStmt
+FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt
+                   | Function IDENTIFIER '(' OptEndl ')' AS Type EndList BodyStmt
+                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' EndList BodyStmt
+                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' AS Type EndList BodyStmt
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '('   ')'   StatementList END Sub EndList
-              | Sub IDENTIFIER '('   IDENTIFIERlist    ')'   StatementList END Sub EndList
+SubDeclaration: Sub IDENTIFIER '('OptEndl')' StatementList END Sub EndList
+              | Sub IDENTIFIER '('OptEndl IDENTIFIERlist')' StatementList END Sub EndList
               ;
 
 IfStmt: IF Expression THEN EndList StatementList END IF
@@ -179,9 +186,9 @@ IfStmt: IF Expression THEN EndList StatementList END IF
 TernarOperator: Iif '('Expression ',' Expression ',' Expression')';
 
 WhileStatement: WHILE Expression EndList StatementList END WHILE
-	| WHILE Expression EndList IF Expression THEN EndList StatementList CONTINUE WHILE EndList END IF EndList StatementList END WHILE
-	| WHILE IF Expression THEN Statement EXIT WHILE END IF END WHILE
-	;
+			| WHILE Expression EndList IF Expression THEN EndList StatementList CONTINUE WHILE EndList END IF EndList StatementList END WHILE
+			| WHILE IF Expression THEN Statement EXIT WHILE END IF END WHILE
+			;
 
 DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP
 					| DO UNTIL Expression EndList StatementList DOOption EndList StatementList LOOP
@@ -192,22 +199,26 @@ DOOption: EXITDO
 		;
 
 DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP
-	| DO WHILE Expression EndList StatementList DOOption EndList StatementList LOOP
-	;
+					| DO WHILE Expression EndList StatementList DOOption EndList StatementList LOOP
+					;
 	
 EXITDO: EXIT DO;
 
 CONTINUEDO: CONTINUE DO;
 
 ForStatement: FOR Statement '=' Statement TO Statement StatementList NEXT
-	| FOR Statement '=' Statement TO Statement STEP Statement StatementList NEXT
-	| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList CONTINUE FOR EndList END IF EndList StatementList NEXT
-	| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList EXIT FOR EndList END IF EndList StatementList NEXT
-	;
+			| FOR Statement '=' Statement TO Statement STEP Statement StatementList NEXT
+			| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList CONTINUE FOR EndList END IF EndList StatementList NEXT
+			| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList EXIT FOR EndList END IF EndList StatementList NEXT
+			;
 	
 ArrayElementExpression: IDENTIFIER '('')'
-                     ;
+                      ;
 				 
 EndList: TOKEN_LINE
 	   | EndList TOKEN_LINE
+	   ;
+	   
+OptEndl: EndList
+	   |
 	   ;
