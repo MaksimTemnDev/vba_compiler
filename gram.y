@@ -1,3 +1,35 @@
+%{
+    #include <iostream>
+    #include "classesnodes.h"
+    void yyerror(char const* s);
+    extern int yylex(void);
+    using namespace std;
+    CodeNode* global_program_code;
+%}
+
+%union {
+    int int_literal;
+    string* string_literal;
+    string* identifier;
+    bool bool_literal;
+    float float_literal;
+    char char_literal;
+    object obj_literal;
+    double db_literal;
+
+    CodeNode* code;
+    ExprNode* expr;
+    ExprListNode * expr_list;
+    StmtNode* stmt;
+    StmtListNode* stmt_list;
+    FuncDecl* func_decl;
+    SubDecl* sub_decl;
+    FuncParamNode* function_param;
+    FuncParamListNode* function_params;
+    TypeNode* type;
+}
+
+
 %token END
 %token WHILE DO LOOP UNTIL FOR TO STEP CONTINUE EXIT
 %token IF THEN ELSE ELSEIF
