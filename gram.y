@@ -29,6 +29,11 @@
     TypeNode* type;
 }
 
+%type <code> Program
+
+%type <int_literal> Integer
+%type <string_literal> String
+%type <identifier> IDENTIFIER
 
 %token END
 %token WHILE DO LOOP UNTIL FOR TO STEP CONTINUE EXIT
@@ -54,6 +59,7 @@
 %token Iif
 %token KW_STATIC
 
+%token Integer
 %token STRING
 %token DECIMAL_NUMBER
 %token BYTE_NUMBER
@@ -61,6 +67,7 @@
 %token ARRAY_ELEMENT_ACCESS_OPERATOR
 %token BOOLEAN
 %token SINGLE
+%token String
 %token SHORT
 %token DATE
 %token CHAR
@@ -80,7 +87,12 @@
 %left AND ANDALSO
 %nonassoc '{' '}'
 
+%start Program 
+
 %%
+
+Program: OptEndl GlobalCodeList { $$ = global_program_code = new CodeNode($2); }
+	   ;
 
 GlobalCodeList: GlobalCode
 			  | GlobalCodeList GlobalCode
@@ -117,7 +129,7 @@ IDENTIFIERlist: IDENTIFIEREndl
  			  | IDENTIFIERlist ',' IDENTIFIEREndl
 			  ;
 			  
-IDENTIFIEREndl: IDENTIFIER OptEndl
+IDENTIFIEREndl: IDENTIFIER OptEndl {}
 
 StaticStmt: KW_STATIC DimSingle
 	      | KW_STATIC DimArray
@@ -162,7 +174,7 @@ ExpressionList: Expression
 			  | ExpressionList ',' Expression
 			  ;
 
-Expression: ArrayElementExpression
+Expression: IDENTIFIER '('Integer')' '=' OptEndl Expression {}
 		  | Expression '=' OptEndl Expression
 		  | Expression '+' OptEndl Expression
 		  | Expression '&' OptEndl Expression
@@ -171,7 +183,7 @@ Expression: ArrayElementExpression
 		  | Expression '*' OptEndl Expression
 		  | Expression '\\' OptEndl Expression
 		  | Expression MOD OptEndl Expression
-		  | IDENTIFIER '('ExpressionList')'
+		  | IDENTIFIER '('ExpressionList')' {}
 		  | Expression '>' OptEndl Expression
 		  | Expression '<' OptEndl Expression
 		  | Expression MORE_OR_SAME OptEndl Expression
@@ -183,16 +195,21 @@ Expression: ArrayElementExpression
 		  | ArrayStatement
 		  | '('Expression')'
 		  | TernarOperator
-		  | SHORT
-		  | SINGLE
-		  | BOOLEAN
-		  | BYTE_NUMBER
-		  | DOUBLE
-		  | DATE
-		  | CHAR
-		  | DECIMAL_NUMBER
-		  | OBJECT
+		  | Values
 		  ;
+		
+Values: Integer {}
+	  | SHORT
+	  | SINGLE
+	  | String {}
+	  | BOOLEAN
+	  | BYTE_NUMBER
+	  | DOUBLE
+	  | DATE
+	  | CHAR
+	  | DECIMAL_NUMBER
+	  | OBJECT
+	  ;
 		
 UnarExpr: UnarMinus	Expression
 		| UnarPlus Expression
@@ -244,7 +261,8 @@ ForStatement: FOR Statement '=' Statement TO Statement StatementList NEXT
 			| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList EXIT FOR EndList END IF EndList StatementList NEXT
 			;
 	
-ArrayElementExpression: IDENTIFIER '('')'
+ArrayElementExpression: IDENTIFIER '('IDENTIFIER')' '=' OptEndl Expression {}
+					  | IDENTIFIER '('Integer')' '=' OptEndl Expression {}
                       ;
 				 
 EndList: TOKEN_LINE
@@ -254,3 +272,5 @@ EndList: TOKEN_LINE
 OptEndl: EndList
 	   |
 	   ;
+	   
+%%
