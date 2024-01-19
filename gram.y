@@ -160,6 +160,10 @@ ArrayStatement: '{' ArrayBody '}'
 ArrayIDdeclaration: ArrayElementExpression
 				  | ArrayIDdeclaration ',' ArrayElementExpression
 				  ;
+				 
+ArrayElementExpression: IDENTIFIER '('')'{}
+					  | IDENTIFIER '('Indexes')'{}
+                      ;
 
 StatementList: Statement
              | StatementList Statement
@@ -173,43 +177,52 @@ BodyStmt: StatementList RETURN Expression EndList END Function EndList
 ExpressionList: Expression
 			  | ExpressionList ',' Expression
 			  ;
+			  
+Expression: ExprStart '=' OptEndl ExpressionWithoutAssign
+		  | ExpressionWithoutAssign
+		  ;
 
-Expression: IDENTIFIER '('Integer')' '=' OptEndl Expression {}
-		  | Expression '=' OptEndl Expression
-		  | Expression '+' OptEndl Expression
-		  | Expression '&' OptEndl Expression
-		  | Expression '-' OptEndl Expression
-		  | Expression '/' OptEndl Expression
-		  | Expression '*' OptEndl Expression
-		  | Expression '\\' OptEndl Expression
-		  | Expression MOD OptEndl Expression
-		  | IDENTIFIER '('ExpressionList')' {}
-		  | Expression '>' OptEndl Expression
-		  | Expression '<' OptEndl Expression
-		  | Expression MORE_OR_SAME OptEndl Expression
-		  | Expression LESS_OR_SAME OptEndl Expression
-		  | Expression NOT_EQUAL OptEndl Expression
-		  | Expression BIT_LEFT_SHIFT OptEndl Expression
-		  | Expression BIT_RIGHT_SHIFT OptEndl Expression
+
+ExpressionWithoutAssign: ExprStart '+' OptEndl Expression
+		  | ExprStart '&' OptEndl Expression
+		  | ExprStart '-' OptEndl Expression
+		  | ExprStart '/' OptEndl Expression
+		  | ExprStart '*' OptEndl Expression
+		  | ExprStart '\\' OptEndl Expression
+		  | ExprStart MOD OptEndl Expression
+		  | ExprStart '>' OptEndl Expression
+		  | ExprStart '<' OptEndl Expression
+		  | ExprStart MORE_OR_SAME OptEndl Expression
+		  | ExprStart LESS_OR_SAME OptEndl Expression
+		  | ExprStart NOT_EQUAL OptEndl Expression
+		  | ExprStart BIT_LEFT_SHIFT OptEndl Expression
+		  | ExprStart BIT_RIGHT_SHIFT OptEndl Expression
 		  | UnarExpr
 		  | ArrayStatement
 		  | '('Expression')'
 		  | TernarOperator
-		  | Values
 		  ;
+	
+ExprStart: Values
+		 | IDENTIFIER '('ExpressionList')' {}
+		 ;
 		
-Values: Integer {}
-	  | SHORT
-	  | SINGLE
+Values: SINGLE
 	  | String {}
 	  | BOOLEAN
-	  | BYTE_NUMBER
 	  | DOUBLE
 	  | DATE
 	  | CHAR
-	  | DECIMAL_NUMBER
 	  | OBJECT
+	  | DECIMAL_NUMBER
+	  | Indexes
 	  ;
+	  
+Indexes: Integer {}
+	   | BYTE_NUMBER
+	   | SHORT
+	   | IDENTIFIER {}
+	   ;
 		
 UnarExpr: UnarMinus	Expression
 		| UnarPlus Expression
@@ -260,10 +273,6 @@ ForStatement: FOR Statement '=' Statement TO Statement StatementList NEXT
 			| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList CONTINUE FOR EndList END IF EndList StatementList NEXT
 			| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList EXIT FOR EndList END IF EndList StatementList NEXT
 			;
-	
-ArrayElementExpression: IDENTIFIER '('IDENTIFIER')' '=' OptEndl Expression {}
-					  | IDENTIFIER '('Integer')' '=' OptEndl Expression {}
-                      ;
 				 
 EndList: TOKEN_LINE
 	   | EndList TOKEN_LINE
