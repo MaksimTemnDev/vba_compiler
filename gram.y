@@ -27,9 +27,22 @@
     FuncParamNode* function_param;
     FuncParamListNode* function_params;
     TypeNode* type;
+	GlobalCodeList* globalCodeList
+	GlobalCode* globalCode
+	DimStmt* dimStmt
 }
 
 %type <code> Program
+%type <expr> Expression
+%type <expr_list> ExpressionList
+%type <stmt> Statement
+%type <stmt_list> StatementList
+%type <func_decl> FunctionDeclaration
+%type <sub_decl> SubDeclaration
+%type <type> Type 
+%type <globalCodeList> GlobalCodeList
+%type <globalCode> GlobalCode
+%type <dimStmt> DimStmt
 
 %type <int_literal> Integer
 %type <string_literal> String
@@ -94,32 +107,32 @@
 Program: OptEndl GlobalCodeList { $$ = global_program_code = new CodeNode($2); }
 	   ;
 
-GlobalCodeList: GlobalCode
-			  | GlobalCodeList GlobalCode
+GlobalCodeList: GlobalCode {}
+			  | GlobalCodeList GlobalCode {}
 			  ;
 
-GlobalCode: FunctionDeclaration
-		  | SubDeclaration
-		  | DimStmt
+GlobalCode: FunctionDeclaration {}
+		  | SubDeclaration {}
+		  | DimStmt {}
 		  ;
 
-Statement: DimStmt EndList
- 		 | IfStmt EndList
-   		 | WhileStatement EndList
-		 | DoLoopWhileStatement EndList
-		 | DoLoopUntilStatement EndList
-		 | ForStatement EndList
-		 | StaticStmt EndList
-		 | Expression EndList
+Statement: DimStmt EndList {}
+ 		 | IfStmt EndList {}
+   		 | WhileStatement EndList {}
+		 | DoLoopWhileStatement EndList {}
+		 | DoLoopUntilStatement EndList {}
+		 | ForStatement EndList {}
+		 | StaticStmt EndList {}
+		 | Expression EndList {}
 		 ;
 
-DimStmt: DIM DimSingle
-	   | DIM DimArray
+DimStmt: DIM DimSingle {}
+	   | DIM DimArray {}
 	   ;
 
 DimSingle: IDENTIFIERlist '=' Expression
-	| IDENTIFIERlist AS Type
-	;
+		 | IDENTIFIERlist AS Type
+		 ;
 
 DimArray: ArrayIDdeclaration
 	    | ArrayIDdeclaration AS Type
@@ -135,17 +148,17 @@ StaticStmt: KW_STATIC DimSingle
 	      | KW_STATIC DimArray
 	      ;
 
-Type: TYPE_BOOLEAN
-	| TYPE_BYTE
-	| TYPE_INTEGER
-	| TYPE_SINGLE
-	| TYPE_SHORT
-	| TYPE_DOUBLE
-	| TYPE_DECIMAL
-	| TYPE_DATE
-	| TYPE_CHAR
-	| TYPE_STRING
-	| TYPE_OBJECT
+Type: TYPE_BOOLEAN {}
+	| TYPE_BYTE {}
+	| TYPE_INTEGER {}
+	| TYPE_SINGLE {}
+	| TYPE_SHORT {}
+	| TYPE_DOUBLE {}
+	| TYPE_DECIMAL {}
+	| TYPE_DATE {}
+	| TYPE_CHAR {}
+	| TYPE_STRING {}
+	| TYPE_OBJECT {}
 	;
 
 ArrayBody: IDENTIFIERlist
@@ -153,33 +166,33 @@ ArrayBody: IDENTIFIERlist
 		 ;
 
 ArrayStatement: '{' ArrayBody '}'
-               | '{' '}'
-			   | NEW Type '('')' '{'ArrayBody'}'
-               ;
+              | '{' '}'
+			  | NEW Type '('')' '{'ArrayBody'}'
+              ;
 
-ArrayIDdeclaration: ArrayElementExpression
-				  | ArrayIDdeclaration ',' ArrayElementExpression
+ArrayIDdeclaration: ArraySizeName
+				  | ArrayIDdeclaration ',' ArraySizeName
 				  ;
 				 
-ArrayElementExpression: IDENTIFIER '('')'{}
-					  | IDENTIFIER '('Indexes')'{}
-                      ;
-
-StatementList: Statement
-             | StatementList Statement
+ArraySizeName: IDENTIFIER '('')'{}
+			 | IDENTIFIER '('Indexes')'{}
              ;
 
-BodyStmt: StatementList RETURN Expression EndList END Function EndList
+StatementList: Statement {}
+             | StatementList Statement {}
+             ;
+
+BodyStmt: StatementList RETURN Expression EndList END Function EndList {}
 		| RETURN Expression END Function EndList
 		;
 		
 
-ExpressionList: Expression
-			  | ExpressionList ',' Expression
+ExpressionList: Expression {}
+			  | ExpressionList ',' Expression {}
 			  ;
 			  
-Expression: ExprStart '=' OptEndl ExpressionWithoutAssign
-		  | ExpressionWithoutAssign
+Expression: ExprStart '=' OptEndl ExpressionWithoutAssign {}
+		  | ExpressionWithoutAssign {}
 		  ;
 
 
@@ -229,14 +242,14 @@ UnarExpr: UnarMinus	Expression
 		| Not Expression
 		;
 
-FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt
-                   | Function IDENTIFIER '(' OptEndl ')' AS Type EndList BodyStmt
-                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' EndList BodyStmt
-                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' AS Type EndList BodyStmt
+FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt {}
+                   | Function IDENTIFIER '(' OptEndl ')' AS Type EndList BodyStmt {}
+                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' EndList BodyStmt {}
+                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' AS Type EndList BodyStmt {}
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '('OptEndl')' StatementList END Sub EndList
-              | Sub IDENTIFIER '('OptEndl IDENTIFIERlist')' StatementList END Sub EndList
+SubDeclaration: Sub IDENTIFIER '('OptEndl')' StatementList END Sub EndList {}
+              | Sub IDENTIFIER '('OptEndl IDENTIFIERlist')' StatementList END Sub EndList {}
               ;
 
 IfStmt: IF Expression THEN EndList StatementList END IF
