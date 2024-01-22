@@ -12,14 +12,17 @@
     string* string_literal;
     string* identifier;
     bool bool_literal;
-    float float_literal;
+    double double_literal;
     char char_literal;
     object obj_literal;
-    double db_literal;
+	date date_literal; 
+	int decimal_number;
+	int short_literal;
+	byte byte_number;
 
     CodeNode* code;
     ExprNode* expr;
-    ExprListNode * expr_list;
+    ExprListNode* expr_list;
     StmtNode* stmt;
     StmtListNode* stmt_list;
     FuncDecl* func_decl;
@@ -45,8 +48,16 @@
 %type <dimStmt> DimStmt
 
 %type <int_literal> Integer
-%type <string_literal> String
+%type <string_literal> STRING
 %type <identifier> IDENTIFIER
+%type <bool_literal> Boolean
+%type <double_literal> DOUBLE
+%type <char_literal> CHAR
+%type <obj_literal> OBJECT
+%type <date_literal> DATE
+%type <decimal_number> DECIMAL_NUMBER
+%type <byte_number> BYTE_NUMBER
+%type <short_literal> SHORT 
 
 %token END
 %token WHILE DO LOOP UNTIL FOR TO STEP CONTINUE EXIT
@@ -71,6 +82,9 @@
 %token Sub
 %token Iif
 %token KW_STATIC
+%token KW_FALSE
+%token KW_TRUE
+
 
 %token Integer
 %token STRING
@@ -80,11 +94,14 @@
 %token ARRAY_ELEMENT_ACCESS_OPERATOR
 %token BOOLEAN
 %token SINGLE
-%token String
 %token SHORT
 %token DATE
 %token CHAR
 %token OBJECT
+
+%token TRUE
+%token FALSE
+%token PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT EXP_ASSIGNMENT BIT_AND_ASSIGNMENT DIV_NUM_ASSIGNMENT BIT_LEFT_SHIFT_ASSIGNMENT BIT_RIGHT_SHIFT_ASSIGNMENT
 
 %left '^'
 %left UnarPlus UnarMinus
@@ -94,7 +111,7 @@
 %right '+' '-'
 %right '&'
 %left BIT_LEFT_SHIFT BIT_RIGHT_SHIFT
-%right '=' NOT_EQUAL '<' LESS_OR_SAME Is IsNot Like TypeOf Not
+%right '=' NOT_EQUAL '<' LESS_OR_SAME Is IsNot Like TypeOf Not PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT EXP_ASSIGNMENT BIT_AND_ASSIGNMENT DIV_NUM_ASSIGNMENT BIT_LEFT_SHIFT_ASSIGNMENT BIT_RIGHT_SHIFT_ASSIGNMENT
 %left '>' MORE_OR_SAME
 %left OR ORELSE
 %left AND ANDALSO
@@ -165,10 +182,10 @@ ArrayBody: IDENTIFIERlist
 		 | '{' '}'
 		 ;
 
-ArrayStatement: '{' ArrayBody '}'
-              | '{' '}'
-			  | NEW Type '('')' '{'ArrayBody'}'
-              ;
+ArrayExpr: '{' ArrayBody '}'
+         | '{' '}'
+	     | NEW Type '('')' '{'ArrayBody'}'
+         ;
 
 ArrayIDdeclaration: ArraySizeName
 				  | ArrayIDdeclaration ',' ArraySizeName
@@ -193,14 +210,27 @@ ExpressionList: Expression {}
 			  
 Expression: ExprStart '=' OptEndl ExpressionWithoutAssign {}
 		  | ExpressionWithoutAssign {}
+		  | Expression OR Expression {}
+		  | Expression ORELSE Expression {}
+		  | Expression AND Expression {}
+		  | Expression ANDALSO Expression {}
+		  | ExprStart PLUS_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStart MINUS_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStart MUL_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStart DIV_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStart EXP_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStart BIT_AND_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStart DIV_NUM_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStart BIT_LEFT_SHIFT_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStart BIT_RIGHT_SHIFT_ASSIGNMENT ExpressionWithoutAssign {}
 		  ;
-
 
 ExpressionWithoutAssign: ExprStart '+' OptEndl Expression
 		  | ExprStart '&' OptEndl Expression
 		  | ExprStart '-' OptEndl Expression
 		  | ExprStart '/' OptEndl Expression
 		  | ExprStart '*' OptEndl Expression
+		  | ExprStart '^' OptEndl Expression
 		  | ExprStart '\\' OptEndl Expression
 		  | ExprStart MOD OptEndl Expression
 		  | ExprStart '>' OptEndl Expression
@@ -211,34 +241,46 @@ ExpressionWithoutAssign: ExprStart '+' OptEndl Expression
 		  | ExprStart BIT_LEFT_SHIFT OptEndl Expression
 		  | ExprStart BIT_RIGHT_SHIFT OptEndl Expression
 		  | UnarExpr
-		  | ArrayStatement
+		  | ArrayExpr
 		  | '('Expression')'
 		  | TernarOperator
+		  | IDENTIFIER'('Indexes')' {}
+		  | ExprStart Like ExprStart
+		  | IsNotIs
+		  | TypeOf IsNotIs
 		  ;
+		  
+IsNotIs: ExprStart IsNot ExpressionWithoutAssign
+	   | ExprStart Is ExpressionWithoutAssign
+	   ;
 	
 ExprStart: Values
 		 | IDENTIFIER '('ExpressionList')' {}
 		 ;
 		
 Values: SINGLE
-	  | String {}
-	  | BOOLEAN
-	  | DOUBLE
-	  | DATE
-	  | CHAR
-	  | OBJECT
-	  | DECIMAL_NUMBER
+	  | STRING {}
+	  | Boolean {}
+	  | DOUBLE {}
+	  | DATE {}
+	  | CHAR {}
+	  | OBJECT {}
+	  | DECIMAL_NUMBER {}
 	  | Indexes
 	  ;
-	  
+	 
+Boolean: KW_FALSE {}
+	   | KW_TRUE {}
+	   ;
+	 
 Indexes: Integer {}
-	   | BYTE_NUMBER
-	   | SHORT
+	   | BYTE_NUMBER {}
+	   | SHORT {}
 	   | IDENTIFIER {}
 	   ;
 		
-UnarExpr: UnarMinus	Expression
-		| UnarPlus Expression
+UnarExpr: UnarMinus	ExpressionWithoutAssign
+		| UnarPlus ExpressionWithoutAssign
 		| Not Expression
 		;
 
