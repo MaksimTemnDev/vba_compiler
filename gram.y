@@ -143,6 +143,7 @@ Statement: DimStmt EndList {}
 		 | Expression EndList {}
 		 | ContinueWhile EndList {}
 		 | DOOption EndList {}
+		 | ContinueExitFor EndList {}
 		 ;
 
 DimStmt: DIM DimSingle {}
@@ -194,7 +195,7 @@ ArrayIDdeclaration: ArraySizeName
 				  ;
 				 
 ArraySizeName: IDENTIFIER '('')'{}
-			 | IDENTIFIER '('Indexes')'{}
+			 | IDENTIFIER '('IndexesWithId')'{}
              ;
 
 StatementList: Statement {}
@@ -210,50 +211,53 @@ ExpressionList: Expression {}
 			  | ExpressionList ',' Expression {}
 			  ;
 			  
-Expression: ExprStart '=' OptEndl ExpressionWithoutAssign {}
+Expression: AssignExprVar {}
+		  | ExprStart '=' OptEndl ExpressionWithoutAssign {};
 		  | ExpressionWithoutAssign {}
 		  | Expression OR Expression {}
 		  | Expression ORELSE Expression {}
 		  | Expression AND Expression {}
 		  | Expression ANDALSO Expression {}
-		  | ExprStart PLUS_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStart MINUS_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStart MUL_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStart DIV_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStart EXP_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStart BIT_AND_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStart DIV_NUM_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStart BIT_LEFT_SHIFT_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStart BIT_RIGHT_SHIFT_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId PLUS_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId MINUS_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId MUL_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId DIV_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId EXP_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId BIT_AND_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId DIV_NUM_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId BIT_LEFT_SHIFT_ASSIGNMENT ExpressionWithoutAssign {}
+		  | ExprStartWithId BIT_RIGHT_SHIFT_ASSIGNMENT ExpressionWithoutAssign {}
 		  ;
+		  
+AssignExprVar: IDENTIFIER '=' OptEndl ExpressionWithoutAssign {};
 
-ExpressionWithoutAssign: ExprStart '+' OptEndl Expression
-		  | ExprStart '&' OptEndl Expression
-		  | ExprStart '-' OptEndl Expression
-		  | ExprStart '/' OptEndl Expression
-		  | ExprStart '*' OptEndl Expression
-		  | ExprStart '^' OptEndl Expression
-		  | ExprStart '\\' OptEndl Expression
-		  | ExprStart MOD OptEndl Expression
-		  | ExprStart '>' OptEndl Expression
-		  | ExprStart '<' OptEndl Expression
-		  | ExprStart MORE_OR_SAME OptEndl Expression
-		  | ExprStart LESS_OR_SAME OptEndl Expression
-		  | ExprStart NOT_EQUAL OptEndl Expression
-		  | ExprStart BIT_LEFT_SHIFT OptEndl Expression
-		  | ExprStart BIT_RIGHT_SHIFT OptEndl Expression
+ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression
+		  | ExprStartWithId '&' OptEndl Expression
+		  | ExprStartWithId '-' OptEndl Expression
+		  | ExprStartWithId '/' OptEndl Expression
+		  | ExprStartWithId '*' OptEndl Expression
+		  | ExprStartWithId '^' OptEndl Expression
+		  | ExprStartWithId '\\' OptEndl Expression
+		  | ExprStartWithId MOD OptEndl Expression
+		  | ExprStartWithId '>' OptEndl Expression
+		  | ExprStartWithId '<' OptEndl Expression
+		  | ExprStartWithId MORE_OR_SAME OptEndl Expression
+		  | ExprStartWithId LESS_OR_SAME OptEndl Expression
+		  | ExprStartWithId NOT_EQUAL OptEndl Expression
+		  | ExprStartWithId BIT_LEFT_SHIFT OptEndl Expression
+		  | ExprStartWithId BIT_RIGHT_SHIFT OptEndl Expression
 		  | UnarExpr
 		  | ArrayExpr
 		  | '('Expression')'
 		  | TernarOperator
-		  | IDENTIFIER'('Indexes')' {}
-		  | ExprStart Like ExprStart
+		  | IDENTIFIER'('IndexesWithId')' {}
+		  | ExprStartWithId Like ExprStartWithId
 		  | IsNotIs
 		  | TypeOf IsNotIs
 		  ;
 		  
-IsNotIs: ExprStart IsNot ExpressionWithoutAssign
-	   | ExprStart Is ExpressionWithoutAssign
+IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign
+	   | ExprStartWithId Is ExpressionWithoutAssign
 	   ;
 	
 ExprStart: Values
@@ -278,9 +282,27 @@ Boolean: KW_FALSE {}
 Indexes: Integer {}
 	   | BYTE_NUMBER {}
 	   | SHORT {}
-	   | IDENTIFIER {}
 	   ;
+	   
+IndexesWithId: Indexes
+			 | IDENTIFIER {}
+			 ;
+			 
+ExprStartWithId: ValuesWithId
+			   | IDENTIFIER '('ExpressionList')' {}
+			   ;
 		
+ValuesWithId: SINGLE
+		    | STRING {}
+		    | Boolean {}
+		    | DOUBLE {}
+		    | DATE {}
+		    | CHAR {}
+		    | OBJECT {}
+		    | DECIMAL_NUMBER {}
+		    | IndexesWithId
+		    ;
+
 UnarExpr: UnarMinus	ExpressionWithoutAssign
 		| UnarPlus ExpressionWithoutAssign
 		| Not Expression
@@ -320,10 +342,15 @@ EXITDO: EXIT DO;
 
 CONTINUEDO: CONTINUE DO;
 
-ForStatement: FOR Statement '=' Statement TO Statement StatementList NEXT
-			| FOR Statement '=' Statement TO Statement STEP Statement StatementList NEXT
-			| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList CONTINUE FOR EndList END IF EndList StatementList NEXT
-			| FOR Statement '=' Statement TO Statement StatementList IF Expression THEN EndList EXIT FOR EndList END IF EndList StatementList NEXT
+OptionalStep: 
+			| STEP IndexesWithId
+			;
+			
+ContinueExitFor: CONTINUE FOR
+			   | EXIT FOR
+			   ;
+
+ForStatement: FOR AssignExprVar TO Expression OptionalStep EndList StatementList NEXT
 			;
 				 
 EndList: TOKEN_LINE

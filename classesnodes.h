@@ -158,11 +158,11 @@ public:
     int id;
     Type item_type;
 
-    static StmtNode* DeclarationExpression(ExprNode* expr);
-    static StmtNode* DeclarationStatic();
-    static StmtNode* DeclarationDim(DimNode* dim, Type item_type);
+    static StmtNode* DeclarationExpression(ExprNode* expr, Type item_type);
+    static StmtNode* DeclarationDim(DimNode* dim, Type item_type, bool isStatic);
     static StmtNode* DeclarationIf(IfNode* ifNode, Type item_type);
-    static StmtNode* DeclarationWhile(While* whilestmt, Type type);
+    static StmtNode* DeclarationWhile(While* while_stmt, Type item_type);
+    static StmtNode* DeclarationFor(ForNode* forstmt, Type item_type);
     StmtNode(StmtNode* node);
     StmtNode();
 
@@ -207,11 +207,15 @@ public:
 class While
 {
 public:
+    enum Type{
+        simple_, doloopwhile_, doloopuntil
+    };
     int id;
     ExprNode* condition;
     StmtListNode* body;
+    Type type;
 
-    While(ExprNode* condition, StmtListNode* body);
+    While(ExprNode* condition, StmtListNode* body, Type type);
 
     void toDot(string &dot);
 };
@@ -230,10 +234,11 @@ public:
     TypeNode* typeNode = NULL;
     IdList* idList = NULL;
     ArrayIdList* arrayIdList = NULL;
+    bool isStatic = false;
 
-    static DimNode* DeclarationSingleType(IdList* idList, Type type);
-    static DimNode* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode);
-    static DimNode* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode);
+    static DimNode* DeclarationSingleType(IdList* idList, Type type, bool isStatic);
+    static DimNode* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode, bool isStatic);
+    static DimNode* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode, bool isStatic);
 
     void toDot(string &dot);
 };
@@ -290,4 +295,38 @@ public:
     ArrayIdList(ArrayIdList* arrayIdList);
     static ArrayIdList* Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId);
     void toDot(string &dot, const string &type="arr_id_list");
+};
+
+class ForNode
+{
+public:
+    int id;
+    ExprNode* startExpr;
+    ExprNode* endExpr;
+    bool hasStep = false;
+    ExprNode* assignExpVar;
+    Value* stepVal;
+    StmtListNode* body;
+
+    ForNode(ExprNode* startExpr, ExprNode* endExpr, bool hasStep, ExprNode* assignExpVar, Value* stepVal, StmtListNode* body);
+
+    void toDot(string &dot);
+};
+
+class Value
+{
+public:
+    enum Type
+    {
+    int_, byte_num, id_, short_ 
+    };
+    int id;
+    int value;
+    Identificator* identificator;
+    Type type;
+    bool hasIntVal = false;
+
+    Value(int value, Type type, bool hasIntVal, Identificator* id);
+
+    void toDot(string &dot);
 };
