@@ -182,13 +182,42 @@ Module VBModule
         Next
 		
 		' тест массива и доступа к нему
-        Dim numbers = New Integer() {1, 2, 4, 8}
+        Dim numbers = New Integer() {1, 2, numberTwo(index3), 8}
 		Dim characters() As Char = {"a"c, "b"c, "c"c, "d"c}
 		numbers(2)
 		characters(3)
 		
 		' тест работы с консолью
-		Console.WriteLine("Введите цвет консоли (синий или зеленый):")
-		Dim line = Console.ReadLine()
+		writeLine("Введите цвет консоли (синий или зеленый):")
+		Dim line = readLine()
+		Dim line2 = write()
+		
+		' тест работы операций над строками, их участие в выражениях
+		Dim nString = "string" + "second"
+		Dim nString2 = "string" + "second" + "new one"
+		Dim nString3 = "string" & "second"
+		Dim sampleStr As String
+		sampleStr = "Hello" & " World"
+		Dim StringName As String = "lorem ipsum dolor sit amet"
+        StringName = StringName.Replace("i", "o")
+        writeLine(Mid(StringName, InStr(StringName, " "), 6))
+		write(Left(nstring2, 3))
+		write(Right(nstring3, 4))
     End Sub
+	
+	'Тест работы с функцией
+	Function MyFunction(ByVal j As Integer) As Double
+		MyFunction = 3.87 * j
+		Exit Function
+	End Function
+	
+	'Тест для RETURN
+	Function MyReturn(ByVal j As Integer) As Double
+		Return 3.88 * j
+	End Function
+	
+	'Тест работы с процедурой
+	Sub Addition(ByRef x As Integer, ByVal y As Integer)
+		x=x+y
+	End Sub
 End Module
