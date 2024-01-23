@@ -162,6 +162,7 @@ public:
     static StmtNode* DeclarationStatic();
     static StmtNode* DeclarationDim(DimNode* dim, Type item_type);
     static StmtNode* DeclarationIf(IfNode* ifNode, Type item_type);
+    static StmtNode* DeclarationWhile(While* whilestmt, Type type);
     StmtNode(StmtNode* node);
     StmtNode();
 
@@ -186,7 +187,7 @@ public:
     static IfNode* IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListNode* stmtElseListNode, Type type);
     static IfNode* IfTernar(ExprNode* exprNode, StmtListNode* stmtListNode, Ternar* ternar, Type type);
     static IfNode* IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNode* conditionElse, StmtListNode* stmtElseIfListNode, Type type);
-
+    
     void toDot(string &dot);
 };
 
@@ -199,7 +200,19 @@ public:
     ExprNode* not;
 
     Ternar(ExprNode* cond, ExprNode* y, ExprNode* n);
-    
+
+    void toDot(string &dot);
+};
+
+class While
+{
+public:
+    int id;
+    ExprNode* condition;
+    StmtListNode* body;
+
+    While(ExprNode* condition, StmtListNode* body);
+
     void toDot(string &dot);
 };
 

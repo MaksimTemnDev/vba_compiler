@@ -141,6 +141,8 @@ Statement: DimStmt EndList {}
 		 | ForStatement EndList {}
 		 | StaticStmt EndList {}
 		 | Expression EndList {}
+		 | ContinueWhile EndList {}
+		 | DOOption EndList {}
 		 ;
 
 DimStmt: DIM DimSingle {}
@@ -302,22 +304,17 @@ IfStmt: IF Expression THEN EndList StatementList END IF
 
 TernarOperator: Iif '('Expression ',' Expression ',' Expression')';
 
-WhileStatement: WHILE Expression EndList StatementList END WHILE
-			| WHILE Expression EndList IF Expression THEN EndList StatementList CONTINUE WHILE EndList END IF EndList StatementList END WHILE
-			| WHILE IF Expression THEN Statement EXIT WHILE END IF END WHILE
-			;
+WhileStatement: WHILE Expression EndList StatementList END WHILE;
+			
+ContinueWhile: CONTINUE WHILE;
 
-DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP
-					| DO UNTIL Expression EndList StatementList DOOption EndList StatementList LOOP
-					;
+DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP;
 	
 DOOption: EXITDO
 		| CONTINUEDO
 		;
 
-DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP
-					| DO WHILE Expression EndList StatementList DOOption EndList StatementList LOOP
-					;
+DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP;
 	
 EXITDO: EXIT DO;
 
