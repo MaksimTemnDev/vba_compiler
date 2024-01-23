@@ -14,7 +14,7 @@ DIGIT [0-9]
     #include <stdlib.h>
     #include <string.h>
     #include <ctype.h>
-	
+    #include "gram_tab.cpp"
 
 	void delete_();
     void eraseType(char *typeName);
