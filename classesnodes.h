@@ -146,3 +146,135 @@ public:
 
    void toDot(string &dot, const string &type="expr_list");
 };
+
+class StmtNode
+{
+public:
+    enum Type
+    {
+        dim_, ifstmt_, while_, dowhile_, dountil_, for_, static_, expr_
+    };
+
+    int id;
+    Type item_type;
+
+    static StmtNode* DeclarationExpression(ExprNode* expr);
+    static StmtNode* DeclarationStatic();
+    static StmtNode* DeclarationDim(DimNode* dim, Type item_type);
+    static StmtNode* DeclarationIf(IfNode* ifNode, Type item_type);
+    StmtNode(StmtNode* node);
+    StmtNode();
+
+   void toDot(string &dot);
+
+};
+
+class IfNode
+{
+public:
+    enum Type{
+        clear_, else_, ternar_, elseif
+    };
+    int id;
+    ExprNode* condition;
+    ExprNode* conditionElseIF;
+    StmtListNode* stmtListNode;
+    StmtListNode* stmtElse;
+    Ternar* ternar;
+
+    static IfNode* IfClear(ExprNode* exprNode, StmtListNode* stmtListNode, Type type);
+    static IfNode* IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListNode* stmtElseListNode, Type type);
+    static IfNode* IfTernar(ExprNode* exprNode, StmtListNode* stmtListNode, Ternar* ternar, Type type);
+    static IfNode* IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNode* conditionElse, StmtListNode* stmtElseIfListNode, Type type);
+
+    void toDot(string &dot);
+};
+
+class Ternar
+{
+public:
+    int id;
+    ExprNode* condition;
+    ExprNode* yes;
+    ExprNode* not;
+
+    Ternar(ExprNode* cond, ExprNode* y, ExprNode* n);
+    
+    void toDot(string &dot);
+};
+
+class DimNode
+{
+public:
+    enum Type
+    {
+        single_expr, single_type, array_with, array_without
+    };
+
+    int id;
+    Type type;
+    ExprNode* exprNode = NULL;
+    TypeNode* typeNode = NULL;
+    IdList* idList = NULL;
+    ArrayIdList* arrayIdList = NULL;
+
+    static DimNode* DeclarationSingleType(IdList* idList, Type type);
+    static DimNode* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode);
+    static DimNode* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode);
+
+    void toDot(string &dot);
+};
+
+class IdList
+{
+public:
+    int id;
+    list<Identificator*>* identificators = NULL;
+
+    IdList(Identificator* identificator);
+    IdList(IdList* IdList);
+    static IdList* Append(IdList* idList, Identificator* Identificator);
+    void toDot(string &dot, const string &type="id_list");
+};
+
+class Identificator
+{
+public:
+    enum Type
+    {
+        var_, func_, arr_, class_
+    };
+    int id;
+    string* identifier;
+    Type type;
+
+    Identificator(string* identifier, Type* type);
+
+    void toDot(string &dot);
+};
+
+class ArrayIdDeclare
+{
+public:
+    int id;
+    string* identifier;
+    int index;
+    //И-тор переменнной внутри массива
+    Identificator* input_id = NULL;
+
+    ArrayIdDeclare(string* identifier, Identificator* input_id);
+
+    void toDot(string &dot);
+};
+
+class ArrayIdList
+{
+public:
+    int id;
+    list<ArrayIdDeclare*>* arrayId = NULL;
+
+    ArrayIdList(ArrayIdDeclare* arrayIdDeclare);
+    ArrayIdList(ArrayIdList* arrayIdList);
+    static ArrayIdList* Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId);
+    void toDot(string &dot, const string &type="arr_id_list");
+};
