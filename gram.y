@@ -47,6 +47,15 @@
 %type <code> Program
 %type <expr> Expression
 %type <expr_list> ExpressionList
+%type <expr> ExprStartWithId
+%type <expr> ExpressionWithoutAssign
+%type <expr> UnarExpr
+%type <expr> ArrayExpr
+%type <expr> IsNotIs
+%type <expr> TernarOperator
+%type <expr> ArrayBody
+%type <expr> TypeOfs
+%type <expr> IndexesWithId
 %type <stmt> Statement
 %type <stmt_list> StatementList
 %type <func_decl> FunctionDeclaration
@@ -190,8 +199,8 @@ Type: TYPE_BOOLEAN {}
 	| TYPE_OBJECT {}
 	;
 
-ArrayBody: IDENTIFIERlist
-		 | '{' '}'
+ArrayBody: IDENTIFIERlist {}
+		 | '{' '}' {}
 		 ;
 
 ArrayExpr: '{' ArrayBody '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $2, 0); }
@@ -262,9 +271,12 @@ ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode:
 		  | IDENTIFIER'('IndexesWithId')' { $$ = ExprNode::OperatorExpr(ExprNode::array_access, $1, $3); }
 		  | ExprStartWithId Like ExprStartWithId { $$ = ExprNode::OperatorExpr(ExprNode::like, $1, $3); }
 		  | IsNotIs {$$=$1;}
-		  | TypeOf IsNotIs { $$ = ExprNode::typeOfisnotIs(ExprNode::typof, $1, $2); }
+		  | TypeOfs IsNotIs { $$ = ExprNode::typeOfisnotIs(ExprNode::typof, $1, $2); }
 		  ;
-		  
+
+TypeOfs: TypeOf {}
+       ;
+
 IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::isnot, $1, $3); }
 	   | ExprStartWithId Is ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::is, $1, $3); }
 	   ;
@@ -293,11 +305,11 @@ Indexes: Integer {}
 	   | SHORT {}
 	   ;
 	   
-IndexesWithId: Indexes
+IndexesWithId: Indexes {}
 			 | IDENTIFIER {}
 			 ;
 			 
-ExprStartWithId: ValuesWithId
+ExprStartWithId: ValuesWithId {}
 			   | IDENTIFIER '('ExpressionList')' {}
 			   ;
 		
@@ -309,7 +321,7 @@ ValuesWithId: SINGLE
 		    | CHAR {}
 		    | OBJECT {}
 		    | DECIMAL_NUMBER {}
-		    | IndexesWithId
+		    | IndexesWithId {}
 		    ;
 
 UnarExpr: UnarMinus	ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::u_minus, 0, $2); }
