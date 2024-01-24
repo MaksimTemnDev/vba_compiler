@@ -240,33 +240,33 @@ Expression: AssignExprVar {}
 		  
 AssignExprVar: IDENTIFIER '=' OptEndl ExpressionWithoutAssign {};
 
-ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression
-		  | ExprStartWithId '&' OptEndl Expression
-		  | ExprStartWithId '-' OptEndl Expression
-		  | ExprStartWithId '/' OptEndl Expression
-		  | ExprStartWithId '*' OptEndl Expression
-		  | ExprStartWithId '^' OptEndl Expression
-		  | ExprStartWithId '\\' OptEndl Expression
-		  | ExprStartWithId MOD OptEndl Expression
-		  | ExprStartWithId '>' OptEndl Expression
-		  | ExprStartWithId '<' OptEndl Expression
-		  | ExprStartWithId MORE_OR_SAME OptEndl Expression
-		  | ExprStartWithId LESS_OR_SAME OptEndl Expression
-		  | ExprStartWithId NOT_EQUAL OptEndl Expression
-		  | ExprStartWithId BIT_LEFT_SHIFT OptEndl Expression
-		  | ExprStartWithId BIT_RIGHT_SHIFT OptEndl Expression
-		  | UnarExpr
+ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_plus, $1, $4); }
+		  | ExprStartWithId '&' OptEndl Expression {  }
+		  | ExprStartWithId '-' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_minus, $1, $4); }
+		  | ExprStartWithId '/' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_div, $1, $4); }
+		  | ExprStartWithId '*' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_mul, $1, $4); }
+		  | ExprStartWithId '^' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::degree, $1, $4); }
+		  | ExprStartWithId '\\' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::int_div, $1, $4); }
+		  | ExprStartWithId MOD OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::mod_div, $1, $4); }
+		  | ExprStartWithId '>' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::more, $1, $4); }
+		  | ExprStartWithId '<' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::less, $1, $4); }
+		  | ExprStartWithId MORE_OR_SAME OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::more_s, $1, $4); }
+		  | ExprStartWithId LESS_OR_SAME OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::less_s, $1, $4); }
+		  | ExprStartWithId NOT_EQUAL OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::not_eq, $1, $4); }
+		  | ExprStartWithId BIT_LEFT_SHIFT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_l_shift, $1, $4); }
+		  | ExprStartWithId BIT_RIGHT_SHIFT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_r_shift, $1, $4); }
+		  | UnarExpr 
 		  | ArrayExpr
 		  | '('Expression')'
 		  | TernarOperator
 		  | IDENTIFIER'('IndexesWithId')' {}
-		  | ExprStartWithId Like ExprStartWithId
+		  | ExprStartWithId Like ExprStartWithId { $$ = ExprNode::OperatorExpr(ExprNode::like, $1, $3); }
 		  | IsNotIs
 		  | TypeOf IsNotIs
 		  ;
 		  
-IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign
-	   | ExprStartWithId Is ExpressionWithoutAssign
+IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::isnot, $1, $3); }
+	   | ExprStartWithId Is ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::is, $1, $3); }
 	   ;
 	
 ExprStart: Values
