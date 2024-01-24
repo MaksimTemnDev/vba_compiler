@@ -194,9 +194,9 @@ ArrayBody: IDENTIFIERlist
 		 | '{' '}'
 		 ;
 
-ArrayExpr: '{' ArrayBody '}'
-         | '{' '}'
-	     | NEW Type '('')' '{'ArrayBody'}'
+ArrayExpr: '{' ArrayBody '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $2, 0); }
+         | '{' '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_empty, 0, 0); }
+	     | NEW Type '('')' '{'ArrayBody'}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body_type, $2, $6); }
          ;
 
 ArrayIDdeclaration: ArraySizeName
@@ -241,7 +241,7 @@ Expression: AssignExprVar {}
 AssignExprVar: IDENTIFIER '=' OptEndl ExpressionWithoutAssign {};
 
 ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_plus, $1, $4); }
-		  | ExprStartWithId '&' OptEndl Expression {  }
+		  | ExprStartWithId '&' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::str_plus, $1, $4); }
 		  | ExprStartWithId '-' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_minus, $1, $4); }
 		  | ExprStartWithId '/' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_div, $1, $4); }
 		  | ExprStartWithId '*' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_mul, $1, $4); }
@@ -255,14 +255,14 @@ ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode:
 		  | ExprStartWithId NOT_EQUAL OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::not_eq, $1, $4); }
 		  | ExprStartWithId BIT_LEFT_SHIFT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_l_shift, $1, $4); }
 		  | ExprStartWithId BIT_RIGHT_SHIFT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_r_shift, $1, $4); }
-		  | UnarExpr 
-		  | ArrayExpr
-		  | '('Expression')'
-		  | TernarOperator
-		  | IDENTIFIER'('IndexesWithId')' {}
+		  | UnarExpr {$$ = $1;}
+		  | ArrayExpr {$$ = $1;}
+		  | '('Expression')' {$$ = $2;}
+		  | TernarOperator {$$ = $1}
+		  | IDENTIFIER'('IndexesWithId')' { $$ = ExprNode::OperatorExpr(ExprNode::array_access, $1, $3); }
 		  | ExprStartWithId Like ExprStartWithId { $$ = ExprNode::OperatorExpr(ExprNode::like, $1, $3); }
-		  | IsNotIs
-		  | TypeOf IsNotIs
+		  | IsNotIs {$$=$1;}
+		  | TypeOf IsNotIs { $$ = ExprNode::typeOfisnotIs(ExprNode::typof, $1, $2); }
 		  ;
 		  
 IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::isnot, $1, $3); }
@@ -312,9 +312,9 @@ ValuesWithId: SINGLE
 		    | IndexesWithId
 		    ;
 
-UnarExpr: UnarMinus	ExpressionWithoutAssign
-		| UnarPlus ExpressionWithoutAssign
-		| Not Expression
+UnarExpr: UnarMinus	ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::u_minus, 0, $2); }
+		| UnarPlus ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::u_plus, 0, $2); }
+		| Not Expression { $$ = ExprNode::OperatorExpr(ExprNode::not, 0, $2); }
 		;
 
 FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt {}
@@ -333,7 +333,7 @@ IfStmt: IF Expression THEN EndList StatementList END IF
 	| IF Expression THEN EndList StatementList ELSEIF Expression THEN EndList StatementList END IF
 	;
 
-TernarOperator: Iif '('Expression ',' Expression ',' Expression')';
+TernarOperator: Iif '('Expression ',' Expression ',' Expression')' { $$ = ExprNode::IifExpr(ExprNode::iif, $3, $5, $7); };
 
 WhileStatement: WHILE Expression EndList StatementList END WHILE;
 			

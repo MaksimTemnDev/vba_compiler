@@ -122,7 +122,7 @@ class ExprNode{
     enum Type{assign, no_assign_part, or, or_elase, and, and_also, plus_assign, minus_assign, mul_assign, 
     div_assign, expr_assign, bit_and_aassign, div_num_assign, bit_l_shift_assign, bit_r_shift_assign,
 
-    b_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, not_eq, bit_l_shift, bit_r_shift,
+    b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, not_eq, bit_l_shift, bit_r_shift,
     u_plus, u_minus, not, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof,
 
     single, string, bool_val, double_val, date, char_val, obj, dec_num, int_val, byte_num, short_val, identifier 
@@ -149,6 +149,8 @@ class ExprNode{
 
     //Функции для работы
     static ExprNode* OperatorExpr(Type type, ExprNode* left, ExprNode* right);
+    static ExprNode* IifExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body);
+    static ExprNode* typeOfisnotIs(Type type, ExprNode* isnotIs);
 
     void toDot(string &dot, const string &pos = "");
 };
