@@ -29,9 +29,19 @@
     FuncParamNode* function_param;
     FuncParamListNode* function_params;
     TypeNode* type;
-	GlobalCodeList* globalCodeList
-	GlobalCode* globalCode
-	DimStmt* dimStmt
+	GlobalCodeList* globalCodeList;
+	GlobalCode* globalCode;
+	DimStmt* dimStmt;
+	Value* value;
+	ForNode* forNode;
+	ArrayIdList* arrayIdList;
+	ArrayIdDeclare* arrayIdDeclare;
+	Identificator* identificator;
+	IdList* idList;
+	While* whileSt;
+	Ternar* ternar;
+	IfNode* ifNode;
+	
 }
 
 %type <code> Program
