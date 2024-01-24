@@ -26,7 +26,6 @@
     StmtNode* stmt;
     StmtListNode* stmt_list;
     FuncDecl* func_decl;
-    SubDecl* sub_decl;
     FuncParamNode* function_param;
     FuncParamListNode* function_params;
     TypeNode* type;
@@ -130,7 +129,7 @@ GlobalCodeList: GlobalCode {}
 
 GlobalCode: FunctionDeclaration {}
 		  | SubDeclaration {}
-		  | DimStmt {}
+		  | DimStmt EndList {}
 		  ;
 
 Statement: DimStmt EndList {}

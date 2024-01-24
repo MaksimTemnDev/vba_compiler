@@ -10,24 +10,40 @@ class ExprListNode;
 class StmtNode;
 class StmtListNode;
 class FuncDecl;
-class SubDecl;
 class FuncParamNode;
 class FuncParamListNode;
 class TypeNode;
 class GlobalCodeList;
 class GlobalCode;
 class DimStmt;
+class Value;
+class ForNode;
+class ArrayIdList;
+class ArrayIdDeclare;
+class Identificator;
+class IdList;
+class While;
+class Ternar;
+class IfNode;
 
 class CodeNode{
     public: 
     int id;
     GlobalCodeList* globalCode = NULL;
-    GlobalCodeList(GlobalCode *globalcode);
+    GlobalCodeList(GlobalCode* globalcode);
    void toDot(string &dot);
 };
 
 class GlobalCode{
+public:
+    int id;
+    FuncDecl* subfunc = NULL;
+    DimStmt* dim = NULL;
 
+    static GlobalCode* addDim(DimStmt* dim);
+    static GlobalCode* addSubFunc(FuncDecl* subfunc);
+    
+    void toDot(string &dot);
 };
 
 class GlobalCodeList{
@@ -49,8 +65,10 @@ class FuncDecl{
     TypeNode* returnType = NULL;
     FuncParamListNode* params = NULL;
     ExprNode* body = NULL;
+    bool is_sub = false;
 
-    FuncDecl(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body);
+    FuncDecl(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body, bool is_sub);
+
    void toDot(string &dot);
 };
 
@@ -152,17 +170,20 @@ class StmtNode
 public:
     enum Type
     {
-        dim_, ifstmt_, while_, dowhile_, dountil_, for_, static_, expr_
+        dim_, ifstmt_, while_, dowhile_, dountil_, for_, static_, expr_, continue_while, dooption_exit, dooption_continue, continue_for, exit_for
     };
 
     int id;
     Type item_type;
 
     static StmtNode* DeclarationExpression(ExprNode* expr, Type item_type);
-    static StmtNode* DeclarationDim(DimNode* dim, Type item_type, bool isStatic);
+    static StmtNode* DeclarationDim(DimStmt* dim, Type item_type, bool isStatic);
     static StmtNode* DeclarationIf(IfNode* ifNode, Type item_type);
     static StmtNode* DeclarationWhile(While* while_stmt, Type item_type);
     static StmtNode* DeclarationFor(ForNode* forstmt, Type item_type);
+    static StmtNode* DeclarationContinueWhile(Type item_type);
+    static StmtNode* DeclarationDoOption(Type item_type);
+    static StmtNode* DeclarationContinueExitFor(Type item_type);
     StmtNode(StmtNode* node);
     StmtNode();
 
@@ -220,7 +241,7 @@ public:
     void toDot(string &dot);
 };
 
-class DimNode
+class DimStmt
 {
 public:
     enum Type
@@ -236,9 +257,9 @@ public:
     ArrayIdList* arrayIdList = NULL;
     bool isStatic = false;
 
-    static DimNode* DeclarationSingleType(IdList* idList, Type type, bool isStatic);
-    static DimNode* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode, bool isStatic);
-    static DimNode* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode, bool isStatic);
+    static DimStmt* DeclarationSingleType(IdList* idList, Type type, bool isStatic);
+    static DimStmt* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode, bool isStatic);
+    static DimStmt* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode, bool isStatic);
 
     void toDot(string &dot);
 };
@@ -330,3 +351,18 @@ public:
 
     void toDot(string &dot);
 };
+
+class StmtListNode
+{
+public:
+    int id;
+    list<StmtNode*>* stmts = NULL;
+
+    StmtListNode(StmtNode* stmtNode);
+    static StmtListNode* Append(StmtListNode* stmtListNode, StmtNode* stmtNode);
+
+    void toDot(string &dot, const string &type = "stmt_list");
+};
+
+void connectVerticesDots(string &s, int parentId, int childId);
+void createVertexDot(string &s, int id, string name="", string type="", string value = "", string pos = "");
