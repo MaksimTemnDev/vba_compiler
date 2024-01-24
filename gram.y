@@ -56,6 +56,8 @@
 %type <expr> ArrayBody
 %type <expr> TypeOfs
 %type <expr> IndexesWithId
+%type <expr> AssignExprVar
+%type <expr> ExprStart
 %type <stmt> Statement
 %type <stmt_list> StatementList
 %type <func_decl> FunctionDeclaration
@@ -229,22 +231,22 @@ ExpressionList: Expression {}
 			  | ExpressionList ',' Expression {}
 			  ;
 			  
-Expression: AssignExprVar {}
-		  | ExprStart '=' OptEndl ExpressionWithoutAssign {};
-		  | ExpressionWithoutAssign {}
-		  | Expression OR Expression {}
-		  | Expression ORELSE Expression {}
-		  | Expression AND Expression {}
-		  | Expression ANDALSO Expression {}
-		  | ExprStartWithId PLUS_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStartWithId MINUS_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStartWithId MUL_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStartWithId DIV_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStartWithId EXP_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStartWithId BIT_AND_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStartWithId DIV_NUM_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStartWithId BIT_LEFT_SHIFT_ASSIGNMENT ExpressionWithoutAssign {}
-		  | ExprStartWithId BIT_RIGHT_SHIFT_ASSIGNMENT ExpressionWithoutAssign {}
+Expression: AssignExprVar { $$ = ExprNode::OperatorExpr(ExprNode::assign, $1, 0); }
+		  | ExprStart '=' OptEndl ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::no_assign_part, $1, $4); }
+		  | ExpressionWithoutAssign { $$ = $1; }
+		  | Expression OR Expression { $$ = ExprNode::OperatorExpr(ExprNode::or, $1, $3); }
+		  | Expression ORELSE Expression { $$ = ExprNode::OperatorExpr(ExprNode::or_elase, $1, $3); }
+		  | Expression AND Expression { $$ = ExprNode::OperatorExpr(ExprNode::and, $1, $3); }
+		  | Expression ANDALSO Expression { $$ = ExprNode::OperatorExpr(ExprNode::and_also, $1, $3); }
+		  | ExprStartWithId PLUS_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::plus_assign, $1, $3); }
+		  | ExprStartWithId MINUS_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::minus_assign, $1, $3); }
+		  | ExprStartWithId MUL_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::mul_assign, $1, $3); }
+		  | ExprStartWithId DIV_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::div_assign, $1, $3); }
+		  | ExprStartWithId EXP_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::expr_assign, $1, $3); }
+		  | ExprStartWithId BIT_AND_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::bit_and_aassign, $1, $3); }
+		  | ExprStartWithId DIV_NUM_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::div_num_assign, $1, $3); }
+		  | ExprStartWithId BIT_LEFT_SHIFT_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::bit_l_shift_assign, $1, $3); }
+		  | ExprStartWithId BIT_RIGHT_SHIFT_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::bit_r_shift_assign, $1, $3); }
 		  ;
 		  
 AssignExprVar: IDENTIFIER '=' OptEndl ExpressionWithoutAssign {};
@@ -281,7 +283,7 @@ IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::Operator
 	   | ExprStartWithId Is ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::is, $1, $3); }
 	   ;
 	
-ExprStart: Values
+ExprStart: Values {}
 		 | IDENTIFIER '('ExpressionList')' {}
 		 ;
 		
