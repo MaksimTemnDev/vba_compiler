@@ -238,7 +238,7 @@ public:
     StmtListNode* body;
     Type type;
 
-    WhileStmt(ExprNode* condition, StmtListNode* body, Type type);
+    static While* whileStmt(ExprNode* condition, StmtListNode* body, Type type);
 
     void toDot(string &dot);
 };

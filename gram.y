@@ -354,17 +354,17 @@ IfStmt: IF Expression THEN EndList StatementList END IF { $$ = IfNode::IfClear($
 
 TernarOperator: Iif '('Expression ',' Expression ',' Expression')' { $$ = ExprNode::IifExpr(ExprNode::iif, $3, $5, $7); };
 
-WhileStatement: WHILE Expression EndList StatementList END WHILE; { $$ = While::whileStmt($2, $4, While::simple_); }
+WhileStatement: WHILE Expression EndList StatementList END WHILE { $$ = While::whileStmt($2, $4, While::simple_); };
 			
 ContinueWhile: CONTINUE WHILE;
 
-DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP; { $$ = While::whileStmt($3, $5, While::doloopuntil); }
+DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP { $$ = While::whileStmt($3, $5, While::doloopuntil); };
 	
 DOOption: EXITDO
 		| CONTINUEDO
 		;
 
-DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP; { $$ = While::whileStmt($3, $5, While::doloopwhile_); }
+DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP { $$ = While::whileStmt($3, $5, While::doloopwhile_); };
 	
 EXITDO: EXIT DO;
 
