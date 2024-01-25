@@ -70,6 +70,7 @@
 %type <dimStmt> DimSingle
 %type <dimStmt> DimArray
 %type <static_> StaticStmt
+%type <ifNode> IfStmt
 
 %type <int_literal> Integer
 %type <string_literal> STRING
@@ -345,25 +346,25 @@ SubDeclaration: Sub IDENTIFIER '('OptEndl')' StatementList END Sub EndList {}
               | Sub IDENTIFIER '('OptEndl IDENTIFIERlist')' StatementList END Sub EndList {}
               ;
 
-IfStmt: IF Expression THEN EndList StatementList END IF
-	| IF Expression THEN EndList StatementList ELSE EndList StatementList END IF
-	| IF Expression THEN EndList TernarOperator END IF
-	| IF Expression THEN EndList StatementList ELSEIF Expression THEN EndList StatementList END IF
+IfStmt: IF Expression THEN EndList StatementList END IF { $$ = IfNode::IfClear($2, $5, IfNode::clear_); }
+	| IF Expression THEN EndList StatementList ELSE EndList StatementList END IF { $$ = IfNode::IfElse($2, $5, $8, IfNode::else_); }
+	| IF Expression THEN EndList TernarOperator END IF { $$ = IfNode::IfTernar($2, $5, IfNode::ternar_); }
+	| IF Expression THEN EndList StatementList ELSEIF Expression THEN EndList StatementList END IF { $$ = IfNode::IfElseIf($2, $5, $7, $10, IfNode::else_); }
 	;
 
 TernarOperator: Iif '('Expression ',' Expression ',' Expression')' { $$ = ExprNode::IifExpr(ExprNode::iif, $3, $5, $7); };
 
-WhileStatement: WHILE Expression EndList StatementList END WHILE;
+WhileStatement: WHILE Expression EndList StatementList END WHILE; { $$ = While::whileStmt($2, $4, While::simple_); }
 			
 ContinueWhile: CONTINUE WHILE;
 
-DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP;
+DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP; { $$ = While::whileStmt($3, $5, While::doloopuntil); }
 	
 DOOption: EXITDO
 		| CONTINUEDO
 		;
 
-DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP;
+DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP; { $$ = While::whileStmt($3, $5, While::doloopwhile_); }
 	
 EXITDO: EXIT DO;
 

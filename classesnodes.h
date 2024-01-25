@@ -208,7 +208,7 @@ public:
 
     static IfNode* IfClear(ExprNode* exprNode, StmtListNode* stmtListNode, Type type);
     static IfNode* IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListNode* stmtElseListNode, Type type);
-    static IfNode* IfTernar(ExprNode* exprNode, StmtListNode* stmtListNode, Ternar* ternar, Type type);
+    static IfNode* IfTernar(ExprNode* exprNode, Ternar* ternar, Type type);
     static IfNode* IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNode* conditionElse, StmtListNode* stmtElseIfListNode, Type type);
     
     void toDot(string &dot);
@@ -238,7 +238,7 @@ public:
     StmtListNode* body;
     Type type;
 
-    While(ExprNode* condition, StmtListNode* body, Type type);
+    WhileStmt(ExprNode* condition, StmtListNode* body, Type type);
 
     void toDot(string &dot);
 };
