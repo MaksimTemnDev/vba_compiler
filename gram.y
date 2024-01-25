@@ -31,6 +31,7 @@
     TypeNode* type;
 	GlobalCodeList* globalCodeList;
 	GlobalCode* globalCode;
+	StaticDim* static_;
 	DimStmt* dimStmt;
 	Value* value;
 	ForNode* forNode;
@@ -66,6 +67,9 @@
 %type <globalCodeList> GlobalCodeList
 %type <globalCode> GlobalCode
 %type <dimStmt> DimStmt
+%type <dimStmt> DimSingle
+%type <dimStmt> DimArray
+%type <static_> StaticStmt
 
 %type <int_literal> Integer
 %type <string_literal> STRING
@@ -153,39 +157,39 @@ GlobalCode: FunctionDeclaration {}
 		  | DimStmt EndList {}
 		  ;
 
-Statement: DimStmt EndList {}
- 		 | IfStmt EndList {}
-   		 | WhileStatement EndList {}
-		 | DoLoopWhileStatement EndList {}
-		 | DoLoopUntilStatement EndList {}
-		 | ForStatement EndList {}
-		 | StaticStmt EndList {}
-		 | Expression EndList {}
-		 | ContinueWhile EndList {}
-		 | DOOption EndList {}
-		 | ContinueExitFor EndList {}
+Statement: DimStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::dim_); }
+ 		 | IfStmt EndList { $$ = StmtNode::DeclarationIf($1, StmtNode::ifstmt_); }
+   		 | WhileStatement EndList { $$ = StmtNode::DeclarationWhile($1, StmtNode::while_); }
+		 | DoLoopWhileStatement EndList { $$ = StmtNode::DeclarationWhile($1, StmtNode::dowhile_); }
+		 | DoLoopUntilStatement EndList { $$ = StmtNode::DeclarationWhile($1, StmtNode::dountil_); }
+		 | ForStatement EndList { $$ = StmtNode::DeclarationFor($1, StmtNode::for_); }
+		 | StaticStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::static_); }
+		 | Expression EndList { $$ = StmtNode::DeclarationExpression($1, StmtNode::expr_); }
+		 | ContinueWhile EndList { $$ = StmtNode::DeclarationContinueWhile($1, StmtNode::continue_while); }
+		 | DOOption EndList { $$ = StmtNode::DeclarationDoOption($1, StmtNode::dooption_exit); }
+		 | ContinueExitFor EndList { $$ = StmtNode::DeclarationContinueExitFor($1, StmtNode::continue_for); }
 		 ;
 
-DimStmt: DIM DimSingle {}
-	   | DIM DimArray {}
+DimStmt: DIM DimSingle {$$ = $2;}
+	   | DIM DimArray {$$ = $2;}
 	   ;
 
-DimSingle: IDENTIFIERlist '=' Expression
-		 | IDENTIFIERlist AS Type
+DimSingle: IDENTIFIERlist '=' Expression { $$ = DimStmt::DeclarationSingleExpr($1, DimStmt::single_expr, $3); }
+		 | IDENTIFIERlist AS Type { $$ = DimStmt::DeclarationSingleType($1, DimStmt::single_type, $3); }
 		 ;
 
-DimArray: ArrayIDdeclaration
-	    | ArrayIDdeclaration AS Type
+DimArray: ArrayIDdeclaration { $$ = DimStmt::DeclarationArray($1, DimStmt::array_without, 0); }
+	    | ArrayIDdeclaration AS Type { $$ = DimStmt::DeclarationArray($1, DimStmt::array_with, $3); }
 		;
 
-IDENTIFIERlist: IDENTIFIEREndl
- 			  | IDENTIFIERlist ',' IDENTIFIEREndl
+IDENTIFIERlist: IDENTIFIEREndl {}
+ 			  | IDENTIFIERlist ',' IDENTIFIEREndl {}
 			  ;
 			  
 IDENTIFIEREndl: IDENTIFIER OptEndl {}
 
-StaticStmt: KW_STATIC DimSingle
-	      | KW_STATIC DimArray
+StaticStmt: KW_STATIC DimSingle { $$ = StaticDim::DeclareStatic($2); }
+	      | KW_STATIC DimArray { $$ = StaticDim::DeclareStatic($2); }
 	      ;
 
 Type: TYPE_BOOLEAN {}
@@ -210,8 +214,8 @@ ArrayExpr: '{' ArrayBody '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $
 	     | NEW Type '('')' '{'ArrayBody'}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body_type, $2, $6); }
          ;
 
-ArrayIDdeclaration: ArraySizeName
-				  | ArrayIDdeclaration ',' ArraySizeName
+ArrayIDdeclaration: ArraySizeName {}
+				  | ArrayIDdeclaration ',' ArraySizeName {}
 				  ;
 				 
 ArraySizeName: IDENTIFIER '('')'{}

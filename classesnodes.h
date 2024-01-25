@@ -243,6 +243,17 @@ public:
     void toDot(string &dot);
 };
 
+class StaticDim
+{
+public:
+    int id;
+    DimStmt* dim;
+
+    static StaticDim* DeclareStatic(DimStmt* dim);
+
+    void toDot(string &dot);
+};
+
 class DimStmt
 {
 public:
@@ -259,9 +270,10 @@ public:
     ArrayIdList* arrayIdList = NULL;
     bool isStatic = false;
 
-    static DimStmt* DeclarationSingleType(IdList* idList, Type type, bool isStatic);
-    static DimStmt* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode, bool isStatic);
-    static DimStmt* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode, bool isStatic);
+    static DimStmt* DeclarationSingleType(IdList* idList, Type type, TypeNode* typeNode);
+    static DimStmt* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode);
+    static DimStmt* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode);
+    void becomeStatic();
 
     void toDot(string &dot);
 };
