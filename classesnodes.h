@@ -338,12 +338,23 @@ public:
     int id;
     ExprNode* startExpr;
     ExprNode* endExpr;
-    bool hasStep = false;
+    OptionalStep* step = false;
     ExprNode* assignExpVar;
-    Value* stepVal;
     StmtListNode* body;
 
-    ForNode(ExprNode* startExpr, ExprNode* endExpr, bool hasStep, ExprNode* assignExpVar, Value* stepVal, StmtListNode* body);
+    static ForNode* fornode(ExprNode* startExpr, ExprNode* endExpr, OptionalStep* step, ExprNode* assignExpVar, StmtListNode* body);
+
+    void toDot(string &dot);
+};
+
+class OptionalStep
+{
+public:
+    int id;
+    bool hasStep = false;
+    Value* stepval = NULL;
+
+    static OptionalStep* addStep(Value* stepval, bool hasStep);
 
     void toDot(string &dot);
 };

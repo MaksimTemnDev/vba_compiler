@@ -166,9 +166,9 @@ Statement: DimStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::dim_); 
 		 | ForStatement EndList { $$ = StmtNode::DeclarationFor($1, StmtNode::for_); }
 		 | StaticStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::static_); }
 		 | Expression EndList { $$ = StmtNode::DeclarationExpression($1, StmtNode::expr_); }
-		 | ContinueWhile EndList { $$ = StmtNode::DeclarationContinueWhile($1, StmtNode::continue_while); }
-		 | DOOption EndList { $$ = StmtNode::DeclarationDoOption($1, StmtNode::dooption_exit); }
-		 | ContinueExitFor EndList { $$ = StmtNode::DeclarationContinueExitFor($1, StmtNode::continue_for); }
+		 | ContinueWhile EndList { $$ = StmtNode::DeclarationContinueWhile(StmtNode::continue_while); }
+		 | DOOption EndList { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_exit); }
+		 | ContinueExitFor EndList { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::continue_for); }
 		 ;
 
 DimStmt: DIM DimSingle {$$ = $2;}
@@ -370,15 +370,15 @@ EXITDO: EXIT DO;
 
 CONTINUEDO: CONTINUE DO;
 
-OptionalStep: 
-			| STEP IndexesWithId
+OptionalStep: { $$ = OptionalStep::whileStmt(0, false); }
+			| STEP IndexesWithId { $$ = OptionalStep::whileStmt($2, true); }
 			;
 			
 ContinueExitFor: CONTINUE FOR
 			   | EXIT FOR
 			   ;
 
-ForStatement: FOR AssignExprVar TO Expression OptionalStep EndList StatementList NEXT
+ForStatement: FOR AssignExprVar TO Expression OptionalStep EndList StatementList NEXT { $$ = ForNode::fornode($2, $4, $5, $7, While::doloopwhile_); }
 			;
 				 
 EndList: TOKEN_LINE
