@@ -222,7 +222,7 @@ public:
     ExprNode* yes;
     ExprNode* not;
 
-    Ternar(ExprNode* cond, ExprNode* y, ExprNode* n);
+    static Ternar* ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n);
 
     void toDot(string &dot);
 };

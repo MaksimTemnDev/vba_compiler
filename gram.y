@@ -236,7 +236,7 @@ ExpressionList: Expression {}
 			  | ExpressionList ',' Expression {}
 			  ;
 			  
-Expression: AssignExprVar { $$ = ExprNode::OperatorExpr(ExprNode::assign, $1, 0); }
+Expression: AssignExprVar { $$ = $1; }
 		  | ExprStart '=' OptEndl ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::no_assign_part, $1, $4); }
 		  | ExpressionWithoutAssign { $$ = $1; }
 		  | Expression OR Expression { $$ = ExprNode::OperatorExpr(ExprNode::or, $1, $3); }
@@ -254,7 +254,7 @@ Expression: AssignExprVar { $$ = ExprNode::OperatorExpr(ExprNode::assign, $1, 0)
 		  | ExprStartWithId BIT_RIGHT_SHIFT_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::bit_r_shift_assign, $1, $3); }
 		  ;
 		  
-AssignExprVar: IDENTIFIER '=' OptEndl ExpressionWithoutAssign {};
+AssignExprVar: IDENTIFIER '=' OptEndl ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::assign, $1, 0); };
 
 ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_plus, $1, $4); }
 		  | ExprStartWithId '&' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::str_plus, $1, $4); }
@@ -352,7 +352,7 @@ IfStmt: IF Expression THEN EndList StatementList END IF { $$ = IfNode::IfClear($
 	| IF Expression THEN EndList StatementList ELSEIF Expression THEN EndList StatementList END IF { $$ = IfNode::IfElseIf($2, $5, $7, $10, IfNode::else_); }
 	;
 
-TernarOperator: Iif '('Expression ',' Expression ',' Expression')' { $$ = ExprNode::IifExpr(ExprNode::iif, $3, $5, $7); };
+TernarOperator: Iif '('Expression ',' Expression ',' Expression')' { $$ = Ternar::ternarOp($3, $5, $7); };
 
 WhileStatement: WHILE Expression EndList StatementList END WHILE { $$ = While::whileStmt($2, $4, While::simple_); };
 			
