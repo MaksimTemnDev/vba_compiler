@@ -42,6 +42,7 @@
 	While* whileSt;
 	Ternar* ternar;
 	IfNode* ifNode;
+	OptionalStep* optStep;
 	
 }
 
@@ -55,11 +56,15 @@
 %type <expr> IsNotIs
 %type <expr> TernarOperator
 %type <expr> ArrayBody
-%type <expr> TypeOfs
+
 %type <expr> IndexesWithId
 %type <expr> AssignExprVar
 %type <expr> ExprStart
 %type <stmt> Statement
+%type <stmt> WhileStatement
+%type <stmt> DoLoopWhileStatement
+%type <stmt> DoLoopUntilStatement
+%type <stmt> ForStatement
 %type <stmt_list> StatementList
 %type <func_decl> FunctionDeclaration
 %type <sub_decl> SubDeclaration
@@ -71,7 +76,9 @@
 %type <dimStmt> DimArray
 %type <static_> StaticStmt
 %type <ifNode> IfStmt
-
+%type <dimStmt> IDENTIFIERlist
+%type <dimStmt> ArrayIDdeclaration
+%type <optStep> OptionalStep
 %type <int_literal> Integer
 %type <string_literal> STRING
 %type <identifier> IDENTIFIER
@@ -278,11 +285,9 @@ ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode:
 		  | IDENTIFIER'('IndexesWithId')' { $$ = ExprNode::OperatorExpr(ExprNode::array_access, $1, $3); }
 		  | ExprStartWithId Like ExprStartWithId { $$ = ExprNode::OperatorExpr(ExprNode::like, $1, $3); }
 		  | IsNotIs {$$=$1;}
-		  | TypeOfs IsNotIs { $$ = ExprNode::typeOfisnotIs(ExprNode::typof, $1, $2); }
+		  | TypeOf IsNotIs { $$ = ExprNode::typeOfisnotIs(ExprNode::typof, $2); }
 		  ;
 
-TypeOfs: TypeOf {}
-       ;
 
 IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::isnot, $1, $3); }
 	   | ExprStartWithId Is ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::is, $1, $3); }

@@ -25,6 +25,7 @@ class IdList;
 class While;
 class Ternar;
 class IfNode;
+class OptionalStep;
 
 class CodeNode{
     public: 
