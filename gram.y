@@ -77,7 +77,8 @@
 %type <dimStmt> DimArray
 %type <static_> StaticStmt
 %type <ifNode> IfStmt
-%type <dimStmt> IDENTIFIERlist
+%type <idList> IDENTIFIERlist
+%type <idList> IDENTIFIEREndl
 %type <dimStmt> ArrayIDdeclaration
 %type <optStep> OptionalStep
 %type <int_literal> Integer
@@ -195,27 +196,27 @@ DimArray: ArrayIDdeclaration { $$ = DimStmt::DeclarationArray($1, DimStmt::array
 	    | ArrayIDdeclaration AS Type { $$ = DimStmt::DeclarationArray($1, DimStmt::array_with, $3); }
 		;
 
-IDENTIFIERlist: IDENTIFIEREndl {}
- 			  | IDENTIFIERlist ',' IDENTIFIEREndl {}
+IDENTIFIERlist: IDENTIFIEREndl { $$ = $1; }
+ 			  | IDENTIFIERlist ',' IDENTIFIEREndl { $$ = IdList::IsList($1); }
 			  ;
 			  
-IDENTIFIEREndl: IDENTIFIER OptEndl {}
+IDENTIFIEREndl: IDENTIFIER OptEndl { $$ = IdList::IsList($1); }
 
 StaticStmt: KW_STATIC DimSingle { $$ = StaticDim::DeclareStatic($2); }
 	      | KW_STATIC DimArray { $$ = StaticDim::DeclareStatic($2); }
 	      ;
 
-Type: TYPE_BOOLEAN {}
-	| TYPE_BYTE {}
-	| TYPE_INTEGER {}
-	| TYPE_SINGLE {}
-	| TYPE_SHORT {}
-	| TYPE_DOUBLE {}
-	| TYPE_DECIMAL {}
-	| TYPE_DATE {}
-	| TYPE_CHAR {}
-	| TYPE_STRING {}
-	| TYPE_OBJECT {}
+Type: TYPE_BOOLEAN { $$ = TypeNode::TypeNode(TypeNode::bool_); }
+	| TYPE_BYTE { $$ = TypeNode::TypeNode(TypeNode::byte_); }
+	| TYPE_INTEGER { $$ = TypeNode::TypeNode(TypeNode::int_); }
+	| TYPE_SINGLE { $$ = TypeNode::TypeNode(TypeNode::single); }
+	| TYPE_SHORT { $$ = TypeNode::TypeNode(TypeNode::short_); }
+	| TYPE_DOUBLE { $$ = TypeNode::TypeNode(TypeNode::double_); }
+	| TYPE_DECIMAL { $$ = TypeNode::TypeNode(TypeNode::decimal_); }
+	| TYPE_DATE { $$ = TypeNode::TypeNode(TypeNode::date_); }
+	| TYPE_CHAR { $$ = TypeNode::TypeNode(TypeNode::char_); }
+	| TYPE_STRING { $$ = TypeNode::TypeNode(TypeNode::string_); }
+	| TYPE_OBJECT { $$ = TypeNode::TypeNode(TypeNode::obj_); }
 	;
 
 ArrayBody: IDENTIFIERlist {}

@@ -102,7 +102,7 @@ public:
 class TypeNode{
 public:
     enum Type{
-        date_, int_, byte_, single, char_, string_, short_, bool_, obj_, decimal_
+        date_, int_, byte_, single, char_, string_, short_, bool_, obj_, decimal_, double_
     };
 
     int id;
