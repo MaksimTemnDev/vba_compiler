@@ -303,40 +303,40 @@ IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::Operator
 	   ;
 	
 ExprStart: Values { $$ = $1; }
-		 | IDENTIFIER '('ExpressionList')' {}
+		 | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_witout($1, Identificator::func_, $3); }
 		 ;
 		
-Values: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout(single, Identificator::var_)); }
-	  | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::var_)); }
+Values: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout(single, Identificator::val_)); }
+	  | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::val_)); }
 	  | Boolean { $$ = $1; }
-	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::var_)); }
-	  | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date, Identificator::var_)); }
-	  | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::var_)); }
-	  | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::var_)); }
+	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::val_)); }
+	  | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date, Identificator::val_)); }
+	  | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::val_)); }
+	  | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::val_)); }
 	  | Indexes { $$ = $1; }
 	  ;
 	 
-Boolean: KW_FALSE { $$ = Value::Value(0, Value::bool_, FALSE, Identificator::id_witout(FALSE, Identificator::var_)); }
-	   | KW_TRUE { $$ = Value::Value(1, Value::bool_, TRUE, Identificator::id_witout(TRUE, Identificator::var_)); }
+Boolean: KW_FALSE { $$ = Value::Value(0, Value::bool_, FALSE, Identificator::id_witout(FALSE, Identificator::val_)); }
+	   | KW_TRUE { $$ = Value::Value(1, Value::bool_, TRUE, Identificator::id_witout(TRUE, Identificator::val_)); }
 	   ;
 	 
-Indexes: DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::id_witout(int, Identificator::var_)); };
+Indexes: DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::id_witout(int, Identificator::val_)); };
 	   
 IndexesWithId: Indexes { $$ = $1; }
-			 | IDENTIFIER { $$ = Identificator::id_witout($1, Identificator::var_); }
+			 | IDENTIFIER { $$ = Identificator::id_witout($1, Identificator::val_); }
 			 ;
 			 
 ExprStartWithId: ValuesWithId {$$ = $1;}
-			   | IDENTIFIER '('ExpressionList')' {}
+			   | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_witout(single, Identificator::var_)); }
 			   ;
 		
-ValuesWithId: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout(single, Identificator::var_)); }
-            | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::var_)); }
+ValuesWithId: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout(single, Identificator::val_)); }
+            | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::val_)); }
             | Boolean { $$ = $1; }
-            | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::var_)); }
-            | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date, Identificator::var_)); }
-            | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::var_)); }
-            | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::var_)); }
+            | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::val_)); }
+            | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date, Identificator::val_)); }
+            | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::val_)); }
+            | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::val_)); }
 		    | IndexesWithId { $$ = $1; }
 		    ;
 

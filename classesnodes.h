@@ -296,7 +296,7 @@ class Identificator
 public:
     enum Type
     {
-        var_, func_, arr_, class_
+        val_, var_, func_, arr_, class_
     };
     int id;
     string* identifier;
