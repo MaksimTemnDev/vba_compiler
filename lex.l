@@ -188,6 +188,8 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 
     eraseType("Decimal");
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
+	yylval.TYPE_DECIMAL = atoi(str);
+    return TYPE_DECIMAL;
 }
 
 0b([0-1])+ {
@@ -195,6 +197,8 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
     if(strlen(str) > 2)
     {
          printf("Found BYTE_NUMBER: %d\n", strtol(str + 2, NULL, 2));
+		 yylval.TYPE_BYTE = str;
+	 return TYPE_BYTE;
     }
     else
     {
@@ -204,13 +208,17 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 
 [0-9]+\.([0-9]+|([eE]?[+-]?[0-9]+)+)* {
     printf("Found DOUBLE: %lf\n", atof(str), str);
+	yylval.TYPE_DOUBLE = atof(str);
+    return TYPE_DOUBLE;
 }
 
 [0-9]+([eE]?[+-]?[0-9]+)? {
     printf("Found DOUBLE: %lf\n", atof(str));
+	yylval.TYPE_DOUBLE = atof(str);
+    return TYPE_DOUBLE;
 }
 
-[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); yylval.IDENTIFIER = yytext;  return IDENTIFIER; }
 
 %%
 
