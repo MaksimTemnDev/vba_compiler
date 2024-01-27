@@ -365,7 +365,7 @@ class Value
 public:
     enum Type
     {
-    int_, byte_num, id_, short_, bool_, single_, double_, string_, date_, char_, obj_
+    int_, byte_num, id_, short_, bool_, single_, double_, string_, date_, char_, obj_, dec_num
     };
     int id;
     int value;

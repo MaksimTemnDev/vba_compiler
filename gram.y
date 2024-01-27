@@ -93,6 +93,7 @@
 %type <byte_number> BYTE_NUMBER
 %type <short_literal> SHORT
 %type <value> Values
+%type <value> ValuesWithId
 %type <value> Indexes
 
 %token END
@@ -329,15 +330,15 @@ ExprStartWithId: ValuesWithId {}
 			   | IDENTIFIER '('ExpressionList')' {}
 			   ;
 		
-ValuesWithId: SINGLE {}
-		    | STRING {}
-		    | Boolean {}
-		    | DOUBLE {}
-		    | DATE {}
-		    | CHAR {}
-		    | OBJECT {}
-		    | DECIMAL_NUMBER {}
-		    | IndexesWithId {}
+ValuesWithId: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::Identificator(single, Identificator::var_)); }
+            | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::Identificator(string, Identificator::var_)); }
+            | Boolean { $$ = $1; }
+            | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::Identificator(double, Identificator::var_)); }
+            | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::Identificator(date, Identificator::var_)); }
+            | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::Identificator(char, Identificator::var_)); }
+            | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::Identificator(object, Identificator::var_)); }
+            | DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::Identificator(int, Identificator::var_)); }
+		    | IndexesWithId { $$ = $1; }
 		    ;
 
 UnarExpr: UnarMinus	ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::u_minus, 0, $2); }
