@@ -301,8 +301,12 @@ public:
     int id;
     string* identifier;
     Type type;
+    Value* arrSize;
+    ExprListNode* exprList;
 
-    Identificator(string* identifier, Type* type);
+    static Identificator* id_witout(string* identifier, Type* type);
+    static Identificator* id_with(string* identifier, Type* type, Value* size);
+    static Identificator* id_func(string* identifier, Type* type, ExprListNode* exprs);
 
     void toDot(string &dot);
 };

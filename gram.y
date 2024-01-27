@@ -54,9 +54,9 @@
 %type <expr> ExpressionWithoutAssign
 %type <expr> UnarExpr
 %type <expr> ArrayExpr
+%type <expr> ArrayBody
 %type <expr> IsNotIs
 %type <expr> TernarOperator
-%type <expr> ArrayBody
 
 %type <value> IndexesWithId
 %type <expr> AssignExprVar
@@ -66,6 +66,8 @@
 %type <stmt> DoLoopWhileStatement
 %type <stmt> DoLoopUntilStatement
 %type <stmt> ForStatement
+%type <stmt> ContinueExitFor
+%type <stmt> DOOption
 %type <stmt_list> StatementList
 %type <func_decl> FunctionDeclaration
 %type <sub_decl> SubDeclaration
@@ -181,8 +183,8 @@ Statement: DimStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::dim_); 
 		 | StaticStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::static_); }
 		 | Expression EndList { $$ = StmtNode::DeclarationExpression($1, StmtNode::expr_); }
 		 | ContinueWhile EndList { $$ = StmtNode::DeclarationContinueWhile(StmtNode::continue_while); }
-		 | DOOption EndList { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_exit); }
-		 | ContinueExitFor EndList { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::continue_for); }
+		 | DOOption EndList { $$ = $1; }
+		 | ContinueExitFor EndList { $$ = $1; }
 		 ;
 
 DimStmt: DIM DimSingle {$$ = $2;}
@@ -220,21 +222,21 @@ Type: TYPE_BOOLEAN { $$ = TypeNode::TypeNode(TypeNode::bool_); }
 	| TYPE_OBJECT { $$ = TypeNode::TypeNode(TypeNode::obj_); }
 	;
 
-ArrayBody: IDENTIFIERlist { $$ = $1; }
-		 | '{' '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_empty, 0, 0); }
+ArrayBody: '{' IDENTIFIERlist '}' { $$ = $2; }
+		 | '{' ExpressionList '}' { $$ = $2; }
 		 ;
 
-ArrayExpr: '{' ArrayBody '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $2, 0); }
+ArrayExpr: ArrayBody { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $1, 0); }
          | '{' '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_empty, 0, 0); }
-	     | NEW Type '('')' '{'ArrayBody'}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body_type, $2, $6); }
+	     | NEW Type '('')' ArrayBody { $$ = ExprNode::OperatorExpr(ExprNode::arr_body_type, $2, $5); }
          ;
 
 ArrayIDdeclaration: ArraySizeName { $$ = $1; }
 				  | ArrayIDdeclaration ',' ArraySizeName { $$ = DimStmt::DeclarationArray($1, DimStmt::without, 0); }
 				  ;
 				 
-ArraySizeName: IDENTIFIER '('')' { $$ = Identificator::Identificator($1, Identificator::arr_); }
-			 | IDENTIFIER '('IndexesWithId')' {  }
+ArraySizeName: IDENTIFIER '('')' { $$ = Identificator::id_witout($1, Identificator::arr_); }
+			 | IDENTIFIER '('IndexesWithId')' { $$ = Identificator::id_with($1, Identificator::arr_, $3); }
              ;
 
 StatementList: Statement { $$ = $1 }
@@ -304,42 +306,37 @@ ExprStart: Values { $$ = $1; }
 		 | IDENTIFIER '('ExpressionList')' {}
 		 ;
 		
-Values: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::Identificator(single, Identificator::var_)); }
-	  | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::Identificator(string, Identificator::var_)); }
+Values: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout(single, Identificator::var_)); }
+	  | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::var_)); }
 	  | Boolean { $$ = $1; }
-	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::Identificator(double, Identificator::var_)); }
-	  | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::Identificator(date, Identificator::var_)); }
-	  | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::Identificator(char, Identificator::var_)); }
-	  | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::Identificator(object, Identificator::var_)); }
-	  | DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::Identificator(int, Identificator::var_)); }
+	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::var_)); }
+	  | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date, Identificator::var_)); }
+	  | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::var_)); }
+	  | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::var_)); }
 	  | Indexes { $$ = $1; }
 	  ;
 	 
-Boolean: KW_FALSE { $$ = Value::Value(0, Value::bool_, FALSE, Identificator::Identificator(FALSE, Identificator::var_)); }
-	   | KW_TRUE { $$ = Value::Value(1, Value::bool_, TRUE, Identificator::Identificator(TRUE, Identificator::var_)); }
+Boolean: KW_FALSE { $$ = Value::Value(0, Value::bool_, FALSE, Identificator::id_witout(FALSE, Identificator::var_)); }
+	   | KW_TRUE { $$ = Value::Value(1, Value::bool_, TRUE, Identificator::id_witout(TRUE, Identificator::var_)); }
 	   ;
 	 
-Indexes: Integer { $$ = Value::Value($1, Value::int_, TRUE, Identificator::Identificator(int, Identificator::var_)); } //что передавать первым параметром
-	   | BYTE_NUMBER { $$ = Value::Value($1, Value::byte_num, TRUE, Identificator::Identificator(byte, Identificator::var_)); }
-	   | SHORT { $$ = Value::Value($1, Value::short_num, TRUE, Identificator::Identificator(short, Identificator::var_)); }
-	   ;
+Indexes: DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::id_witout(int, Identificator::var_)); };
 	   
 IndexesWithId: Indexes { $$ = $1; }
-			 | IDENTIFIER { $$ = Identificator::Identificator($1, Identificator::var_); }
+			 | IDENTIFIER { $$ = Identificator::id_witout($1, Identificator::var_); }
 			 ;
 			 
-ExprStartWithId: ValuesWithId {}
+ExprStartWithId: ValuesWithId {$$ = $1;}
 			   | IDENTIFIER '('ExpressionList')' {}
 			   ;
 		
-ValuesWithId: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::Identificator(single, Identificator::var_)); }
-            | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::Identificator(string, Identificator::var_)); }
+ValuesWithId: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout(single, Identificator::var_)); }
+            | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::var_)); }
             | Boolean { $$ = $1; }
-            | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::Identificator(double, Identificator::var_)); }
-            | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::Identificator(date, Identificator::var_)); }
-            | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::Identificator(char, Identificator::var_)); }
-            | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::Identificator(object, Identificator::var_)); }
-            | DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::Identificator(int, Identificator::var_)); }
+            | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::var_)); }
+            | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date, Identificator::var_)); }
+            | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::var_)); }
+            | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::var_)); }
 		    | IndexesWithId { $$ = $1; }
 		    ;
 
@@ -372,8 +369,8 @@ ContinueWhile: CONTINUE WHILE;
 
 DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP { $$ = While::whileStmt($3, $5, While::doloopuntil); };
 	
-DOOption: EXITDO
-		| CONTINUEDO
+DOOption: EXITDO { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_exit); }
+		| CONTINUEDO { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_continue); }
 		;
 
 DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP { $$ = While::whileStmt($3, $5, While::doloopwhile_); };
@@ -386,8 +383,8 @@ OptionalStep: { $$ = OptionalStep::whileStmt(0, false); }
 			| STEP IndexesWithId { $$ = OptionalStep::whileStmt($2, true); }
 			;
 			
-ContinueExitFor: CONTINUE FOR
-			   | EXIT FOR
+ContinueExitFor: CONTINUE FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::continue_for); }
+			   | EXIT FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::exit_for); }
 			   ;
 
 ForStatement: FOR AssignExprVar TO Expression OptionalStep EndList StatementList NEXT { $$ = ForNode::fornode($2, $4, $5, $7, While::doloopwhile_); }
