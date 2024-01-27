@@ -13,6 +13,7 @@
     string* identifier;
     bool bool_literal;
     double double_literal;
+    double single_literal;
     char char_literal;
     object obj_literal;
 	date date_literal; 
@@ -57,7 +58,7 @@
 %type <expr> TernarOperator
 %type <expr> ArrayBody
 
-%type <expr> IndexesWithId
+%type <value> IndexesWithId
 %type <expr> AssignExprVar
 %type <expr> ExprStart
 %type <stmt> Statement
@@ -84,12 +85,15 @@
 %type <identifier> IDENTIFIER
 %type <bool_literal> Boolean
 %type <double_literal> DOUBLE
+%type <single_literal> SINGLE
 %type <char_literal> CHAR
 %type <obj_literal> OBJECT
 %type <date_literal> DATE
 %type <decimal_number> DECIMAL_NUMBER
 %type <byte_number> BYTE_NUMBER
-%type <short_literal> SHORT 
+%type <short_literal> SHORT
+%type <value> Values
+%type <value> Indexes
 
 %token END
 %token WHILE DO LOOP UNTIL FOR TO STEP CONTINUE EXIT
@@ -293,39 +297,39 @@ IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::Operator
 	   | ExprStartWithId Is ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::is, $1, $3); }
 	   ;
 	
-ExprStart: Values {}
+ExprStart: Values { $$ = $1; }
 		 | IDENTIFIER '('ExpressionList')' {}
 		 ;
 		
-Values: SINGLE
-	  | STRING {}
-	  | Boolean {}
-	  | DOUBLE {}
-	  | DATE {}
-	  | CHAR {}
-	  | OBJECT {}
-	  | DECIMAL_NUMBER {}
-	  | Indexes
+Values: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::Identificator(single, Identificator::var_)); }
+	  | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::Identificator(string, Identificator::var_)); }
+	  | Boolean { $$ = $1; }
+	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::Identificator(double, Identificator::var_)); }
+	  | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::Identificator(date, Identificator::var_)); }
+	  | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::Identificator(char, Identificator::var_)); }
+	  | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::Identificator(object, Identificator::var_)); }
+	  | DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::Identificator(int, Identificator::var_)); }
+	  | Indexes { $$ = $1; }
 	  ;
 	 
-Boolean: KW_FALSE {}
-	   | KW_TRUE {}
+Boolean: KW_FALSE { $$ = Value::Value(0, Value::bool_, FALSE, Identificator::Identificator(FALSE, Identificator::var_)); }
+	   | KW_TRUE { $$ = Value::Value(1, Value::bool_, TRUE, Identificator::Identificator(TRUE, Identificator::var_)); }
 	   ;
 	 
-Indexes: Integer {}
-	   | BYTE_NUMBER {}
-	   | SHORT {}
+Indexes: Integer { $$ = Value::Value($1, Value::int_, TRUE, Identificator::Identificator(int, Identificator::var_)); } //что передавать первым параметром
+	   | BYTE_NUMBER { $$ = Value::Value($1, Value::byte_num, TRUE, Identificator::Identificator(byte, Identificator::var_)); }
+	   | SHORT { $$ = Value::Value($1, Value::short_num, TRUE, Identificator::Identificator(short, Identificator::var_)); }
 	   ;
 	   
-IndexesWithId: Indexes {}
-			 | IDENTIFIER {}
+IndexesWithId: Indexes { $$ = $1; }
+			 | IDENTIFIER { $$ = Identificator::Identificator($1, Identificator::var_); }
 			 ;
 			 
 ExprStartWithId: ValuesWithId {}
 			   | IDENTIFIER '('ExpressionList')' {}
 			   ;
 		
-ValuesWithId: SINGLE
+ValuesWithId: SINGLE {}
 		    | STRING {}
 		    | Boolean {}
 		    | DOUBLE {}
