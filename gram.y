@@ -96,6 +96,7 @@
 %type <value> Values
 %type <value> ValuesWithId
 %type <value> Indexes
+%type <identificator> ArraySizeName
 
 %token END
 %token WHILE DO LOOP UNTIL FOR TO STEP CONTINUE EXIT
@@ -219,8 +220,8 @@ Type: TYPE_BOOLEAN { $$ = TypeNode::TypeNode(TypeNode::bool_); }
 	| TYPE_OBJECT { $$ = TypeNode::TypeNode(TypeNode::obj_); }
 	;
 
-ArrayBody: IDENTIFIERlist {}
-		 | '{' '}' {}
+ArrayBody: IDENTIFIERlist { $$ = $1; }
+		 | '{' '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_empty, 0, 0); }
 		 ;
 
 ArrayExpr: '{' ArrayBody '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $2, 0); }
@@ -228,16 +229,16 @@ ArrayExpr: '{' ArrayBody '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $
 	     | NEW Type '('')' '{'ArrayBody'}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_body_type, $2, $6); }
          ;
 
-ArrayIDdeclaration: ArraySizeName {}
-				  | ArrayIDdeclaration ',' ArraySizeName {}
+ArrayIDdeclaration: ArraySizeName { $$ = $1; }
+				  | ArrayIDdeclaration ',' ArraySizeName { $$ = DimStmt::DeclarationArray($1, DimStmt::without, 0); }
 				  ;
 				 
-ArraySizeName: IDENTIFIER '('')'{}
-			 | IDENTIFIER '('IndexesWithId')'{}
+ArraySizeName: IDENTIFIER '('')' { $$ = Identificator::Identificator($1, Identificator::arr_); }
+			 | IDENTIFIER '('IndexesWithId')' {  }
              ;
 
-StatementList: Statement {}
-             | StatementList Statement {}
+StatementList: Statement { $$ = $1 }
+             | StatementList Statement { $$ = StmtListNode::StmtListNode($2); }
              ;
 
 BodyStmt: StatementList RETURN Expression EndList END Function EndList {}
@@ -245,8 +246,8 @@ BodyStmt: StatementList RETURN Expression EndList END Function EndList {}
 		;
 		
 
-ExpressionList: Expression {}
-			  | ExpressionList ',' Expression {}
+ExpressionList: Expression { $$ = $1; }
+			  | ExpressionList ',' Expression { $$ = ExprListNode::ExprListNode($1); }
 			  ;
 			  
 Expression: AssignExprVar { $$ = $1; }
