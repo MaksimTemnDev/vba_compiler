@@ -166,13 +166,13 @@
 Program: OptEndl GlobalCodeList { $$ = global_program_code = new CodeNode($2); }
 	   ;
 
-GlobalCodeList: GlobalCode {}
-			  | GlobalCodeList GlobalCode {}
+GlobalCodeList: GlobalCode { $$ = $1; }
+			  | GlobalCodeList GlobalCode { $$ = GlobalCodeList::Append($1, $2); }
 			  ;
 
-GlobalCode: FunctionDeclaration {}
-		  | SubDeclaration {}
-		  | DimStmt EndList {}
+GlobalCode: FunctionDeclaration { $$ = GlobalCode::addSubFunc($1); }
+		  | SubDeclaration { $$ = GlobalCode::addSubFunc($1); }
+		  | DimStmt EndList { $$ = GlobalCode::addDim($1); }
 		  ;
 
 Statement: DimStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::dim_); }
