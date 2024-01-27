@@ -70,6 +70,7 @@
 %type <stmt> DOOption
 %type <stmt_list> StatementList
 %type <func_decl> FunctionDeclaration
+%type <func_decl> BodyStmt
 %type <sub_decl> SubDeclaration
 %type <type> Type 
 %type <globalCodeList> GlobalCodeList
@@ -243,8 +244,8 @@ StatementList: Statement { $$ = $1 }
              | StatementList Statement { $$ = StmtListNode::StmtListNode($2); }
              ;
 
-BodyStmt: StatementList RETURN Expression EndList END Function EndList {}
-		| RETURN Expression END Function EndList
+BodyStmt: StatementList RETURN Expression EndList END Function EndList { $$ = FuncDecl::addBody($1); $$ = FuncDecl::addReturn($3); }
+		| RETURN Expression END Function EndList { $$ = FuncDecl::addReturn($2); }
 		;
 		
 
@@ -345,10 +346,10 @@ UnarExpr: UnarMinus	ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNo
 		| Not Expression { $$ = ExprNode::OperatorExpr(ExprNode::not, 0, $2); }
 		;
 
-FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt {}
-                   | Function IDENTIFIER '(' OptEndl ')' AS Type EndList BodyStmt {}
-                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' EndList BodyStmt {}
-                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' AS Type EndList BodyStmt {}
+FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, 0, 0, $7, 0); }
+                   | Function IDENTIFIER '(' OptEndl ')' AS Type EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, $7, 0, $9, 0); }
+                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, 0, $5, $8, 0); }
+                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' AS Type EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, $8, $5, $10, 0); }
                    ;
 				   
 SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, $7, 1); }

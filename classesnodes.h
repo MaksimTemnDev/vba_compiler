@@ -64,11 +64,14 @@ class FuncDecl{
     int id;
     Identificator*  name = NULL;
     TypeNode* returnType = NULL;
-    FuncParamListNode* params = NULL;
+    IdList* params = NULL;
     StmtListNode* body = NULL;
+    ExprNode* return_;
     bool is_sub = false;
 
-    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, FuncParamListNode* params, StmtListNode* body, bool is_sub);
+    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, StmtListNode* body, bool is_sub);
+    void addBody(StmtListNode* body);
+    void addReturn(ExprNode* return_);
 
    void toDot(string &dot);
 };
