@@ -351,8 +351,8 @@ FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt {}
                    | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' AS Type EndList BodyStmt {}
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '('OptEndl')' StatementList END Sub EndList {}
-              | Sub IDENTIFIER '('OptEndl IDENTIFIERlist')' StatementList END Sub EndList {}
+SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, $7, 1); }
+              | Sub IDENTIFIER '('OptEndl IDENTIFIERlist')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, $5, $8, 1); }
               ;
 
 IfStmt: IF Expression THEN EndList StatementList END IF { $$ = IfNode::IfClear($2, $5, IfNode::clear_); }

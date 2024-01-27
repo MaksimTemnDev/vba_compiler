@@ -62,13 +62,13 @@ class GlobalCodeList{
 class FuncDecl{
     public:
     int id;
-    string*  name = NULL;
+    Identificator*  name = NULL;
     TypeNode* returnType = NULL;
     FuncParamListNode* params = NULL;
-    ExprNode* body = NULL;
+    StmtListNode* body = NULL;
     bool is_sub = false;
 
-    FuncDecl(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body, bool is_sub);
+    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, FuncParamListNode* params, StmtListNode* body, bool is_sub);
 
    void toDot(string &dot);
 };
