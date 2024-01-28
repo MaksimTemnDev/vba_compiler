@@ -275,3 +275,116 @@ DimStmt* DimStmt::DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode
 void DimStmt::becomeStatic(){
     this->isStatic?false:true;
 }
+
+IdList::IdList(Identificator* identificator) {
+    this->id = ++globId;
+    this->identificators = new list<Identificator*>{ identificator };
+}
+
+IdList::IdList(IdList* IdList) {
+    this->id = ++globId;
+    if (IdList != NULL)
+    {
+        this->identificators = IdList->identificators;
+    }
+    else
+    {
+        this->identificators = new std::list<Identificator*>;
+    }
+}
+
+IdList* IdList::Append(IdList* idList, Identificator* Identificator) {
+    idList->identificators->push_back(Identificator);
+    return idList;
+}
+
+Identificator* Identificator::id_witout(string* identifier, Type* type) {
+    Identificator* id = new Identificator();
+    id->id = ++globId;
+    id->identifier = identifier;
+    id->type = type;
+    return id;
+}
+
+Identificator* Identificator::id_with(string* identifier, Type* type, Value* size) {
+    Identificator* id = new Identificator();
+    id->id = ++globId;
+    id->identifier = identifier;
+    id->type = type;
+    id->arrSize = size;
+    return id;
+}
+
+Identificator* Identificator::id_func(string* identifier, Type* type, ExprListNode* exprs) {
+    Identificator* id = new Identificator();
+    id->id = ++globId;
+    id->identifier = identifier;
+    id->type = type;
+    id->exprList = exprs;
+    return id;
+}
+
+ArrayIdDeclare::ArrayIdDeclare(string* identifier, Identificator* input_id) {
+    this->id = ++globId;
+    this->identifier = identifier;
+    this->input_id = input_id;
+}
+
+ArrayIdList::ArrayIdList(ArrayIdDeclare* arrayIdDeclare) {
+    this->id = ++globId;
+    this->arrayId = new list<ArrayIdDeclare*>{ arrayIdDeclare };
+}
+
+ArrayIdList::ArrayIdList(ArrayIdList* arrayIdList) {
+    this->id = ++globId;
+    if (arrayIdList != NULL)
+    {
+        this->arrayId = ArrayIdList->arrayId;
+    }
+    else
+    {
+        this->arrayId = new std::list<ArrayIdDeclare*>;
+    }
+}
+
+ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId) {
+    arrIdList->arrayId->push_back(arrayId);
+    return arrIdList;
+}
+
+ForNode* ForNode::fornode(ExprNode* startExpr, ExprNode* endExpr, OptionalStep* step, ExprNode* assignExpVar, StmtListNode* body) {
+    ForNode forNode = new ForNode();
+    forNode->id = ++globId;
+    forNode->startExpr = startExpr;
+    forNode->endExpr = endExpr;
+    forNode->step = step;
+    forNode->assignExpVar = assignExpVar;
+    forNode->body = body;
+    return forNode;
+}
+
+OptionalStep* OptionalStep::addStep(Value* stepval, bool hasStep) {
+    OptionalStep optStep = new OptionalStep();
+    optStep->id = ++globId;
+    optStep->stepval = stepval;
+    optStep->hasStep = hasStep;
+    return optStep;
+}
+
+Value::Value(int value, Type type, bool hasIntVal, Identificator* id) {
+    this->id = ++globId;
+    this->value = value;
+    this->type = type;
+    this->hasIntVal = hasIntVal;
+    this->identificator = id;
+}
+
+StmtListNode::StmtListNode(StmtNode* stmtNode) {
+    this->id = ++globId;
+    this->stmts = new list<StmtNode*>{ stmtNode };
+}
+
+StmtListNode* StmtListNode::Append(StmtListNode* stmtListNode, StmtNode* stmtNode) {
+    stmtListNode->stmts->push_back(stmtNode);
+    return stmtListNode;
+}
