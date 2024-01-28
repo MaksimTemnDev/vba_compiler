@@ -13,13 +13,8 @@
     string* identifier;
     bool bool_literal;
     double double_literal;
-    double single_literal;
     char char_literal;
-    object obj_literal;
-	date date_literal; 
 	int decimal_number;
-	int short_literal;
-	byte byte_number;
 
     CodeNode* code;
     ExprNode* expr;
@@ -84,18 +79,12 @@
 %type <idList> IDENTIFIEREndl
 %type <dimStmt> ArrayIDdeclaration
 %type <optStep> OptionalStep
-%type <int_literal> Integer
 %type <string_literal> STRING
 %type <identifier> IDENTIFIER
 %type <bool_literal> Boolean
 %type <double_literal> DOUBLE
-%type <single_literal> SINGLE
 %type <char_literal> CHAR
-%type <obj_literal> OBJECT
-%type <date_literal> DATE
 %type <decimal_number> DECIMAL_NUMBER
-%type <byte_number> BYTE_NUMBER
-%type <short_literal> SHORT
 %type <value> Values
 %type <value> ValuesWithId
 %type <value> Indexes
@@ -104,7 +93,6 @@
 %token END
 %token WHILE DO LOOP UNTIL FOR TO STEP CONTINUE EXIT
 %token IF THEN ELSE ELSEIF
-%token TRUE FALSE
 %token DIM
 %token NEW AS RETURN NEXT
 %token IDENTIFIER
@@ -128,21 +116,11 @@
 %token KW_TRUE
 
 
-%token Integer
 %token STRING
 %token DECIMAL_NUMBER
-%token BYTE_NUMBER
 %token DOUBLE
-%token ARRAY_ELEMENT_ACCESS_OPERATOR
-%token BOOLEAN
-%token SINGLE
-%token SHORT
-%token DATE
 %token CHAR
-%token OBJECT
 
-%token TRUE
-%token FALSE
 %token PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT EXP_ASSIGNMENT BIT_AND_ASSIGNMENT DIV_NUM_ASSIGNMENT BIT_LEFT_SHIFT_ASSIGNMENT BIT_RIGHT_SHIFT_ASSIGNMENT
 
 %left '^'
@@ -307,13 +285,10 @@ ExprStart: Values { $$ = $1; }
 		 | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_witout($1, Identificator::func_, $3); }
 		 ;
 		
-Values: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout($1, Identificator::val_)); }
-	  | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string_, Identificator::val_)); }
+Values: STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string_, Identificator::val_)); }
 	  | Boolean { $$ = $1; }
 	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double_val, Identificator::val_)); }
-	  | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date_, Identificator::val_)); }
 	  | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::val_)); }
-	  | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::val_)); }
 	  | Indexes { $$ = $1; }
 	  ;
 	 
@@ -331,13 +306,10 @@ ExprStartWithId: ValuesWithId {$$ = $1;}
 			   | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_witout(single, Identificator::var_)); }
 			   ;
 		
-ValuesWithId: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout(single, Identificator::val_)); }
-            | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::val_)); }
+ValuesWithId: STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::val_)); }
             | Boolean { $$ = $1; }
             | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::val_)); }
-            | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date, Identificator::val_)); }
             | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::val_)); }
-            | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::val_)); }
 		    | IndexesWithId { $$ = $1; }
 		    ;
 
