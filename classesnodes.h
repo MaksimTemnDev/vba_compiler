@@ -31,7 +31,7 @@ class CodeNode{
     public: 
     int id;
     GlobalCodeList* globalCode = NULL;
-    GlobalCodeList(GlobalCode* globalcode);
+    CodeNode(GlobalCode* globalcode);
    void toDot(string &dot);
 };
 
@@ -123,19 +123,19 @@ public:
 
 class ExprNode{
     public:
-    enum Type{assign, no_assign_part, or, or_elase, and, and_also, plus_assign, minus_assign, mul_assign, 
+    enum Type{assign, no_assign_part, or_, or_elase, and_, and_also, plus_assign, minus_assign, mul_assign, 
     div_assign, expr_assign, bit_and_aassign, div_num_assign, bit_l_shift_assign, bit_r_shift_assign,
 
-    b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, not_eq, bit_l_shift, bit_r_shift,
-    u_plus, u_minus, not, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof,
+    b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, _not_eq, bit_l_shift, bit_r_shift,
+    u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof,
 
-    single, string, bool_val, double_val, date, char_val, obj, dec_num, int_val, byte_num, short_val, identifier 
+    single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier 
     };
 
     int id;
     Type type;
     char Char = 0;
-    string *String = NULL;
+    string* String = NULL;
     int Int = 0;
     double Double = 0;
     bool Bool;
@@ -224,7 +224,7 @@ public:
     int id;
     ExprNode* condition;
     ExprNode* yes;
-    ExprNode* not;
+    ExprNode* not_;
 
     static Ternar* ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n);
 
@@ -346,7 +346,7 @@ public:
     int id;
     ExprNode* startExpr;
     ExprNode* endExpr;
-    OptionalStep* step = false;
+    OptionalStep* step;
     ExprNode* assignExpVar;
     StmtListNode* body;
 

@@ -179,8 +179,6 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 
 
-\{ {printf("Found ARRAY_Start: %s\n", yytext);}
-\}	 {printf("Found ARRAY_End: %s\n", yytext);}
 
 
 
@@ -250,8 +248,15 @@ int main(int argc, char** argv) {
     }
 
     yyin = file;
-    yylex();
+    yyparse();
     fclose(file);
+
+    string dot;
+    global_program->toDot(dot);
+    std::cout << dot << "\n";
+
+    std::ofstream out("dot-tree.txt");
+    out << dot << "\n";
 
     return 0;
 }

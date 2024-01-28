@@ -256,9 +256,9 @@ ExpressionList: Expression { $$ = $1; }
 Expression: AssignExprVar { $$ = $1; }
 		  | ExprStart '=' OptEndl ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::no_assign_part, $1, $4); }
 		  | ExpressionWithoutAssign { $$ = $1; }
-		  | Expression OR Expression { $$ = ExprNode::OperatorExpr(ExprNode::or, $1, $3); }
+		  | Expression OR Expression { $$ = ExprNode::OperatorExpr(ExprNode::or_, $1, $3); }
 		  | Expression ORELSE Expression { $$ = ExprNode::OperatorExpr(ExprNode::or_elase, $1, $3); }
-		  | Expression AND Expression { $$ = ExprNode::OperatorExpr(ExprNode::and, $1, $3); }
+		  | Expression AND Expression { $$ = ExprNode::OperatorExpr(ExprNode::and_, $1, $3); }
 		  | Expression ANDALSO Expression { $$ = ExprNode::OperatorExpr(ExprNode::and_also, $1, $3); }
 		  | ExprStartWithId PLUS_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::plus_assign, $1, $3); }
 		  | ExprStartWithId MINUS_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::minus_assign, $1, $3); }
@@ -285,7 +285,7 @@ ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode:
 		  | ExprStartWithId '<' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::less, $1, $4); }
 		  | ExprStartWithId MORE_OR_SAME OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::more_s, $1, $4); }
 		  | ExprStartWithId LESS_OR_SAME OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::less_s, $1, $4); }
-		  | ExprStartWithId NOT_EQUAL OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::not_eq, $1, $4); }
+		  | ExprStartWithId NOT_EQUAL OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::_not_eq, $1, $4); }
 		  | ExprStartWithId BIT_LEFT_SHIFT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_l_shift, $1, $4); }
 		  | ExprStartWithId BIT_RIGHT_SHIFT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_r_shift, $1, $4); }
 		  | UnarExpr {$$ = $1;}
@@ -307,11 +307,11 @@ ExprStart: Values { $$ = $1; }
 		 | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_witout($1, Identificator::func_, $3); }
 		 ;
 		
-Values: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout(single, Identificator::val_)); }
-	  | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::val_)); }
+Values: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificator::id_witout($1, Identificator::val_)); }
+	  | STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string_, Identificator::val_)); }
 	  | Boolean { $$ = $1; }
-	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::val_)); }
-	  | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date, Identificator::val_)); }
+	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double_val, Identificator::val_)); }
+	  | DATE { $$ = Value::Value($1, Value::date_, FALSE, Identificator::id_witout(date_, Identificator::val_)); }
 	  | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::val_)); }
 	  | OBJECT { $$ = Value::Value($1, Value::obj_, FALSE, Identificator::id_witout(object, Identificator::val_)); }
 	  | Indexes { $$ = $1; }
@@ -343,7 +343,7 @@ ValuesWithId: SINGLE { $$ = Value::Value($1, Value::single_, FALSE, Identificato
 
 UnarExpr: UnarMinus	ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::u_minus, 0, $2); }
 		| UnarPlus ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::u_plus, 0, $2); }
-		| Not Expression { $$ = ExprNode::OperatorExpr(ExprNode::not, 0, $2); }
+		| Not Expression { $$ = ExprNode::OperatorExpr(ExprNode::_not, 0, $2); }
 		;
 
 FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, 0, 0, $7, 0); }
