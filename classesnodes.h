@@ -31,7 +31,7 @@ class CodeNode{
     public: 
     int id;
     GlobalCodeList* globalCode = NULL;
-    CodeNode(GlobalCode* globalcode);
+    CodeNode(GlobalCodeList* globalcode);
    void toDot(string &dot);
 };
 
@@ -54,7 +54,7 @@ class GlobalCodeList{
 
     GlobalCodeList(GlobalCode* globalCode);
     GlobalCodeList(GlobalCodeList* globalCodes);
-    static GlobalCodeList* Append(GlobalCodeList* globalCodes, GlobalCode* GlobalCode);
+    static GlobalCodeList* Append(GlobalCodeList* globalCodes, GlobalCode* globalCode);
 
     void toDot(string &dot);
 };
@@ -150,6 +150,10 @@ class ExprNode{
 
     list<ExprNode*>* ifList = NULL;
     ExprNode* else_body = NULL;
+    ExprNode* body = NULL;
+    ExprNode* condition = NULL;
+    
+    ExprNode* isnotis = NULL;
 
     //Функции для работы
     static ExprNode* OperatorExpr(Type type, ExprNode* left, ExprNode* right);
@@ -181,6 +185,12 @@ public:
 
     int id;
     Type item_type;
+    ExprNode* expr;
+    bool isStatic;
+    DimStmt* dim;
+    IfNode* ifNode;
+    While* while_stmt;
+    ForNode* forstmt;
 
     static StmtNode* DeclarationExpression(ExprNode* expr, Type item_type);
     static StmtNode* DeclarationDim(DimStmt* dim, Type item_type, bool isStatic);
@@ -190,7 +200,6 @@ public:
     static StmtNode* DeclarationContinueWhile(Type item_type);
     static StmtNode* DeclarationDoOption(Type item_type);
     static StmtNode* DeclarationContinueExitFor(Type item_type);
-    StmtNode(StmtNode* node);
     StmtNode();
 
    void toDot(string &dot);
@@ -209,6 +218,7 @@ public:
     StmtListNode* stmtListNode;
     StmtListNode* stmtElse;
     Ternar* ternar;
+    Type type;
 
     static IfNode* IfClear(ExprNode* exprNode, StmtListNode* stmtListNode, Type type);
     static IfNode* IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListNode* stmtElseListNode, Type type);
