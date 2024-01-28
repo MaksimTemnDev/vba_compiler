@@ -404,15 +404,57 @@ void CodeNode::toDot(string& dot) {
 }
 
 void GlobalCode::toDot(string& dot) {
+    createVertexDot(dot, this->id, "global_code", type, value, "", "");
 
+    if (this->subfunc != NULL) {
+        connectVerticesDots(dot, this->id, this->subfunc->id);
+        this->subfunc->toDot(dot, "sub_func");
+    }
+
+    if (this->dim != NULL) {
+        connectVerticesDots(dot, this->id, this->dim->id);
+        this->dim->toDot(dot, "dim");
+    }
 }
 
 void GlobalCodeList::toDot(string& dot) {
+    createVertexDot(dot, this->id, "global_code_list");
 
+    for (auto elem : *this->globalCodes)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot, "condition" + to_string(exprNum++));
+    }
 }
 
 void FuncDecl::toDot(string& dot) {
+    createVertexDot(dot, this->id, "func_decl", type, "", "");
 
+    if (this->name != NULL) {
+        connectVerticesDots(dot, this->id, this->name->id);
+        this->name->toDot(dot, "name");
+    }
+
+    if (this->returnType != NULL) {
+        connectVerticesDots(dot, this->id, this->returnType->id);
+        this->returnType->toDot(dot, "return_type");
+    }
+
+    if (this->params != NULL) {
+        connectVerticesDots(dot, this->id, this->params->id);
+        this->params->toDot(dot, "params");
+    }
+
+    if (this->body != NULL) {
+        connectVerticesDots(dot, this->id, this->body->id);
+        this->body->toDot(dot, "body");
+    }
+
+    if (this->return_ != NULL) {
+        connectVerticesDots(dot, this->id, this->return_->id);
+        this->return_->toDot(dot, "return");
+    }
 }
 
 void TypeNode::toDot(string& dot) {
@@ -460,6 +502,18 @@ void TypeNode::toDot(string& dot) {
         case TypeNode::double_:
             createVertexDot(dot, this->id, "double_type", "", "");
             break;
+    }
+
+    createVertexDot(dot, this->id, "type", type, value, "", "");
+
+    if (this->typeArr != NULL) {
+        connectVerticesDots(dot, this->id, this->typeArr->id);
+        this->typeArr->toDot(dot, "expr_left");
+    }
+
+    if (this->exprArr != NULL) {
+        connectVerticesDots(dot, this->id, this->exprArr->id);
+        this->exprArr->toDot(dot, "expr_right");
     }
 }
 
