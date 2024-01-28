@@ -388,3 +388,814 @@ StmtListNode* StmtListNode::Append(StmtListNode* stmtListNode, StmtNode* stmtNod
     stmtListNode->stmts->push_back(stmtNode);
     return stmtListNode;
 }
+
+//toDot функции
+
+void CodeNode::toDot(string& dot) {
+    dot = "digraph vbCode {\n";
+    createVertexDot(dot, this->id, "code");
+    
+    if (this->globalCode != NULL) {
+        connectVerticesDots(dot, this->id, this->globalCode->id);
+        this->globalCode->toDot(dot);
+    }
+
+    dot += "}\n";
+}
+
+void GlobalCode::toDot(string& dot) {
+
+}
+
+void GlobalCodeList::toDot(string& dot) {
+
+}
+
+void FuncDecl::toDot(string& dot) {
+
+}
+
+void TypeNode::toDot(string& dot) {
+    switch (this->type) {
+        case TypeNode::date_:
+            createVertexDot(dot, this->id, "date_type", "", "");
+            break;
+
+        case TypeNode::int_:
+            createVertexDot(dot, this->id, "int_type", "", "");
+            break;
+
+        case TypeNode::byte_:
+            createVertexDot(dot, this->id, "byte_type", "", "");
+            break;
+
+        case TypeNode::single:
+            createVertexDot(dot, this->id, "single_type", "", "");
+            break;
+
+        case TypeNode::char_:
+            createVertexDot(dot, this->id, "char_type", "", "");
+            break;
+
+        case TypeNode::string_:
+            createVertexDot(dot, this->id, "string_type", "", "");
+            break;
+
+        case TypeNode::short_:
+            createVertexDot(dot, this->id, "short_type", "", "");
+            break;
+
+        case TypeNode::bool_:
+            createVertexDot(dot, this->id, "bool_type", "", "");
+            break;
+
+        case TypeNode::obj_:
+            createVertexDot(dot, this->id, "obj_type", "", "");
+            break;
+
+        case TypeNode::decimal_:
+            createVertexDot(dot, this->id, "decimal_type", "", "");
+            break;
+
+        case TypeNode::double_:
+            createVertexDot(dot, this->id, "double_type", "", "");
+            break;
+    }
+}
+
+void ExprNode::toDot(string& dot, const string& pos = "") {
+    string type = "";
+    string value = "";
+
+    switch (this->type){
+        case ExprNode::assign:
+            type = "assign";
+            break;
+        
+        case ExprNode::no_assign_part:
+            type = "no_assign_part";
+            break;
+
+        case ExprNode::or_:
+            type = "or";
+            break;
+
+        case ExprNode::or_elase:
+            type = "or_else";
+            break;
+
+        case ExprNode::and_:
+            type = "and";
+            break;
+
+        case ExprNode::and_also:
+            type = "and_also";
+            break;
+
+        case ExprNode::plus_assign:
+            type = "plus_assign";
+            break;
+
+        case ExprNode::minus_assign:
+            type = "minus_assign";
+            break;
+
+        case ExprNode::mul_assign:
+            type = "mul_assign";
+            break;
+
+        case ExprNode::div_assign:
+            type = "div_assign";
+            break;
+
+        case ExprNode::expr_assign:
+            type = "expr_assign";
+            break;
+
+        case ExprNode::bit_and_aassign:
+            type = "bit_and_assign";
+            break;
+
+        case ExprNode::div_num_assign:
+            type = "div_num_assign";
+            break;
+
+        case ExprNode::bit_l_shift_assign:
+            type = "bit_l_shift_assign";
+            break;
+
+        case ExprNode::bit_r_shift_assign:
+            type = "bit_r_shift_assign";
+            break;
+
+        case ExprNode::b_plus:
+            type = "b_plus";
+            break;
+
+        case ExprNode::str_plus:
+            type = "str_plus";
+            break;
+
+        case ExprNode::b_minus:
+            type = "b_minus";
+            break;
+
+        case ExprNode::b_div:
+            type = "b_div";
+            break;
+
+        case ExprNode::b_mul:
+            type = "b_mul";
+            break;
+
+        case ExprNode::degree:
+            type = "degree";
+            break;
+
+        case ExprNode::int_div:
+            type = "int_div";
+            break;
+
+        case ExprNode::mod_div:
+            type = "mod_div";
+            break;
+
+        case ExprNode::more:
+            type = "more";
+            break;
+
+        case ExprNode::less:
+            type = "less";
+            break;
+
+        case ExprNode::more_s:
+            type = "more_s";
+            break;
+
+        case ExprNode::less_s:
+            type = "less_s";
+            break;
+
+        case ExprNode::_not_eq:
+            type = "not_eq";
+            break;
+
+        case ExprNode::bit_l_shift:
+            type = "bit_l_shift";
+            break;
+
+        case ExprNode::bit_r_shift:
+            type = "bit_r_shift";
+            break;
+
+        case ExprNode::u_plus:
+            type = "u_plus";
+            break;
+
+        case ExprNode::u_minus:
+            type = "u_minus";
+            break;
+
+        case ExprNode::not_:
+            type = "not";
+            break;
+
+        case ExprNode::arr_body:
+            type = "arr_body";
+            break;
+
+        case ExprNode::arr_empty:
+            type = "arr_empty";
+            break;
+
+        case ExprNode::arr_body_type:
+            type = "arr_body_type";
+            break;
+
+        case ExprNode::iif:
+            type = "iif";
+            break;
+
+        case ExprNode::array_access:
+            type = "array_access";
+            break;
+
+        case ExprNode::like:
+            type = "like";
+            break;
+
+        case ExprNode::is:
+            type = "is";
+            break;
+
+        case ExprNode::isnot:
+            type = "isnot";
+            break;
+
+        case ExprNode::typof:
+            type = "typeOf";
+            break;
+
+        case ExprNode::single:
+            type = "single";
+            break;
+
+        case ExprNode::string_:
+            type = "string";
+            break;
+
+        case ExprNode::bool_val:
+            type = "bool_val";
+            break;
+
+        case ExprNode::double_val:
+            type = "double_val";
+            break;
+
+        case ExprNode::date_:
+            type = "date";
+            break;
+
+        case ExprNode::char_val:
+            type = "char_val";
+            break;
+
+        case ExprNode::obj:
+            type = "obj";
+            break;
+
+        case ExprNode::dec_num:
+            type = "decimal_num";
+            break;
+
+        case ExprNode::int_val:
+            type = "int_val";
+            break;
+
+        case ExprNode::byte_num:
+            type = "byte_num";
+            break;
+
+        case ExprNode::short_val:
+            type = "short_val";
+            break;
+
+        case ExprNode::identifier:
+            type = "identifier";
+            break;
+    }
+
+    createVertexDot(dot, this->id, "expr", type, value, "", pos);
+
+    if (this->expr_left != NULL) {
+        connectVerticesDots(dot, this->id, this->expr_left->id);
+        this->expr_left->toDot(dot, "expr_left");
+    }
+
+    if (this->expr_right != NULL) {
+        connectVerticesDots(dot, this->id, this->expr_right->id);
+        this->expr_right->toDot(dot, "expr_right");
+    }
+
+    if (this->expr_list != NULL) {
+        connectVerticesDots(dot, this->id, this->expr_list->id);
+        this->expr_list->toDot(dot);
+    }
+
+    if (this->field_list != NULL) {
+        connectVerticesDots(dot, this->id, this->field_list->id);
+        this->field_list->toDot(dot, "field_list");;
+    }
+
+    if (this->stmt_list != NULL) {
+        connectVerticesDots(dot, this->id, this->stmt_list->id);
+        this->stmt_list->toDot(dot);
+    }
+
+    if (this->ifList != NULL) {
+
+        int ifCount = 1;
+
+        for (auto elem : *this->ifList)
+        {
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot, "condition" + to_string(ifCount++));
+        }
+    }
+
+    if (this->else_body != NULL) {
+        connectVerticesDots(dot, this->id, this->else_body->id);
+        this->else_body->toDot(dot, "else_body");
+    }
+
+    if (this->body != NULL) {
+        connectVerticesDots(dot, this->id, this->body->id);
+        this->body->toDot(dot, "body");
+    }
+
+    if (this->condition != NULL) {
+        connectVerticesDots(dot, this->id, this->condition->id);
+        this->body->toDot(dot, "condition");
+    }
+
+    if (this->isnotis != NULL) {
+        connectVerticesDots(dot, this->id, this->isnotis->id);
+        this->body->toDot(dot, "isnotis");
+    }
+}
+
+void ExprListNode::toDot(string& dot, const string& type = "expr_list") {
+    createVertexDot(dot, this->id, "expr_list", type);
+
+    for (auto elem : *this->exprs)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot, "condition" + to_string(exprNum++));
+    }
+}
+
+void StmtNode::toDot(string& dot) {
+    string type = "";
+    string value = "";
+
+    switch (this->type) {
+        case dim_:
+            type = "dim";
+            break;
+
+        case ifstmt_:
+            type = "ifstmt";
+            break;
+
+        case while_:
+            type = "while";
+            break;
+
+        case dowhile_:
+            type = "dowhile";
+            break;
+
+        case dountil_:
+            type = "dountil";
+            break;
+            
+        case for_:
+            type = "for";
+            break;
+
+        case static_:
+            type = "static";
+            break;
+
+        case expr_:
+            type = "expr";
+            break;
+
+        case continue_while:
+            type = "continue_while";
+            break;
+
+        case dooption_exit:
+            type = "dooption_exit";
+            break;
+
+        case dooption_continue:
+            type = "dooption_continue";
+            break;
+
+        case continue_for:
+            type = "continue_for";
+            break;
+
+        case exit_for:
+            type = "exit_for";
+            break;
+    }
+
+    createVertexDot(dot, this->id, "stmt", type, value);
+
+    if (this->expr != NULL) {
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot, "expr");
+    }
+
+    if (this->dim != NULL) {
+        connectVerticesDots(dot, this->id, this->dim->id);
+        this->dim->toDot(dot, "dim");
+    }
+
+    if (this->ifNode != NULL) {
+        connectVerticesDots(dot, this->id, this->ifNode->id);
+        this->ifNode->toDot(dot, "if");
+    }
+
+    if (this->while_stmt != NULL) {
+        connectVerticesDots(dot, this->id, this->while_stmt->id);
+        this->while_stmt->toDot(dot, "while");
+    }
+
+    if (this->forstmt != NULL) {
+        connectVerticesDots(dot, this->id, this->forstmt->id);
+        this->forstmt->toDot(dot, "for");
+    }
+}
+
+void StmtListNode::toDot(string& dot, const string& type = "stmt_list") {
+    createVertexDot(dot, this->id, "stmt_list", type);
+
+    for (auto elem : *this->stmts)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
+}
+
+void IfNode::toDot(string& dot) {
+    string type = "";
+
+    switch (this->type) {
+        case clear_:
+            type = "clear";
+            break;
+
+        case else_:
+            type = "else";
+            break;
+
+        case ternar_:
+            type = "ternar";
+            break;
+
+        case elseif:
+            type = "elseif";
+            break;
+    }
+
+    createVertexDot(dot, this->id, "if_stmt", "", "");
+
+    if (this->condition != NULL) {
+        connectVerticesDots(dot, this->id, this->condition->id);
+        this->condition->toDot(dot);
+    }
+
+    if (this->conditionElseIF != NULL) {
+        connectVerticesDots(dot, this->id, this->conditionElseIF->id);
+        this->conditionElseIF->toDot(dot);
+    }
+
+    if (this->stmtListNode != NULL) {
+        connectVerticesDots(dot, this->id, this->stmtListNode->id);
+        this->stmtListNode->toDot(dot);
+    }
+
+    if (this->stmtElse != NULL) {
+        connectVerticesDots(dot, this->id, this->stmtElse->id);
+        this->stmtElse->toDot(dot);
+    }
+
+    if (this->ternar != NULL) {
+        connectVerticesDots(dot, this->id, this->ternar->id);
+        this->ternar->toDot(dot);
+    }
+}
+
+void Ternar::toDot(string& dot) {
+    createVertexDot(dot, this->id, "ternar_stmt", "", "");
+
+    if (this->condition != NULL) {
+        connectVerticesDots(dot, this->id, this->condition->id);
+        this->condition->toDot(dot);
+    }
+
+    if (this->yes != NULL) {
+        connectVerticesDots(dot, this->id, this->yes->id);
+        this->yes->toDot(dot);
+    }
+
+    if (this->not_ != NULL) {
+        connectVerticesDots(dot, this->id, this->not_->id);
+        this->not_->toDot(dot);
+    }
+}
+
+void While::toDot(string& dot) {
+    string type = "";
+
+    switch (this->type) {
+    case simple_:
+        type = "simple";
+        break;
+
+    case doloopwhile_:
+        type = "doloopwhile";
+        break;
+
+    case doloopuntil:
+        type = "doloopuntil";
+        break;
+    }
+
+    createVertexDot(dot, this->id, "while_stmt", "", "");
+
+    if (this->condition != NULL) {
+        connectVerticesDots(dot, this->id, this->condition->id);
+        this->condition->toDot(dot);
+    }
+
+    if (this->body != NULL) {
+        connectVerticesDots(dot, this->id, this->body->id);
+        this->body->toDot(dot);
+    }
+}
+
+void StaticDim::toDot(string& dot) {
+    createVertexDot(dot, this->id, "static_dim", "", "");
+
+    if (this->dim != NULL) {
+        connectVerticesDots(dot, this->id, this->dim->id);
+        this->dim->toDot(dot);
+    }
+}
+
+void DimStmt::toDot(string& dot) {
+    string type = "";
+
+    switch (this->type) {
+        case single_expr:
+            type = "single_expr";
+            break;
+
+        case single_type:
+            type = "single_type";
+            break;
+
+        case array_with:
+            type = "array_with";
+            break;
+
+        case array_without:
+            type = "array_without";
+            break;
+    }
+
+    createVertexDot(dot, this->id, "dim_stmt", "", "");
+
+    if (this->exprNode != NULL) {
+        connectVerticesDots(dot, this->id, this->exprNode->id);
+        this->exprNode->toDot(dot);
+    }
+
+    if (this->typeNode != NULL) {
+        connectVerticesDots(dot, this->id, this->typeNode->id);
+        this->typeNode->toDot(dot);
+    }
+
+    if (this->idList != NULL) {
+        connectVerticesDots(dot, this->id, this->idList->id);
+        this->idList->toDot(dot);
+    }
+
+    if (this->arrayIdList != NULL) {
+        connectVerticesDots(dot, this->id, this->arrayIdList->id);
+        this->arrayIdList->toDot(dot);
+    }
+}
+
+void IdList::toDot(string& dot, const string& type = "id_list") {
+    createVertexDot(dot, this->id, "id_list");
+
+    for (auto elem : *this->items)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
+}
+
+void Identificator::toDot(string& dot) {
+    string type = "";
+
+    switch (this->type) {
+        case val_:
+            type = "val";
+            break;
+
+        case var_:
+            type = "var";
+            break;
+
+        case func_:
+            type = "func";
+            break;
+
+        case arr_:
+            type = "arr";
+            break;
+
+        case class_:
+            type = "class";
+            break;
+    }
+
+    createVertexDot(dot, this->id, "identificator", "", "");
+
+    if (this->arrSize != NULL) {
+        connectVerticesDots(dot, this->id, this->arrSize->id);
+        this->arrSize->toDot(dot);
+    }
+
+    if (this->exprList != NULL) {
+        connectVerticesDots(dot, this->id, this->exprList->id);
+        this->exprList->toDot(dot);
+    }
+}
+
+void ArrayIdDeclare::toDot(string& dot) {
+    createVertexDot(dot, this->id, "array_id_decl", "", "");
+
+    if (this->input_id != NULL) {
+        connectVerticesDots(dot, this->id, this->input_id->id);
+        this->input_id->toDot(dot);
+    }
+}
+
+void ArrayIdList::toDot(string& dot, const string& type = "arr_id_list") {
+    createVertexDot(dot, this->id, "arr_id_list");
+
+    for (auto elem : *this->items)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
+}
+
+void ForNode::toDot(string& dot) {
+    createVertexDot(dot, this->id, "for", "", "");
+
+    if (this->startExpr != NULL) {
+        connectVerticesDots(dot, this->id, this->startExpr->id);
+        this->startExpr->toDot(dot);
+    }
+
+    if (this->endExpr != NULL) {
+        connectVerticesDots(dot, this->id, this->endExpr->id);
+        this->endExpr->toDot(dot);
+    }
+
+    if (this->step != NULL) {
+        connectVerticesDots(dot, this->id, this->step->id);
+        this->step->toDot(dot);
+    }
+
+    if (this->assignExpVar != NULL) {
+        connectVerticesDots(dot, this->id, this->assignExpVar->id);
+        this->assignExpVar->toDot(dot);
+    }
+
+    if (this->body != NULL) {
+        connectVerticesDots(dot, this->id, this->body->id);
+        this->body->toDot(dot);
+    }
+}
+
+void OptionalStep::toDot(string& dot) {
+    createVertexDot(dot, this->id, "opt_step", "", "");
+
+    if (this->stepval != NULL) {
+        connectVerticesDots(dot, this->id, this->stepval->id);
+        this->stepval->toDot(dot);
+    }
+}
+
+void Value::toDot(string& dot) {
+    string type = "";
+
+    switch (this->type) {
+        case int_:
+            type = "int";
+            break;
+
+        case byte_num:
+            type = "byte_num";
+            break;
+
+        case id_:
+            type = "id";
+            break;
+
+        case short_:
+            type = "short";
+            break;
+
+        case bool_:
+            type = "bool";
+            break;
+
+        case single_:
+            type = "single";
+            break;
+
+        case double_:
+            type = "double";
+            break;
+
+        case string_:
+            type = "string";
+            break;
+
+        case date_:
+            type = "date";
+            break;
+
+        case char_:
+            type = "char";
+            break;
+
+        case obj_:
+            type = "obj";
+            break;
+
+        case dec_num:
+            type = "dec_num";
+            break;
+    }
+
+    createVertexDot(dot, this->id, "value", "", "");
+
+    if (this->identificator != NULL) {
+        connectVerticesDots(dot, this->id, this->identificator->id);
+        this->identificator->toDot(dot);
+    }
+}
+
+void connectVerticesDots(string& s, int parentId, int childId) {
+    string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";\n";
+    s += tmp;
+}
+
+void createVertexDot(string& s, int id, string name, string type, string value, string visibility, string pos) {
+    if (!type.empty()) {
+        type = "type=" + type + " ";
+    }
+
+    if (!value.empty()) {
+        value = "value=" + value + " ";
+    }
+
+    if (!visibility.empty()) {
+        visibility = "visibility=" + visibility + " ";
+    }
+
+    if (!pos.empty())
+    {
+        pos = "position=" + pos + " ";
+    }
+
+    string tmp = "id" + to_string(id) +
+        " [label=\"" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + "\"];\n";
+
+    s += tmp;
+}
