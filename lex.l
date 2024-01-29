@@ -19,7 +19,11 @@ DIGIT [0-9]
     #include <stdlib.h>
     #include <string.h>
     #include <ctype.h>
+    #include <fstream>
+    #include <iostream>
     #include "gram_tab.cpp"
+	
+	using namespace std;
 
 	void delete_();
     void eraseType(char *typeName);
