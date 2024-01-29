@@ -119,6 +119,11 @@ ExprListNode::ExprListNode(ExprListNode* exprs){
     }
 }
 
+ExprListNode* ExprListNode::Append(ExprListNode* exprList, ExprNode* expr) {
+    exprList->exprs->push_back(expr);
+    return exprList;
+}
+
 StmtNode* StmtNode::DeclarationExpression(ExprNode* expr, Type item_type){
     StmtNode* new_stmt = new StmtNode();
     new_stmt->id = ++globId;

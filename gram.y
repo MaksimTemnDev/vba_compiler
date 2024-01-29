@@ -51,7 +51,7 @@
 %type <expr> ArrayExpr
 %type <expr> ArrayBody
 %type <expr> IsNotIs
-%type <expr> TernarOperator
+%type <Ternar> TernarOperator
 
 %type <value> IndexesWithId
 %type <expr> AssignExprVar
@@ -66,7 +66,7 @@
 %type <stmt_list> StatementList
 %type <func_decl> FunctionDeclaration
 %type <func_decl> BodyStmt
-%type <sub_decl> SubDeclaration
+%type <func_decl> SubDeclaration
 %type <type> Type 
 %type <globalCodeList> GlobalCodeList
 %type <globalCode> GlobalCode
@@ -80,7 +80,7 @@
 %type <dimStmt> ArrayIDdeclaration
 %type <optStep> OptionalStep
 %type <string_literal> STRING
-%type <identifier> IDENTIFIER
+%type <identificator> IDENTIFIER
 %type <bool_literal> Boolean
 %type <double_literal> DOUBLE
 %type <char_literal> CHAR
@@ -144,7 +144,7 @@
 Program: OptEndl GlobalCodeList { $$ = global_program_code = new CodeNode($2); }
 	   ;
 
-GlobalCodeList: GlobalCode { $$ = $1; }
+GlobalCodeList: GlobalCode { $$ = new GlobalCodeList($1); }
 			  | GlobalCodeList GlobalCode { $$ = GlobalCodeList::Append($1, $2); }
 			  ;
 
@@ -178,11 +178,11 @@ DimArray: ArrayIDdeclaration { $$ = DimStmt::DeclarationArray($1, DimStmt::array
 	    | ArrayIDdeclaration AS Type { $$ = DimStmt::DeclarationArray($1, DimStmt::array_with, $3); }
 		;
 
-IDENTIFIERlist: IDENTIFIEREndl { $$ = $1; }
- 			  | IDENTIFIERlist ',' IDENTIFIEREndl { $$ = IdList::IsList($1); }
+IDENTIFIERlist: IDENTIFIEREndl { $$ = new IdList($1); }
+ 			  | IDENTIFIERlist ',' IDENTIFIEREndl { $$ = IdList::Append($1, $3); }
 			  ;
 			  
-IDENTIFIEREndl: IDENTIFIER OptEndl { $$ = IdList::IsList($1); }
+IDENTIFIEREndl: IDENTIFIER OptEndl { $$ = IdList::IdList($1); }
 
 StaticStmt: KW_STATIC DimSingle { $$ = StaticDim::DeclareStatic($2); }
 	      | KW_STATIC DimArray { $$ = StaticDim::DeclareStatic($2); }
@@ -211,15 +211,15 @@ ArrayExpr: ArrayBody { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $1, 0); }
          ;
 
 ArrayIDdeclaration: ArraySizeName { $$ = $1; }
-				  | ArrayIDdeclaration ',' ArraySizeName { $$ = DimStmt::DeclarationArray($1, DimStmt::without, 0); }
+				  | ArrayIDdeclaration ',' ArraySizeName { $$ = DimStmt::DeclarationArray($1, DimStmt::array_without, 0); }
 				  ;
 				 
 ArraySizeName: IDENTIFIER '('')' { $$ = Identificator::id_witout($1, Identificator::arr_); }
 			 | IDENTIFIER '('IndexesWithId')' { $$ = Identificator::id_with($1, Identificator::arr_, $3); }
              ;
 
-StatementList: Statement { $$ = $1 }
-             | StatementList Statement { $$ = StmtListNode::StmtListNode($2); }
+StatementList: Statement { $$ = new StmtListNode($1); }
+             | StatementList Statement { $$ = StmtListNode::Append($1, $2); }
              ;
 
 BodyStmt: StatementList RETURN Expression EndList END Function EndList { $$ = FuncDecl::addBody($1); $$ = FuncDecl::addReturn($3); }
@@ -227,8 +227,8 @@ BodyStmt: StatementList RETURN Expression EndList END Function EndList { $$ = Fu
 		;
 		
 
-ExpressionList: Expression { $$ = $1; }
-			  | ExpressionList ',' Expression { $$ = ExprListNode::ExprListNode($1); }
+ExpressionList: Expression { $$ = new ExprListNode($1); }
+			  | ExpressionList ',' Expression { $$ = ExprListNode::Append($1, $3); }
 			  ;
 			  
 Expression: AssignExprVar { $$ = $1; }
@@ -249,7 +249,7 @@ Expression: AssignExprVar { $$ = $1; }
 		  | ExprStartWithId BIT_RIGHT_SHIFT_ASSIGNMENT ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::bit_r_shift_assign, $1, $3); }
 		  ;
 		  
-AssignExprVar: IDENTIFIER '=' OptEndl ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::assign, $1, 0); };
+AssignExprVar: IDENTIFIER '=' OptEndl ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::assign, 0, $4); };
 
 ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::b_plus, $1, $4); }
 		  | ExprStartWithId '&' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::str_plus, $1, $4); }
@@ -282,13 +282,13 @@ IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::Operator
 	   ;
 	
 ExprStart: Values { $$ = $1; }
-		 | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_witout($1, Identificator::func_, $3); }
+		 | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_func($1, Identificator::func_, $3); }
 		 ;
 		
-Values: STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string_, Identificator::val_)); }
+Values: STRING { $$ = new Value($1, Value::string_, FALSE, Identificator::id_witout($1, Identificator::val_)); }
 	  | Boolean { $$ = $1; }
-	  | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double_val, Identificator::val_)); }
-	  | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::val_)); }
+	  | DOUBLE { $$ = new Value($1, Value::double_, FALSE, Identificator::id_witout($1, Identificator::val_)); }
+	  | CHAR { $$ = new Value($1, Value::char_, FALSE, Identificator::id_witout($1, Identificator::val_)); }
 	  | Indexes { $$ = $1; }
 	  ;
 	 

@@ -171,6 +171,7 @@ public:
 
     ExprListNode(ExprNode* expr);
     ExprListNode(ExprListNode* exprs);
+    static ExprListNode* Append(ExprListNode* exprList, ExprNode* expr);
 
    void toDot(string &dot, const string &type="expr_list");
 };
