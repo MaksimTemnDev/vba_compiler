@@ -39,7 +39,7 @@
 	Ternar* ternar;
 	IfNode* ifNode;
 	OptionalStep* optStep;
-	
+	BodyStmt* bodyStmt;
 }
 
 %type <code> Program
@@ -51,21 +51,21 @@
 %type <expr> ArrayExpr
 %type <expr> ArrayBody
 %type <expr> IsNotIs
-%type <Ternar> TernarOperator
+%type <ternar> TernarOperator
 
 %type <value> IndexesWithId
 %type <expr> AssignExprVar
 %type <expr> ExprStart
 %type <stmt> Statement
-%type <stmt> WhileStatement
-%type <stmt> DoLoopWhileStatement
-%type <stmt> DoLoopUntilStatement
-%type <stmt> ForStatement
+%type <whileSt> WhileStatement
+%type <whileSt> DoLoopWhileStatement
+%type <whileSt> DoLoopUntilStatement
+%type <forNode> ForStatement
 %type <stmt> ContinueExitFor
 %type <stmt> DOOption
 %type <stmt_list> StatementList
 %type <func_decl> FunctionDeclaration
-%type <func_decl> BodyStmt
+%type <bodyStmt> BodyStmt
 %type <func_decl> SubDeclaration
 %type <type> Type 
 %type <globalCodeList> GlobalCodeList
@@ -73,11 +73,11 @@
 %type <dimStmt> DimStmt
 %type <dimStmt> DimSingle
 %type <dimStmt> DimArray
-%type <static_> StaticStmt
+%type <dimStmt> StaticStmt
 %type <ifNode> IfStmt
 %type <idList> IDENTIFIERlist
-%type <idList> IDENTIFIEREndl
-%type <dimStmt> ArrayIDdeclaration
+%type <identificator> IDENTIFIEREndl
+%type <arrayIdList> ArrayIDdeclaration
 %type <optStep> OptionalStep
 %type <string_literal> STRING
 %type <identificator> IDENTIFIER
@@ -96,17 +96,17 @@
 %token DIM
 %token NEW AS RETURN NEXT
 %token IDENTIFIER
-%token TYPE_BOOLEAN
-%token TYPE_BYTE
-%token TYPE_INTEGER
-%token TYPE_SINGLE
-%token TYPE_SHORT
-%token TYPE_DOUBLE
-%token TYPE_DECIMAL
-%token TYPE_DATE
-%token TYPE_CHAR
-%token TYPE_STRING
-%token TYPE_OBJECT
+%token <type> TYPE_BOOLEAN
+%token <type> TYPE_BYTE
+%token <type> TYPE_INTEGER
+%token <type> TYPE_SINGLE
+%token <type> TYPE_SHORT
+%token <type> TYPE_DOUBLE
+%token <type> TYPE_DECIMAL
+%token <type> TYPE_DATE
+%token <type> TYPE_CHAR
+%token <type> TYPE_STRING
+%token <type> TYPE_OBJECT
 %token TOKEN_LINE
 %token Function
 %token Sub
@@ -153,13 +153,13 @@ GlobalCode: FunctionDeclaration { $$ = GlobalCode::addSubFunc($1); }
 		  | DimStmt EndList { $$ = GlobalCode::addDim($1); }
 		  ;
 
-Statement: DimStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::dim_); }
+Statement: DimStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::dim_, 0); }
  		 | IfStmt EndList { $$ = StmtNode::DeclarationIf($1, StmtNode::ifstmt_); }
    		 | WhileStatement EndList { $$ = StmtNode::DeclarationWhile($1, StmtNode::while_); }
 		 | DoLoopWhileStatement EndList { $$ = StmtNode::DeclarationWhile($1, StmtNode::dowhile_); }
 		 | DoLoopUntilStatement EndList { $$ = StmtNode::DeclarationWhile($1, StmtNode::dountil_); }
 		 | ForStatement EndList { $$ = StmtNode::DeclarationFor($1, StmtNode::for_); }
-		 | StaticStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::static_); }
+		 | StaticStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::static_, 1); }
 		 | Expression EndList { $$ = StmtNode::DeclarationExpression($1, StmtNode::expr_); }
 		 | ContinueWhile EndList { $$ = StmtNode::DeclarationContinueWhile(StmtNode::continue_while); }
 		 | DOOption EndList { $$ = $1; }
@@ -182,36 +182,36 @@ IDENTIFIERlist: IDENTIFIEREndl { $$ = new IdList($1); }
  			  | IDENTIFIERlist ',' IDENTIFIEREndl { $$ = IdList::Append($1, $3); }
 			  ;
 			  
-IDENTIFIEREndl: IDENTIFIER OptEndl { $$ = IdList::IdList($1); }
+IDENTIFIEREndl: IDENTIFIER OptEndl { $$ = $1; }
 
-StaticStmt: KW_STATIC DimSingle { $$ = StaticDim::DeclareStatic($2); }
-	      | KW_STATIC DimArray { $$ = StaticDim::DeclareStatic($2); }
+StaticStmt: KW_STATIC DimSingle { $$ = new DimStmt($2); }
+	      | KW_STATIC DimArray { $$ = new DimStmt($2); }
 	      ;
 
-Type: TYPE_BOOLEAN { $$ = TypeNode::TypeNode(TypeNode::bool_); }
-	| TYPE_BYTE { $$ = TypeNode::TypeNode(TypeNode::byte_); }
-	| TYPE_INTEGER { $$ = TypeNode::TypeNode(TypeNode::int_); }
-	| TYPE_SINGLE { $$ = TypeNode::TypeNode(TypeNode::single); }
-	| TYPE_SHORT { $$ = TypeNode::TypeNode(TypeNode::short_); }
-	| TYPE_DOUBLE { $$ = TypeNode::TypeNode(TypeNode::double_); }
-	| TYPE_DECIMAL { $$ = TypeNode::TypeNode(TypeNode::decimal_); }
-	| TYPE_DATE { $$ = TypeNode::TypeNode(TypeNode::date_); }
-	| TYPE_CHAR { $$ = TypeNode::TypeNode(TypeNode::char_); }
-	| TYPE_STRING { $$ = TypeNode::TypeNode(TypeNode::string_); }
-	| TYPE_OBJECT { $$ = TypeNode::TypeNode(TypeNode::obj_); }
+Type: TYPE_BOOLEAN { $$ = new TypeNode($1); }
+	| TYPE_BYTE { $$ = new TypeNode($1); }
+	| TYPE_INTEGER { $$ = new TypeNode($1); }
+	| TYPE_SINGLE { $$ = new TypeNode($1); }
+	| TYPE_SHORT { $$ = new TypeNode($1); }
+	| TYPE_DOUBLE { $$ = new TypeNode($1); }
+	| TYPE_DECIMAL { $$ = new TypeNode($1); }
+	| TYPE_DATE { $$ = new TypeNode($1); }
+	| TYPE_CHAR { $$ = new TypeNode($1); }
+	| TYPE_STRING { $$ = new TypeNode($1); }
+	| TYPE_OBJECT { $$ = new TypeNode($1); }
 	;
 
-ArrayBody: '{' IDENTIFIERlist '}' { $$ = $2; }
-		 | '{' ExpressionList '}' { $$ = $2; }
+ArrayBody: '{' IDENTIFIERlist '}' { $$ = ExprNode::arrayBodyIdList($2, ExprNode::arr_body); }
+		 | '{' ExpressionList '}' { $$ = ExprNode::arrayBodyExprList($2, ExprNode::arr_expr_list); }
 		 ;
 
 ArrayExpr: ArrayBody { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $1, 0); }
          | '{' '}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_empty, 0, 0); }
-	     | NEW Type '('')' ArrayBody { $$ = ExprNode::OperatorExpr(ExprNode::arr_body_type, $2, $5); }
+	     | NEW Type '('')' ArrayBody { $$ = new ExprNode($5, ExprNode::arr_body_type, $2); }
          ;
 
-ArrayIDdeclaration: ArraySizeName { $$ = $1; }
-				  | ArrayIDdeclaration ',' ArraySizeName { $$ = DimStmt::DeclarationArray($1, DimStmt::array_without, 0); }
+ArrayIDdeclaration: ArraySizeName { $$ = new ArrayIdList($1); }
+				  | ArrayIDdeclaration ',' ArraySizeName { $$ = ArrayIdList::Append($1, $3); }
 				  ;
 				 
 ArraySizeName: IDENTIFIER '('')' { $$ = Identificator::id_witout($1, Identificator::arr_); }
@@ -222,8 +222,8 @@ StatementList: Statement { $$ = new StmtListNode($1); }
              | StatementList Statement { $$ = StmtListNode::Append($1, $2); }
              ;
 
-BodyStmt: StatementList RETURN Expression EndList END Function EndList { $$ = FuncDecl::addBody($1); $$ = FuncDecl::addReturn($3); }
-		| RETURN Expression END Function EndList { $$ = FuncDecl::addReturn($2); }
+BodyStmt: StatementList RETURN Expression EndList END Function EndList { $$ = new BodyStmt($3, $1); }
+		| RETURN Expression END Function EndList { $$ = new BodyStmt($2, 0); }
 		;
 		
 
@@ -269,8 +269,8 @@ ExpressionWithoutAssign: ExprStartWithId '+' OptEndl Expression { $$ = ExprNode:
 		  | UnarExpr {$$ = $1;}
 		  | ArrayExpr {$$ = $1;}
 		  | '('Expression')' {$$ = $2;}
-		  | TernarOperator {$$ = $1}
-		  | IDENTIFIER'('IndexesWithId')' { $$ = ExprNode::OperatorExpr(ExprNode::array_access, $1, $3); }
+		  | TernarOperator {$$ = ExprNode::ternarOp($1, ExprNode::ternar);}
+		  | IDENTIFIER'('IndexesWithId')' { $$ = ExprNode::valueExpr(ExprNode::array_access, $1, $3); }
 		  | ExprStartWithId Like ExprStartWithId { $$ = ExprNode::OperatorExpr(ExprNode::like, $1, $3); }
 		  | IsNotIs {$$=$1;}
 		  | TypeOf IsNotIs { $$ = ExprNode::typeOfisnotIs(ExprNode::typof, $2); }
@@ -281,14 +281,14 @@ IsNotIs: ExprStartWithId IsNot ExpressionWithoutAssign { $$ = ExprNode::Operator
 	   | ExprStartWithId Is ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::is, $1, $3); }
 	   ;
 	
-ExprStart: Values { $$ = $1; }
-		 | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_func($1, Identificator::func_, $3); }
+ExprStart: Values { $$ = new ExprNode($1, ExprNode::value); }
+		 | IDENTIFIER '('ExpressionList')' { $$ = ExprNode::exprList(ExprNode::expr_start_func, $1, $3); }
 		 ;
 		
-Values: STRING { $$ = new Value($1, Value::string_, FALSE, Identificator::id_witout($1, Identificator::val_)); }
+Values: STRING { $$ = new Value($1, Value::string_, 0, Identificator::id_witout($1, Identificator::val_)); }
 	  | Boolean { $$ = $1; }
-	  | DOUBLE { $$ = new Value($1, Value::double_, FALSE, Identificator::id_witout($1, Identificator::val_)); }
-	  | CHAR { $$ = new Value($1, Value::char_, FALSE, Identificator::id_witout($1, Identificator::val_)); }
+	  | DOUBLE { $$ = new Value($1, Value::double_, 0, Identificator::id_witout($1, Identificator::val_)); }
+	  | CHAR { $$ = new Value($1, Value::char_, 0, Identificator::id_witout($1, Identificator::val_)); }
 	  | Indexes { $$ = $1; }
 	  ;
 	 
@@ -299,17 +299,17 @@ Boolean: KW_FALSE { $$ = Value::Value(0, Value::bool_, FALSE, Identificator::id_
 Indexes: DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::id_witout(int, Identificator::val_)); };
 	   
 IndexesWithId: Indexes { $$ = $1; }
-			 | IDENTIFIER { $$ = Identificator::id_witout($1, Identificator::val_); }
+			 | IDENTIFIER { $$ = new Value($1, Value::id_); }
 			 ;
 			 
 ExprStartWithId: ValuesWithId {$$ = $1;}
 			   | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_witout(single, Identificator::var_)); }
 			   ;
 		
-ValuesWithId: STRING { $$ = Value::Value($1, Value::string_, FALSE, Identificator::id_witout(string, Identificator::val_)); }
+ValuesWithId: STRING { $$ = Value::Value($1, Value::string_, 0, Identificator::id_witout(string, Identificator::val_)); }
             | Boolean { $$ = $1; }
-            | DOUBLE { $$ = Value::Value($1, Value::double_, FALSE, Identificator::id_witout(double, Identificator::val_)); }
-            | CHAR { $$ = Value::Value($1, Value::char_, FALSE, Identificator::id_witout(char, Identificator::val_)); }
+            | DOUBLE { $$ = Value::Value($1, Value::double_, 0, Identificator::id_witout(double, Identificator::val_)); }
+            | CHAR { $$ = Value::Value($1, Value::char_, 0, Identificator::id_witout(char, Identificator::val_)); }
 		    | IndexesWithId { $$ = $1; }
 		    ;
 

@@ -26,13 +26,14 @@ class While;
 class Ternar;
 class IfNode;
 class OptionalStep;
+class BodyStmt;
 
 class CodeNode{
     public: 
     int id;
     GlobalCodeList* globalCode = NULL;
     CodeNode(GlobalCodeList* globalcode);
-   void toDot(string &dot);
+   void toDot(std::string &dot);
 };
 
 class GlobalCode{
@@ -44,7 +45,7 @@ public:
     static GlobalCode* addDim(DimStmt* dim);
     static GlobalCode* addSubFunc(FuncDecl* subfunc);
     
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class GlobalCodeList{
@@ -56,7 +57,7 @@ class GlobalCodeList{
     GlobalCodeList(GlobalCodeList* globalCodes);
     static GlobalCodeList* Append(GlobalCodeList* globalCodes, GlobalCode* globalCode);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class FuncDecl{
@@ -65,15 +66,12 @@ class FuncDecl{
     Identificator*  name = NULL;
     TypeNode* returnType = NULL;
     IdList* params = NULL;
-    StmtListNode* body = NULL;
-    ExprNode* return_;
+    BodyStmt* body = NULL;
     bool is_sub = false;
 
-    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, StmtListNode* body, bool is_sub);
-    void addBody(StmtListNode* body);
-    void addReturn(ExprNode* return_);
+    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub);
 
-   void toDot(string &dot);
+   void toDot(std::string &dot);
 };
 
 class FuncParamNode{
@@ -83,12 +81,12 @@ public:
     };
     int id;
     Type param_type;
-    string* name = NULL;
+    std::string* name = NULL;
     TypeNode* type = NULL;
 
-    FuncParamNode(string* name, TypeNode* type, Type param_type);
+    FuncParamNode(std::string* name, TypeNode* type, Type param_type);
 
-   void toDot(string &dot);
+   void toDot(std::string &dot);
 };
 
 class FuncParamListNode{
@@ -99,7 +97,7 @@ public:
     FuncParamListNode(FuncParamNode* item);
     FuncParamListNode(FuncParamListNode* list);
 
-   void toDot(string &dot);
+   void toDot(std::string &dot);
 };
 
 class TypeNode{
@@ -110,14 +108,14 @@ public:
 
     int id;
     Type type;
-    string *name;
+    std::string *name;
     TypeNode* typeArr = NULL;
     ExprNode* exprArr = NULL;
 
-    TypeNode(Type type);
+    TypeNode(TypeNode* type);
     TypeNode(Type type, TypeNode* type_node, ExprNode* expr);
-    TypeNode(Type type, string *name);
-    void toDot(string &dot);
+    TypeNode(Type type, std::string *name);
+    void toDot(std::string &dot);
 
 };
 
@@ -127,26 +125,31 @@ class ExprNode{
     div_assign, expr_assign, bit_and_aassign, div_num_assign, bit_l_shift_assign, bit_r_shift_assign,
 
     b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, _not_eq, bit_l_shift, bit_r_shift,
-    u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof,
+    u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof, arr_expr_list, ternar,
 
-    single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier 
+    single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier, value, expr_start_func
     };
 
     int id;
     Type type;
     char Char = 0;
-    string* String = NULL;
+    std::string* std::string = NULL;
     int Int = 0;
     double Double = 0;
     bool Bool;
-    string *ParentID = NULL;
-    string *Name = NULL;
+    std::string *ParentID = NULL;
+    std::string *Name = NULL;
 
     ExprNode* expr_left = NULL;
     ExprNode* expr_right = NULL;
     ExprListNode* expr_list = NULL;
     ExprNode* field_list = NULL;
     StmtListNode* stmt_list = NULL;
+    IdList* id_list = NULL;
+    TypeNode* type_node = NULL;
+    Ternar* ternar = NULL;
+    Identificator* ident = NULL;
+    Value* value = NULL;
 
     list<ExprNode*>* ifList = NULL;
     ExprNode* else_body = NULL;
@@ -155,12 +158,22 @@ class ExprNode{
     
     ExprNode* isnotis = NULL;
 
+    ExprNode();
+    ExprNode(Value* value, Type type);
+    ExprNode(ExprNode* exprNode, Type type, TypeNode* typeNode);
+
     //Функции для работы
     static ExprNode* OperatorExpr(Type type, ExprNode* left, ExprNode* right);
+    static ExprNode* OperatorIdExpr(Type type, Identificator* left, ExprNode* right);
     static ExprNode* IifExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body);
     static ExprNode* typeOfisnotIs(Type type, ExprNode* isnotIs);
+    static ExprNode* arrayBodyIdList(IdList* idList, Type type);
+    static ExprNode* arrayBodyExprList(ExprListNode* exprList, Type type);
+    static ExprNode* ternarOp(Ternar* ternar, Type type);
+    static ExprNode* valueExpr(Type type, Identificator* ident, Value* value);
+    static ExprNode* exprList(Type type, Identificator* ident, ExprListNode* expr_list);
 
-    void toDot(string &dot, const string &pos = "");
+    void toDot(std::string &dot, const std::string &pos = "");
 };
 
 class ExprListNode
@@ -173,7 +186,7 @@ public:
     ExprListNode(ExprListNode* exprs);
     static ExprListNode* Append(ExprListNode* exprList, ExprNode* expr);
 
-   void toDot(string &dot, const string &type="expr_list");
+   void toDot(std::string &dot, const std::string &type="expr_list");
 };
 
 class StmtNode
@@ -203,7 +216,7 @@ public:
     static StmtNode* DeclarationContinueExitFor(Type item_type);
     StmtNode();
 
-   void toDot(string &dot);
+   void toDot(std::string &dot);
 
 };
 
@@ -226,7 +239,7 @@ public:
     static IfNode* IfTernar(ExprNode* exprNode, Ternar* ternar, Type type);
     static IfNode* IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNode* conditionElse, StmtListNode* stmtElseIfListNode, Type type);
     
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class Ternar
@@ -239,7 +252,7 @@ public:
 
     static Ternar* ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class While
@@ -255,7 +268,7 @@ public:
 
     static While* whileStmt(ExprNode* condition, StmtListNode* body, Type type);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class StaticDim
@@ -266,7 +279,7 @@ public:
 
     static StaticDim* DeclareStatic(DimStmt* dim);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class DimStmt
@@ -285,12 +298,15 @@ public:
     ArrayIdList* arrayIdList = NULL;
     bool isStatic = false;
 
+    DimStmt();
+    DimStmt(DimStmt* dimStmt);
+
     static DimStmt* DeclarationSingleType(IdList* idList, Type type, TypeNode* typeNode);
     static DimStmt* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode);
     static DimStmt* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode);
     void becomeStatic();
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class IdList
@@ -302,7 +318,7 @@ public:
     IdList(Identificator* identificator);
     IdList(IdList* IdList);
     static IdList* Append(IdList* idList, Identificator* Identificator);
-    void toDot(string &dot, const string &type="id_list");
+    void toDot(std::string &dot, const std::string &type="id_list");
 };
 
 class Identificator
@@ -313,30 +329,33 @@ public:
         val_, var_, func_, arr_, class_
     };
     int id;
-    string* identifier;
+    std::string* identifier;
     Type type;
     Value* arrSize;
     ExprListNode* exprList;
 
-    static Identificator* id_witout(string* identifier, Type type);
-    static Identificator* id_with(string* identifier, Type type, Value* size);
-    static Identificator* id_func(string* identifier, Type type, ExprListNode* exprs);
+    static Identificator* id_witout(std::string* identifier, Type type);
+    static Identificator* id_with(std::string* identifier, Type type, Value* size);
+    static Identificator* id_func(std::string* identifier, Type type, ExprListNode* exprs);
+    static Identificator* id_witout(Identificator* identifier, Type type);
+    static Identificator* id_with(Identificator* identifier, Type type, Value* size);
+    static Identificator* id_func(Identificator* identifier, Type type, ExprListNode* exprs);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class ArrayIdDeclare
 {
 public:
     int id;
-    string* identifier;
+    std::string* identifier;
     int index;
     //И-тор переменнной внутри массива
     Identificator* input_id = NULL;
 
-    ArrayIdDeclare(string* identifier, Identificator* input_id);
+    ArrayIdDeclare(std::string* identifier, Identificator* input_id);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class ArrayIdList
@@ -344,11 +363,14 @@ class ArrayIdList
 public:
     int id;
     list<ArrayIdDeclare*>* arrayId = NULL;
+    list<Identificator*>* arrayIdent = NULL;
 
+    ArrayIdList(Identificator* ident);
     ArrayIdList(ArrayIdDeclare* arrayIdDeclare);
     ArrayIdList(ArrayIdList* arrayIdList);
     static ArrayIdList* Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId);
-    void toDot(string &dot, const string &type="arr_id_list");
+    static ArrayIdList* Append(ArrayIdList* arrIdList, Identificator* ident);
+    void toDot(std::string &dot, const std::string &type="arr_id_list");
 };
 
 class ForNode
@@ -363,7 +385,7 @@ public:
 
     static ForNode* fornode(ExprNode* startExpr, ExprNode* endExpr, OptionalStep* step, ExprNode* assignExpVar, StmtListNode* body);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class OptionalStep
@@ -375,7 +397,7 @@ public:
 
     static OptionalStep* addStep(Value* stepval, bool hasStep);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class Value
@@ -387,13 +409,20 @@ public:
     };
     int id;
     int value;
+    char* char_;
+    std::string& str;
+    double double_;
     Identificator* identificator;
     Type type;
     bool hasIntVal = false;
 
+    Value(Identificator* ident, Type type);
+    Value(double double_, Type type);
+    Value(std::string* str, Type type);
+    Value(char* char_, Type type);
     Value(int value, Type type, bool hasIntVal, Identificator* id);
 
-    void toDot(string &dot);
+    void toDot(std::string &dot);
 };
 
 class StmtListNode
@@ -405,8 +434,21 @@ public:
     StmtListNode(StmtNode* stmtNode);
     static StmtListNode* Append(StmtListNode* stmtListNode, StmtNode* stmtNode);
 
-    void toDot(string &dot, const string &type = "stmt_list");
+    void toDot(std::string &dot, const std::string &type = "stmt_list");
 };
 
-void connectVerticesDots(string &s, int parentId, int childId);
-void createVertexDot(string &s, int id, string name="", string type="", string value = "", string pos = "");
+class BodyStmt
+{
+public:
+    int id;
+
+    list<StmtNode*>* stmts = NULL;
+    ExprNode* expr = NULL;
+
+    BodyStmt(ExprNode* expr, StmtListNode* stmt);
+
+    void toDot(std::string& dot, const std::string& type = "stmt_list");
+};
+
+void connectVerticesDots(std::string &s, int parentId, int childId);
+void createVertexDot(std::string &s, int id, std::string name="", std::string type="", std::string value = "", std::string pos = "");

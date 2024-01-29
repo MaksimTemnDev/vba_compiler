@@ -42,7 +42,7 @@ GlobalCodeList* GlobalCodeList::Append(GlobalCodeList* globalCodes, GlobalCode* 
     return globalCodes;
 }
 
-FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, StmtListNode* body, bool is_sub){
+FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub){
     FuncDecl* func = new FuncDecl();
     func->name = name;
     func->params = params;
@@ -52,17 +52,9 @@ FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdLis
     return func;
 }
 
-void FuncDecl::addBody(StmtListNode* body){
-    this->body = body;
-}
-
-void FuncDecl::addReturn(ExprNode* return_){
-    this->return_ = return_;
-}
-
-TypeNode::TypeNode(Type type){
+TypeNode::TypeNode(TypeNode* type){
     this->id = ++globId;
-    this->type = type;
+    this->type = type->type;
 }
 
 TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr){
@@ -102,6 +94,64 @@ ExprNode* ExprNode::typeOfisnotIs(Type type, ExprNode* isnotIs){
     return new_expr;
 }
 
+ExprNode* ExprNode::arrayBodyIdList(IdList* idList, Type type) {
+    ExprNode* new_expr = new ExprNode();
+    new_expr->id_list = idList;
+    new_expr->type = type;
+    return new_expr;
+}
+
+ExprNode* ExprNode::arrayBodyExprList(ExprListNode* exprList, Type type) {
+    ExprNode* new_expr = new ExprNode();
+    new_expr->expr_list = exprList;
+    new_expr->type = type;
+    return new_expr;
+}
+
+ExprNode::ExprNode(ExprNode* exprNode, Type type, TypeNode* typeNode) {
+    this->id = ++globId;
+    this->type = type;
+    this->expr_list = exprNode->expr_list;
+    this->type_node = exprNode->type_node;
+}
+
+ExprNode::ExprNode(Value* value, Type type) {
+    this->id = ++globId;
+    this->type = type;
+    this->value = value;
+}
+
+ExprNode* ExprNode::ternarOp(Ternar* ternar, Type type) {
+    ExprNode* expr = new ExprNode();
+    expr->ternar = ternar;
+    expr->type = type;
+    return expr;
+}
+
+ExprNode* ExprNode::OperatorIdExpr(Type type, Identificator* left, ExprNode* right) {
+    ExprNode* expr = new ExprNode();
+    expr->ident = left;
+    expr->type = type;
+    expr->expr_right = right;
+    return expr;
+}
+
+ExprNode* ExprNode::valueExpr(Type type, Identificator* ident, Value* value) {
+    ExprNode* expr = new ExprNode();
+    expr->ident = ident;
+    expr->value = value;
+    expr->type = type;
+    return expr;
+}
+
+ExprNode* ExprNode::exprList(Type type, Identificator* ident, ExprListNode* expr_list) {
+    ExprNode* expr = new ExprNode();
+    expr->ident = ident;
+    expr->expr_list = expr_list;
+    expr->type = type;
+    return expr;
+}
+
 ExprListNode::ExprListNode(ExprNode* expr){
     this->id = ++globId;
     this->exprs = new list<ExprNode*>{expr};
@@ -123,6 +173,7 @@ ExprListNode* ExprListNode::Append(ExprListNode* exprList, ExprNode* expr) {
     exprList->exprs->push_back(expr);
     return exprList;
 }
+
 
 StmtNode* StmtNode::DeclarationExpression(ExprNode* expr, Type item_type){
     StmtNode* new_stmt = new StmtNode();
@@ -250,6 +301,15 @@ StaticDim* StaticDim::DeclareStatic(DimStmt* dim){
     return _static;
 }
 
+DimStmt::DimStmt(DimStmt* dimStmt) {
+    this->id = ++globId;
+    this->type = dimStmt->type;
+    this->exprNode = dimStmt->exprNode;
+    this->typeNode = dimStmt->typeNode;
+    this->idList = dimStmt->idList;
+    this->arrayIdList = dimStmt->arrayIdList;
+}
+
 DimStmt* DimStmt::DeclarationSingleType(IdList* idList, Type type, TypeNode* typeNode){
     DimStmt* dim = new DimStmt();
     dim->id = ++globId;
@@ -329,10 +389,41 @@ Identificator* Identificator::id_func(string* identifier, Type type, ExprListNod
     return id;
 }
 
+Identificator* Identificator::id_witout(Identificator* identifier, Type type) {
+    Identificator* id = new Identificator();
+    id->id = ++globId;
+    id->identifier = identifier->identifier;
+    id->type = type;
+    return id;
+}
+
+Identificator* Identificator::id_with(Identificator* identifier, Type type, Value* size) {
+    Identificator* id = new Identificator();
+    id->id = ++globId;
+    id->identifier = identifier->identifier;
+    id->type = type;
+    id->arrSize = size;
+    return id;
+}
+
+Identificator* Identificator::id_func(Identificator* identifier, Type type, ExprListNode* exprs) {
+    Identificator* id = new Identificator();
+    id->id = ++globId;
+    id->identifier = identifier->identifier;
+    id->type = type;
+    id->exprList = exprs;
+    return id;
+}
+
 ArrayIdDeclare::ArrayIdDeclare(string* identifier, Identificator* input_id) {
     this->id = ++globId;
     this->identifier = identifier;
     this->input_id = input_id;
+}
+
+ArrayIdList::ArrayIdList(Identificator* ident) {
+    this->id = ++globId;
+    this->arrayIdent = new list<Identificator*>{ ident };
 }
 
 ArrayIdList::ArrayIdList(ArrayIdDeclare* arrayIdDeclare) {
@@ -354,6 +445,11 @@ ArrayIdList::ArrayIdList(ArrayIdList* arrayIdList) {
 
 ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId) {
     arrIdList->arrayId->push_back(arrayId);
+    return arrIdList;
+}
+
+ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, Identificator* ident) {
+    arrIdList->arrayIdent->push_back(ident);
     return arrIdList;
 }
 
@@ -384,6 +480,31 @@ Value::Value(int value, Type type, bool hasIntVal, Identificator* id) {
     this->identificator = id;
 }
 
+Value::Value(Identificator* ident, Type type) {
+    this->id = ++globId;
+    this->identificator = ident;
+    this->type = type;
+    this->hasIntVal = true;
+}
+
+Value::Value(double double_, Type type) {
+    this->id = ++globId;
+    this->double_ = double_;
+    this->type = type;
+}
+
+Value::Value(std::string* str, Type type) {
+    this->id = ++globId;
+    this.string_ = str;
+    this->type = type;
+}
+
+Value::Value(char* char_, Type type) {
+    this->id = ++globId;
+    this->char_ = char_;
+    this->type = type;
+}
+
 StmtListNode::StmtListNode(StmtNode* stmtNode) {
     this->id = ++globId;
     this->stmts = new list<StmtNode*>{ stmtNode };
@@ -392,6 +513,12 @@ StmtListNode::StmtListNode(StmtNode* stmtNode) {
 StmtListNode* StmtListNode::Append(StmtListNode* stmtListNode, StmtNode* stmtNode) {
     stmtListNode->stmts->push_back(stmtNode);
     return stmtListNode;
+}
+
+BodyStmt::BodyStmt(ExprNode* expr, StmtListNode* stmt) {
+    this->id = ++globId;
+    this->expr = expr;
+    this->stmts = stmt->stmts;
 }
 
 //toDot функции
@@ -454,11 +581,6 @@ void FuncDecl::toDot(string& dot) {
     if (this->body != NULL) {
         connectVerticesDots(dot, this->id, this->body->id);
         this->body->toDot(dot, "body");
-    }
-
-    if (this->return_ != NULL) {
-        connectVerticesDots(dot, this->id, this->return_->id);
-        this->return_->toDot(dot, "return");
     }
 }
 
