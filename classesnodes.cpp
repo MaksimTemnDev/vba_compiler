@@ -298,7 +298,7 @@ IdList* IdList::Append(IdList* idList, Identificator* Identificator) {
     return idList;
 }
 
-Identificator* Identificator::id_witout(string* identifier, Type* type) {
+Identificator* Identificator::id_witout(string* identifier, Type type) {
     Identificator* id = new Identificator();
     id->id = ++globId;
     id->identifier = identifier;
@@ -306,7 +306,7 @@ Identificator* Identificator::id_witout(string* identifier, Type* type) {
     return id;
 }
 
-Identificator* Identificator::id_with(string* identifier, Type* type, Value* size) {
+Identificator* Identificator::id_with(string* identifier, Type type, Value* size) {
     Identificator* id = new Identificator();
     id->id = ++globId;
     id->identifier = identifier;
@@ -315,7 +315,7 @@ Identificator* Identificator::id_with(string* identifier, Type* type, Value* siz
     return id;
 }
 
-Identificator* Identificator::id_func(string* identifier, Type* type, ExprListNode* exprs) {
+Identificator* Identificator::id_func(string* identifier, Type type, ExprListNode* exprs) {
     Identificator* id = new Identificator();
     id->id = ++globId;
     id->identifier = identifier;
@@ -339,7 +339,7 @@ ArrayIdList::ArrayIdList(ArrayIdList* arrayIdList) {
     this->id = ++globId;
     if (arrayIdList != NULL)
     {
-        this->arrayId = ArrayIdList->arrayIdList;
+        this->arrayId = arrayIdList->arrayId;
     }
     else
     {
@@ -353,7 +353,7 @@ ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId
 }
 
 ForNode* ForNode::fornode(ExprNode* startExpr, ExprNode* endExpr, OptionalStep* step, ExprNode* assignExpVar, StmtListNode* body) {
-    ForNode forNode = new ForNode();
+    ForNode* forNode = new ForNode();
     forNode->id = ++globId;
     forNode->startExpr = startExpr;
     forNode->endExpr = endExpr;
@@ -364,7 +364,7 @@ ForNode* ForNode::fornode(ExprNode* startExpr, ExprNode* endExpr, OptionalStep* 
 }
 
 OptionalStep* OptionalStep::addStep(Value* stepval, bool hasStep) {
-    OptionalStep optStep = new OptionalStep();
+    OptionalStep* optStep = new OptionalStep();
     optStep->id = ++globId;
     optStep->stepval = stepval;
     optStep->hasStep = hasStep;
@@ -404,16 +404,16 @@ void CodeNode::toDot(string& dot) {
 }
 
 void GlobalCode::toDot(string& dot) {
-    createVertexDot(dot, this->id, "global_code", type, value, "", "");
+    createVertexDot(dot, this->id, "global_code", "", "");
 
     if (this->subfunc != NULL) {
         connectVerticesDots(dot, this->id, this->subfunc->id);
-        this->subfunc->toDot(dot, "sub_func");
+        this->subfunc->toDot(dot);
     }
 
     if (this->dim != NULL) {
         connectVerticesDots(dot, this->id, this->dim->id);
-        this->dim->toDot(dot, "dim");
+        this->dim->toDot(dot);
     }
 }
 
@@ -424,21 +424,21 @@ void GlobalCodeList::toDot(string& dot) {
     {
         int exprNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot, "condition" + to_string(exprNum++));
+        elem->toDot(dot);
     }
 }
 
 void FuncDecl::toDot(string& dot) {
-    createVertexDot(dot, this->id, "func_decl", type, "", "");
+    createVertexDot(dot, this->id, "func_decl", "", "");
 
     if (this->name != NULL) {
         connectVerticesDots(dot, this->id, this->name->id);
-        this->name->toDot(dot, "name");
+        this->name->toDot(dot);
     }
 
     if (this->returnType != NULL) {
         connectVerticesDots(dot, this->id, this->returnType->id);
-        this->returnType->toDot(dot, "return_type");
+        this->returnType->toDot(dot);
     }
 
     if (this->params != NULL) {
@@ -504,11 +504,11 @@ void TypeNode::toDot(string& dot) {
             break;
     }
 
-    createVertexDot(dot, this->id, "type", type, value, "", "");
+    createVertexDot(dot, this->id, "type", "", "");
 
     if (this->typeArr != NULL) {
         connectVerticesDots(dot, this->id, this->typeArr->id);
-        this->typeArr->toDot(dot, "expr_left");
+        this->typeArr->toDot(dot);
     }
 
     if (this->exprArr != NULL) {
@@ -517,7 +517,7 @@ void TypeNode::toDot(string& dot) {
     }
 }
 
-void ExprNode::toDot(string& dot, const string& pos = "") {
+void ExprNode::toDot(string& dot, const string& pos) {
     string type = "";
     string value = "";
 
@@ -739,7 +739,7 @@ void ExprNode::toDot(string& dot, const string& pos = "") {
             break;
     }
 
-    createVertexDot(dot, this->id, "expr", type, value, "", pos);
+    createVertexDot(dot, this->id, "expr", type, value, pos);
 
     if (this->expr_left != NULL) {
         connectVerticesDots(dot, this->id, this->expr_left->id);
@@ -798,7 +798,7 @@ void ExprNode::toDot(string& dot, const string& pos = "") {
     }
 }
 
-void ExprListNode::toDot(string& dot, const string& type = "expr_list") {
+void ExprListNode::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "expr_list", type);
 
     for (auto elem : *this->exprs)
@@ -813,7 +813,7 @@ void StmtNode::toDot(string& dot) {
     string type = "";
     string value = "";
 
-    switch (this->type) {
+    switch (this->item_type) {
         case dim_:
             type = "dim";
             break;
@@ -876,26 +876,26 @@ void StmtNode::toDot(string& dot) {
 
     if (this->dim != NULL) {
         connectVerticesDots(dot, this->id, this->dim->id);
-        this->dim->toDot(dot, "dim");
+        this->dim->toDot(dot);
     }
 
     if (this->ifNode != NULL) {
         connectVerticesDots(dot, this->id, this->ifNode->id);
-        this->ifNode->toDot(dot, "if");
+        this->ifNode->toDot(dot);
     }
 
     if (this->while_stmt != NULL) {
         connectVerticesDots(dot, this->id, this->while_stmt->id);
-        this->while_stmt->toDot(dot, "while");
+        this->while_stmt->toDot(dot);
     }
 
     if (this->forstmt != NULL) {
         connectVerticesDots(dot, this->id, this->forstmt->id);
-        this->forstmt->toDot(dot, "for");
+        this->forstmt->toDot(dot);
     }
 }
 
-void StmtListNode::toDot(string& dot, const string& type = "stmt_list") {
+void StmtListNode::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "stmt_list", type);
 
     for (auto elem : *this->stmts)
@@ -1057,10 +1057,10 @@ void DimStmt::toDot(string& dot) {
     }
 }
 
-void IdList::toDot(string& dot, const string& type = "id_list") {
+void IdList::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "id_list");
 
-    for (auto elem : *this->items)
+    for (auto elem : *this->identificators)
     {
         int exprNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
@@ -1115,10 +1115,10 @@ void ArrayIdDeclare::toDot(string& dot) {
     }
 }
 
-void ArrayIdList::toDot(string& dot, const string& type = "arr_id_list") {
+void ArrayIdList::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "arr_id_list");
 
-    for (auto elem : *this->items)
+    for (auto elem : *this->arrayId)
     {
         int exprNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
@@ -1230,7 +1230,7 @@ void connectVerticesDots(string& s, int parentId, int childId) {
     s += tmp;
 }
 
-void createVertexDot(string& s, int id, string name, string type, string value, string visibility, string pos) {
+void createVertexDot(string& s, int id, string name, string type, string value, string pos) {
     if (!type.empty()) {
         type = "type=" + type + " ";
     }
@@ -1239,9 +1239,7 @@ void createVertexDot(string& s, int id, string name, string type, string value, 
         value = "value=" + value + " ";
     }
 
-    if (!visibility.empty()) {
-        visibility = "visibility=" + visibility + " ";
-    }
+    
 
     if (!pos.empty())
     {
@@ -1249,7 +1247,7 @@ void createVertexDot(string& s, int id, string name, string type, string value, 
     }
 
     string tmp = "id" + to_string(id) +
-        " [label=\"" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + "\"];\n";
+        " [label=\"" + name + " " + type + value + pos + "id=" + to_string(id) + "\"];\n";
 
     s += tmp;
 }

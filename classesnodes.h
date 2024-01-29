@@ -317,9 +317,9 @@ public:
     Value* arrSize;
     ExprListNode* exprList;
 
-    static Identificator* id_witout(string* identifier, Type* type);
-    static Identificator* id_with(string* identifier, Type* type, Value* size);
-    static Identificator* id_func(string* identifier, Type* type, ExprListNode* exprs);
+    static Identificator* id_witout(string* identifier, Type type);
+    static Identificator* id_with(string* identifier, Type type, Value* size);
+    static Identificator* id_func(string* identifier, Type type, ExprListNode* exprs);
 
     void toDot(string &dot);
 };
