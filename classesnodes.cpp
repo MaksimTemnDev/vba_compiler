@@ -339,7 +339,7 @@ ArrayIdList::ArrayIdList(ArrayIdList* arrayIdList) {
     this->id = ++globId;
     if (arrayIdList != NULL)
     {
-        this->arrayId = ArrayIdList->arrayId;
+        this->arrayId = ArrayIdList->arrayIdList;
     }
     else
     {
