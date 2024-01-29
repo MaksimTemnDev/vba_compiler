@@ -1,3 +1,8 @@
+%{
+#include "gram_tab.cpp"
+extern int yyparse();
+%}
+
 %option noyywrap
 %option never-interactive
 
@@ -57,7 +62,7 @@ InStr { printf("Found KW_INSTR: %s\n", yytext); }
 Friend { printf("Found KW_FRIEND: %s\n", yytext); }
 Get { printf("Found KW_GET: %s\n", yytext); }
 Let { printf("Found KW_LET: %s\n", yytext); }
-Is { printf("Found KW_IS: %s\n", yytext); return Is}
+Is { printf("Found KW_IS: %s\n", yytext); return Is;}
 Len { printf("Found KW_LEN: %s\n", yytext); }
 Left { printf("Found KW_LEFT: %s\n", yytext); }
 Like { printf("Found KW_LIKE: %s\n", yytext); return Like; }
@@ -174,7 +179,7 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 \" { strcpy(str,""); BEGIN(STRING); }
 <STRING>\"\" { strcat(str, """"); }
 <STRING>([^\n\"]+)? { strcat(str,yytext); }
-<STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
+<STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL); yylval.string_literal = new string(str); return STRING;}
 <STRING>\n { printf("STRING Error in line %d: there is line translation\n", lineNumber); BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 
@@ -184,39 +189,25 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 
 [0-9]+ {
 
-    eraseType("Decimal");
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
-	yylval.TYPE_DECIMAL = atoi(str);
-    return TYPE_DECIMAL;
+	yylval.decimal_number = atoi(str);
+    return DECIMAL_NUMBER;
 }
 
-0b([0-1])+ {
-
-    if(strlen(str) > 2)
-    {
-         printf("Found BYTE_NUMBER: %d\n", strtol(str + 2, NULL, 2));
-		 yylval.TYPE_BYTE = str;
-	 return TYPE_BYTE;
-    }
-    else
-    {
-        printf("NUMBER Error in line %d: incorrect format\n", lineNumber);
-    }
-}
 
 [0-9]+\.([0-9]+|([eE]?[+-]?[0-9]+)+)* {
     printf("Found DOUBLE: %lf\n", atof(str), str);
-	yylval.TYPE_DOUBLE = atof(str);
-    return TYPE_DOUBLE;
+	yylval.double_literal = atof(str);
+    return DOUBLE;
 }
 
 [0-9]+([eE]?[+-]?[0-9]+)? {
     printf("Found DOUBLE: %lf\n", atof(str));
-	yylval.TYPE_DOUBLE = atof(str);
-    return TYPE_DOUBLE;
+	yylval.double_literal = atof(str);
+    return DOUBLE;
 }
 
-[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); yylval.IDENTIFIER = yytext;  return IDENTIFIER; }
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext);  return IDENTIFIER; }
 
 %%
 
@@ -252,7 +243,7 @@ int main(int argc, char** argv) {
     fclose(file);
 
     string dot;
-    global_program->toDot(dot);
+    global_program_code->toDot(dot);
     std::cout << dot << "\n";
 
     std::ofstream out("dot-tree.txt");
