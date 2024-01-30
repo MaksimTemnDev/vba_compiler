@@ -405,7 +405,7 @@ class Value
 public:
     enum Type
     {
-    int_, byte_num, id_, short_, bool_, single_, double_, string_, date_, char_, obj_, dec_num
+    int_, byte_num, id_, short_, bool_, single_, Double_, string_, date_, Char_, obj_, dec_num
     };
     int id;
     int value;

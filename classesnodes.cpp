@@ -644,9 +644,9 @@ void TypeNode::toDot(string& dot) {
     }
 }
 
-void ExprNode::toDot(string& dot, const string& pos) {
-    string type = "";
-    string value = "";
+void ExprNode::toDot(std::string& dot, const std::string& pos) {
+    std::string type = "";
+    std::string value = "";
 
     switch (this->type){
         case ExprNode::assign:
@@ -1319,7 +1319,7 @@ void Value::toDot(string& dot) {
             type = "single";
             break;
 
-        case double_:
+        case Double_:
             type = "double";
             break;
 
@@ -1331,7 +1331,7 @@ void Value::toDot(string& dot) {
             type = "date";
             break;
 
-        case char_:
+        case Char_:
             type = "char";
             break;
 
@@ -1344,7 +1344,7 @@ void Value::toDot(string& dot) {
             break;
     }
 
-    createVertexDot(dot, this->id, "value", "", "");
+    createVertexDot(dot, this->id, "value", "", "", "");
 
     if (this->identificator != NULL) {
         connectVerticesDots(dot, this->id, this->identificator->id);
