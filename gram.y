@@ -81,7 +81,7 @@
 %type <optStep> OptionalStep
 %type <string_literal> STRING
 %type <identificator> IDENTIFIER
-%type <bool_literal> Boolean
+%type <value> Boolean
 %type <double_literal> DOUBLE
 %type <char_literal> CHAR
 %type <decimal_number> DECIMAL_NUMBER
@@ -112,8 +112,8 @@
 %token Sub
 %token Iif
 %token KW_STATIC
-%token KW_FALSE
-%token KW_TRUE
+%token <bool_literal> KW_FALSE
+%token <bool_literal> KW_TRUE
 
 
 %token STRING
@@ -285,47 +285,47 @@ ExprStart: Values { $$ = new ExprNode($1, ExprNode::value); }
 		 | IDENTIFIER '('ExpressionList')' { $$ = ExprNode::exprList(ExprNode::expr_start_func, $1, $3); }
 		 ;
 		
-Values: STRING { $$ = new Value($1, Value::string_, 0, Identificator::id_witout($1, Identificator::val_)); }
+Values: STRING { $$ = new Value($1, Value::string_); }
 	  | Boolean { $$ = $1; }
-	  | DOUBLE { $$ = new Value($1, Value::double_, 0, Identificator::id_witout($1, Identificator::val_)); }
-	  | CHAR { $$ = new Value($1, Value::char_, 0, Identificator::id_witout($1, Identificator::val_)); }
+	  | DOUBLE { $$ = new Value($1, Value::Double_); }
+	  | CHAR { $$ = new Value($1, Value::Char_); }
 	  | Indexes { $$ = $1; }
 	  ;
 	 
-Boolean: KW_FALSE { $$ = Value::Value(0, Value::bool_, FALSE, Identificator::id_witout(FALSE, Identificator::val_)); }
-	   | KW_TRUE { $$ = Value::Value(1, Value::bool_, TRUE, Identificator::id_witout(TRUE, Identificator::val_)); }
+Boolean: KW_FALSE { $$ = new Value($1, Value::bool_); }
+	   | KW_TRUE { $$ = new Value($1, Value::bool_); }
 	   ;
 	 
-Indexes: DECIMAL_NUMBER { $$ = Value::Value($1, Value::dec_num, FALSE, Identificator::id_witout(int, Identificator::val_)); };
+Indexes: DECIMAL_NUMBER { $$ = new Value($1, Value::dec_num, 1, 0); };
 	   
 IndexesWithId: Indexes { $$ = $1; }
 			 | IDENTIFIER { $$ = new Value($1, Value::id_); }
 			 ;
 			 
-ExprStartWithId: ValuesWithId {$$ = $1;}
-			   | IDENTIFIER '('ExpressionList')' { $$ = Identificator::id_witout(single, Identificator::var_)); }
+ExprStartWithId: ValuesWithId {$$ = new ExprNode($1, ExprNode::values_with_id);}
+			   | IDENTIFIER '('ExpressionList')' { $$ = ExprNode::exprList(ExprNode::expr_start_id, $1, $3); }
 			   ;
 		
-ValuesWithId: STRING { $$ = Value::Value($1, Value::string_, 0, Identificator::id_witout(string, Identificator::val_)); }
-            | Boolean { $$ = $1; }
-            | DOUBLE { $$ = Value::Value($1, Value::double_, 0, Identificator::id_witout(double, Identificator::val_)); }
-            | CHAR { $$ = Value::Value($1, Value::char_, 0, Identificator::id_witout(char, Identificator::val_)); }
+ValuesWithId: STRING { $$ = new Value($1, Value::string_); }
+			| Boolean { $$ = $1; }
+			| DOUBLE { $$ = new Value($1, Value::Double_); }
+			| CHAR { $$ = new Value($1, Value::Char_); }
 		    | IndexesWithId { $$ = $1; }
 		    ;
 
 UnarExpr: UnarMinus	ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::u_minus, 0, $2); }
 		| UnarPlus ExpressionWithoutAssign { $$ = ExprNode::OperatorExpr(ExprNode::u_plus, 0, $2); }
-		| Not Expression { $$ = ExprNode::OperatorExpr(ExprNode::_not, 0, $2); }
+		| Not Expression { $$ = ExprNode::OperatorExpr(ExprNode::not_, 0, $2); }
 		;
 
-FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, 0, 0, $7, 0); }
-                   | Function IDENTIFIER '(' OptEndl ')' AS Type EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, $7, 0, $9, 0); }
-                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, 0, $5, $8, 0); }
-                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' AS Type EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, $8, $5, $10, 0); }
+FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, 0, 0, $7, 0, 0); }
+                   | Function IDENTIFIER '(' OptEndl ')' AS Type EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, $7, 0, $9, 0, 0); }
+                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, 0, $5, $8, 0, 0); }
+                   | Function IDENTIFIER '(' OptEndl IDENTIFIERlist ')' AS Type EndList BodyStmt { $$ = FuncDecl::funcDeclare($2, $8, $5, $10, 0, 0); }
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, $7, 1); }
-              | Sub IDENTIFIER '('OptEndl IDENTIFIERlist')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, $5, $8, 1); }
+SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, 0, 1, $7); }
+              | Sub IDENTIFIER '('OptEndl IDENTIFIERlist')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, $5, 0, 1, $8); }
               ;
 
 IfStmt: IF Expression THEN EndList StatementList END IF { $$ = IfNode::IfClear($2, $5, IfNode::clear_); }
@@ -352,15 +352,15 @@ EXITDO: EXIT DO;
 
 CONTINUEDO: CONTINUE DO;
 
-OptionalStep: { $$ = OptionalStep::whileStmt(0, false); }
-			| STEP IndexesWithId { $$ = OptionalStep::whileStmt($2, true); }
+OptionalStep: { $$ = OptionalStep::addStep(0, false); }
+			| STEP IndexesWithId { $$ = OptionalStep::addStep($2, true); }
 			;
 			
 ContinueExitFor: CONTINUE FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::continue_for); }
 			   | EXIT FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::exit_for); }
 			   ;
 
-ForStatement: FOR AssignExprVar TO Expression OptionalStep EndList StatementList NEXT { $$ = ForNode::fornode($2, $4, $5, $7, While::doloopwhile_); }
+ForStatement: FOR AssignExprVar TO Expression OptionalStep EndList StatementList NEXT { $$ = ForNode::fornode($2, $4, $5, 0, $7); }
 			;
 				 
 EndList: TOKEN_LINE

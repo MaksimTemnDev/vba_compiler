@@ -42,13 +42,14 @@ GlobalCodeList* GlobalCodeList::Append(GlobalCodeList* globalCodes, GlobalCode* 
     return globalCodes;
 }
 
-FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub){
+FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub, StmtListNode* stmtList){
     FuncDecl* func = new FuncDecl();
     func->name = name;
     func->params = params;
     func->body = body;
     func->is_sub = is_sub;
     func->id = ++globId;
+    func->stmt_list = stmtList;
     return func;
 }
 
@@ -117,8 +118,8 @@ ExprNode::ExprNode(ExprNode* exprNode, Type type, TypeNode* typeNode) {
 
 ExprNode::ExprNode(Value* value, Type type) {
     this->id = ++globId;
-    this->type = type;
     this->value = value;
+    this->type = type;
 }
 
 ExprNode* ExprNode::ternarOp(Ternar* ternar, Type type) {
@@ -499,10 +500,16 @@ Value::Value(std::string str, Type type) {
     this->type = type;
 }
 
-Value::Value(char* char_, Type type) {
+Value::Value(char char_, Type type) {
     this->id = ++globId;
-    this->char_ = *char_;
+    this->char_ = char_;
     this->type = type;
+}
+
+Value::Value(bool bool_, Type type) {
+    this->id = ++globId;
+    this->type = type;
+    this->Bool_ = bool_;
 }
 
 StmtListNode::StmtListNode(StmtNode* stmtNode) {

@@ -67,9 +67,10 @@ class FuncDecl{
     TypeNode* returnType = NULL;
     IdList* params = NULL;
     BodyStmt* body = NULL;
+    StmtListNode* stmt_list = NULL;
     bool is_sub = false;
 
-    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub);
+    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub, StmtListNode* stmtList);
 
    void toDot(std::string &dot);
 };
@@ -127,7 +128,9 @@ class ExprNode{
     b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, _not_eq, bit_l_shift, bit_r_shift,
     u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof, arr_expr_list, ternar,
 
-    single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier, value, expr_start_func
+    single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier, value, expr_start_func, values_with_id,
+    expr_start_id
+
     };
 
     int id;
@@ -412,6 +415,7 @@ public:
     char char_;
     std::string str;
     double double_;
+    bool Bool_;
     Identificator* identificator;
     Type type;
     bool hasIntVal = false;
@@ -419,7 +423,8 @@ public:
     Value(Identificator* ident, Type type);
     Value(double double_, Type type);
     Value(std::string str, Type type);
-    Value(char* char_, Type type);
+    Value(char char_, Type type);
+    Value(bool bool_, Type type);
     Value(int value, Type type, bool hasIntVal, Identificator* id);
 
     void toDot(std::string &dot);
