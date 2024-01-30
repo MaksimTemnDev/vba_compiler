@@ -150,9 +150,9 @@ class ExprNode{
     StmtListNode* stmt_list = NULL;
     IdList* id_list = NULL;
     TypeNode* type_node = NULL;
-    Ternar* ternar = NULL;
+    Ternar* _ternar = NULL;
     Identificator* ident = NULL;
-    Value* value = NULL;
+    Value* _value = NULL;
 
     list<ExprNode*>* ifList = NULL;
     ExprNode* else_body = NULL;

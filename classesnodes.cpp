@@ -118,13 +118,13 @@ ExprNode::ExprNode(ExprNode* exprNode, Type type, TypeNode* typeNode) {
 
 ExprNode::ExprNode(Value* value, Type type) {
     this->id = ++globId;
-    this->value = value;
+    this->_value = value;
     this->type = type;
 }
 
 ExprNode* ExprNode::ternarOp(Ternar* ternar, Type type) {
     ExprNode* expr = new ExprNode();
-    expr->ternar = ternar;
+    expr->_ternar = ternar;
     expr->type = type;
     return expr;
 }
@@ -140,7 +140,7 @@ ExprNode* ExprNode::OperatorIdExpr(Type type, Identificator* left, ExprNode* rig
 ExprNode* ExprNode::valueExpr(Type type, Identificator* ident, Value* value) {
     ExprNode* expr = new ExprNode();
     expr->ident = ident;
-    expr->value = value;
+    expr->_value = value;
     expr->type = type;
     return expr;
 }
