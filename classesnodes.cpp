@@ -71,6 +71,8 @@ TypeNode::TypeNode(Type type, string *name){
     this->name = name;
 }
 
+ExprNode::ExprNode(){}
+
 ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
     ExprNode* new_expr = new ExprNode();
     new_expr->id = ++globId;
@@ -312,6 +314,8 @@ StaticDim* StaticDim::DeclareStatic(DimStmt* dim){
     _static->dim = dim;
     return _static;
 }
+
+DimStmt::DimStmt(){}
 
 DimStmt::DimStmt(DimStmt* dimStmt) {
     this->id = ++globId;

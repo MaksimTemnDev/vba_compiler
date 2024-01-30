@@ -28,15 +28,15 @@ class IfNode;
 class OptionalStep;
 class BodyStmt;
 
-class CodeNode{
-    public: 
+class CodeNode {
+public:
     int id;
     GlobalCodeList* globalCode = NULL;
     CodeNode(GlobalCodeList* globalcode);
-   void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
-class GlobalCode{
+class GlobalCode {
 public:
     int id;
     FuncDecl* subfunc = NULL;
@@ -44,12 +44,12 @@ public:
 
     static GlobalCode* addDim(DimStmt* dim);
     static GlobalCode* addSubFunc(FuncDecl* subfunc);
-    
-    void toDot(std::string &dot);
+
+    void toDot(std::string& dot);
 };
 
-class GlobalCodeList{
-    public:
+class GlobalCodeList {
+public:
     int id;
     list<GlobalCode*>* globalCodes = NULL;
 
@@ -57,13 +57,13 @@ class GlobalCodeList{
     GlobalCodeList(GlobalCodeList* globalCodes);
     static GlobalCodeList* Append(GlobalCodeList* globalCodes, GlobalCode* globalCode);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
-class FuncDecl{
-    public:
+class FuncDecl {
+public:
     int id;
-    Identificator*  name = NULL;
+    Identificator* name = NULL;
     TypeNode* returnType = NULL;
     IdList* params = NULL;
     BodyStmt* body = NULL;
@@ -72,12 +72,12 @@ class FuncDecl{
 
     static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub, StmtListNode* stmtList);
 
-   void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
-class FuncParamNode{
+class FuncParamNode {
 public:
-    enum Type{
+    enum Type {
         date_, int_, byte_, single, char_, string_, short_, bool_, obj_, decimal_
     };
     int id;
@@ -87,10 +87,10 @@ public:
 
     FuncParamNode(std::string* name, TypeNode* type, Type param_type);
 
-   void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
-class FuncParamListNode{
+class FuncParamListNode {
 public:
     int id;
     list<FuncParamNode*>* items = NULL;
@@ -98,38 +98,39 @@ public:
     FuncParamListNode(FuncParamNode* item);
     FuncParamListNode(FuncParamListNode* list);
 
-   void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
-class TypeNode{
+class TypeNode {
 public:
-    enum Type{
+    enum Type {
         date_, int_, byte_, single, char_, string_, short_, bool_, obj_, decimal_, double_
     };
 
     int id;
     Type type;
-    std::string *name;
+    std::string* name;
     TypeNode* typeArr = NULL;
     ExprNode* exprArr = NULL;
 
     TypeNode(TypeNode* type);
     TypeNode(Type type, TypeNode* type_node, ExprNode* expr);
-    TypeNode(Type type, std::string *name);
-    void toDot(std::string &dot);
+    TypeNode(Type type, std::string* name);
+    void toDot(std::string& dot);
 
 };
 
-class ExprNode{
-    public:
-    enum Type{assign, no_assign_part, or_, or_elase, and_, and_also, plus_assign, minus_assign, mul_assign, 
-    div_assign, expr_assign, bit_and_aassign, div_num_assign, bit_l_shift_assign, bit_r_shift_assign,
+class ExprNode {
+public:
+    enum Type {
+        assign, no_assign_part, or_, or_elase, and_, and_also, plus_assign, minus_assign, mul_assign,
+        div_assign, expr_assign, bit_and_aassign, div_num_assign, bit_l_shift_assign, bit_r_shift_assign,
 
-    b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, _not_eq, bit_l_shift, bit_r_shift,
-    u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof, arr_expr_list, ternar,
+        b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, _not_eq, bit_l_shift, bit_r_shift,
+        u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof, arr_expr_list, ternar,
 
-    single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier, value, expr_start_func, values_with_id,
-    expr_start_id
+        single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier, value, expr_start_func, values_with_id,
+        expr_start_id
 
     };
 
@@ -140,8 +141,8 @@ class ExprNode{
     int Int = 0;
     double Double = 0;
     bool Bool;
-    std::string *ParentID = NULL;
-    std::string *Name = NULL;
+    std::string* ParentID = NULL;
+    std::string* Name = NULL;
 
     ExprNode* expr_left = NULL;
     ExprNode* expr_right = NULL;
@@ -158,7 +159,7 @@ class ExprNode{
     ExprNode* else_body = NULL;
     ExprNode* body = NULL;
     ExprNode* condition = NULL;
-    
+
     ExprNode* isnotis = NULL;
 
     ExprNode();
@@ -176,7 +177,7 @@ class ExprNode{
     static ExprNode* valueExpr(Type type, Identificator* ident, Value* value);
     static ExprNode* exprList(Type type, Identificator* ident, ExprListNode* expr_list);
 
-    void toDot(std::string &dot, const std::string &pos = "");
+    void toDot(std::string& dot, const std::string& pos = "");
 };
 
 class ExprListNode
@@ -189,7 +190,7 @@ public:
     ExprListNode(ExprListNode* exprs);
     static ExprListNode* Append(ExprListNode* exprList, ExprNode* expr);
 
-   void toDot(std::string &dot, const std::string &type="expr_list");
+    void toDot(std::string& dot, const std::string& type = "expr_list");
 };
 
 class StmtNode
@@ -219,14 +220,14 @@ public:
     static StmtNode* DeclarationContinueExitFor(Type item_type);
     StmtNode();
 
-   void toDot(std::string &dot);
+    void toDot(std::string& dot);
 
 };
 
 class IfNode
 {
 public:
-    enum Type{
+    enum Type {
         clear_, else_, ternar_, elseif
     };
     int id;
@@ -241,8 +242,8 @@ public:
     static IfNode* IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListNode* stmtElseListNode, Type type);
     static IfNode* IfTernar(ExprNode* exprNode, Ternar* ternar, Type type);
     static IfNode* IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNode* conditionElse, StmtListNode* stmtElseIfListNode, Type type);
-    
-    void toDot(std::string &dot);
+
+    void toDot(std::string& dot);
 };
 
 class Ternar
@@ -255,13 +256,13 @@ public:
 
     static Ternar* ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class While
 {
 public:
-    enum Type{
+    enum Type {
         simple_, doloopwhile_, doloopuntil
     };
     int id;
@@ -271,7 +272,7 @@ public:
 
     static While* whileStmt(ExprNode* condition, StmtListNode* body, Type type);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class StaticDim
@@ -282,7 +283,7 @@ public:
 
     static StaticDim* DeclareStatic(DimStmt* dim);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class DimStmt
@@ -309,7 +310,7 @@ public:
     static DimStmt* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode);
     void becomeStatic();
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class IdList
@@ -321,7 +322,7 @@ public:
     IdList(Identificator* identificator);
     IdList(IdList* IdList);
     static IdList* Append(IdList* idList, Identificator* Identificator);
-    void toDot(std::string &dot, const std::string &type="id_list");
+    void toDot(std::string& dot, const std::string& type = "id_list");
 };
 
 class Identificator
@@ -344,7 +345,7 @@ public:
     static Identificator* id_with(Identificator* identifier, Type type, Value* size);
     static Identificator* id_func(Identificator* identifier, Type type, ExprListNode* exprs);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class ArrayIdDeclare
@@ -358,7 +359,7 @@ public:
 
     ArrayIdDeclare(std::string* identifier, Identificator* input_id);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class ArrayIdList
@@ -373,7 +374,7 @@ public:
     ArrayIdList(ArrayIdList* arrayIdList);
     static ArrayIdList* Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId);
     static ArrayIdList* Append(ArrayIdList* arrIdList, Identificator* ident);
-    void toDot(std::string &dot, const std::string &type="arr_id_list");
+    void toDot(std::string& dot, const std::string& type = "arr_id_list");
 };
 
 class ForNode
@@ -388,7 +389,7 @@ public:
 
     static ForNode* fornode(ExprNode* startExpr, ExprNode* endExpr, OptionalStep* step, ExprNode* assignExpVar, StmtListNode* body);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class OptionalStep
@@ -400,7 +401,7 @@ public:
 
     static OptionalStep* addStep(Value* stepval, bool hasStep);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class Value
@@ -408,7 +409,7 @@ class Value
 public:
     enum Type
     {
-    int_, byte_num, id_, short_, bool_, single_, Double_, string_, date_, Char_, obj_, dec_num
+        int_, byte_num, id_, short_, bool_, single_, Double_, string_, date_, Char_, obj_, dec_num
     };
     int id;
     int value;
@@ -427,7 +428,7 @@ public:
     Value(bool bool_, Type type);
     Value(int value, Type type, bool hasIntVal, Identificator* id);
 
-    void toDot(std::string &dot);
+    void toDot(std::string& dot);
 };
 
 class StmtListNode
@@ -439,7 +440,7 @@ public:
     StmtListNode(StmtNode* stmtNode);
     static StmtListNode* Append(StmtListNode* stmtListNode, StmtNode* stmtNode);
 
-    void toDot(std::string &dot, const std::string &type = "stmt_list");
+    void toDot(std::string& dot, const std::string& type = "stmt_list");
 };
 
 class BodyStmt
@@ -455,5 +456,5 @@ public:
     void toDot(std::string& dot);
 };
 
-void connectVerticesDots(std::string &s, int parentId, int childId);
-void createVertexDot(std::string &s, int id, std::string name="", std::string type="", std::string value = "", std::string pos = "");
+void connectVerticesDots(std::string& s, int parentId, int childId);
+void createVertexDot(std::string& s, int id, std::string name = "", std::string type = "", std::string value = "", std::string pos = "");

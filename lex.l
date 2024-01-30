@@ -1,5 +1,5 @@
 %{
-#include "gram_tab.cpp"
+#include "gram_tab.h"
 extern int yyparse();
 %}
 
@@ -21,7 +21,6 @@ DIGIT [0-9]
     #include <ctype.h>
     #include <fstream>
     #include <iostream>
-    #include "gram_tab.cpp"
 	
 	using namespace std;
 
