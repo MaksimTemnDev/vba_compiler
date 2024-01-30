@@ -452,7 +452,7 @@ public:
 
     BodyStmt(ExprNode* expr, StmtListNode* stmt);
 
-    void toDot(std::string& dot, const std::string& type = "stmt_list");
+    void toDot(std::string& dot);
 };
 
 void connectVerticesDots(std::string &s, int parentId, int childId);

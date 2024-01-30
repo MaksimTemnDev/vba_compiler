@@ -599,7 +599,12 @@ void FuncDecl::toDot(string& dot) {
 
     if (this->body != NULL) {
         connectVerticesDots(dot, this->id, this->body->id);
-        this->body->toDot(dot, "body");
+        this->body->toDot(dot);
+    }
+
+    if (this->stmt_list != NULL) {
+        connectVerticesDots(dot, this->id, this->stmt_list->id);
+        this->stmt_list->toDot(dot);
     }
 }
 
@@ -836,6 +841,14 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
             type = "typeOf";
             break;
 
+        case ExprNode::arr_expr_list:
+            type = "arr_expr_list";
+            break;
+
+        case ExprNode::ternar:
+            type = "ternar";
+            break;
+
         case ExprNode::single:
             type = "single";
             break;
@@ -883,6 +896,22 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
         case ExprNode::identifier:
             type = "identifier";
             break;
+
+        case ExprNode::expr_start_id:
+            type = "expr_start_id";
+            break;
+
+        case ExprNode::value:
+            type = "value";
+            break;
+
+        case ExprNode::expr_start_func:
+            type = "expr_start_func";
+            break;
+
+        case ExprNode::values_with_id:
+            type = "values_with_id";
+            break;
     }
 
     createVertexDot(dot, this->id, "expr", type, value, pos);
@@ -910,6 +939,31 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
     if (this->stmt_list != NULL) {
         connectVerticesDots(dot, this->id, this->stmt_list->id);
         this->stmt_list->toDot(dot);
+    }
+
+    if (this->id_list != NULL) {
+        connectVerticesDots(dot, this->id, this->id_list->id);
+        this->id_list->toDot(dot);
+    }
+
+    if (this->type_node != NULL) {
+        connectVerticesDots(dot, this->id, this->type_node->id);
+        this->type_node->toDot(dot);
+    }
+
+    if (this->_ternar != NULL) {
+        connectVerticesDots(dot, this->id, this->_ternar->id);
+        this->_ternar->toDot(dot);
+    }
+
+    if (this->ident != NULL) {
+        connectVerticesDots(dot, this->id, this->ident->id);
+        this->ident->toDot(dot);
+    }
+
+    if (this->_value != NULL) {
+        connectVerticesDots(dot, this->id, this->_value->id);
+        this->_value->toDot(dot);
     }
 
     if (this->ifList != NULL) {
@@ -1270,6 +1324,13 @@ void ArrayIdList::toDot(string& dot, const string& type) {
         connectVerticesDots(dot, this->id, elem->id);
         elem->toDot(dot);
     }
+
+    for (auto elem : *this->arrayIdent)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
 }
 
 void ForNode::toDot(string& dot) {
@@ -1368,6 +1429,22 @@ void Value::toDot(string& dot) {
     if (this->identificator != NULL) {
         connectVerticesDots(dot, this->id, this->identificator->id);
         this->identificator->toDot(dot);
+    }
+}
+
+void BodyStmt::toDot(std::string& dot) {
+    createVertexDot(dot, this->id, "body", "", "", "");
+
+    for (auto elem : *this->stmts)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
+
+    if (this->expr != NULL) {
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot);
     }
 }
 
