@@ -133,7 +133,7 @@ class ExprNode{
     int id;
     Type type;
     char Char = 0;
-    std::string* std::string = NULL;
+    std::string* string = NULL;
     int Int = 0;
     double Double = 0;
     bool Bool;
@@ -409,8 +409,8 @@ public:
     };
     int id;
     int value;
-    char* char_;
-    std::string& str;
+    char char_;
+    std::string str;
     double double_;
     Identificator* identificator;
     Type type;
@@ -418,7 +418,7 @@ public:
 
     Value(Identificator* ident, Type type);
     Value(double double_, Type type);
-    Value(std::string* str, Type type);
+    Value(std::string str, Type type);
     Value(char* char_, Type type);
     Value(int value, Type type, bool hasIntVal, Identificator* id);
 

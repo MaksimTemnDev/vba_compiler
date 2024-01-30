@@ -493,15 +493,15 @@ Value::Value(double double_, Type type) {
     this->type = type;
 }
 
-Value::Value(std::string* str, Type type) {
+Value::Value(std::string str, Type type) {
     this->id = ++globId;
-    this.string_ = str;
+    this->str = str;
     this->type = type;
 }
 
 Value::Value(char* char_, Type type) {
     this->id = ++globId;
-    this->char_ = char_;
+    this->char_ = *char_;
     this->type = type;
 }
 
