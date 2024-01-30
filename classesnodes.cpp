@@ -73,6 +73,7 @@ TypeNode::TypeNode(Type type, string *name){
 
 ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
     ExprNode* new_expr = new ExprNode();
+    new_expr->id = ++globId;
     new_expr->type = type;
     new_expr->expr_left = left;
     new_expr->expr_right = right;
@@ -81,6 +82,7 @@ ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
 
 ExprNode* ExprNode::IifExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body){
     ExprNode* new_expr = new ExprNode();
+    new_expr->id = ++globId;
     new_expr->type = type;
     new_expr->body = body;
     new_expr->condition = condition;
@@ -90,6 +92,7 @@ ExprNode* ExprNode::IifExpr(Type type, ExprNode* condition, ExprNode* body, Expr
 
 ExprNode* ExprNode::typeOfisnotIs(Type type, ExprNode* isnotIs){
     ExprNode* new_expr = new ExprNode();
+    new_expr->id = ++globId;
     new_expr->type = type;
     new_expr->isnotis = isnotIs;
     return new_expr;
@@ -97,6 +100,7 @@ ExprNode* ExprNode::typeOfisnotIs(Type type, ExprNode* isnotIs){
 
 ExprNode* ExprNode::arrayBodyIdList(IdList* idList, Type type) {
     ExprNode* new_expr = new ExprNode();
+    new_expr->id = ++globId;
     new_expr->id_list = idList;
     new_expr->type = type;
     return new_expr;
@@ -104,6 +108,7 @@ ExprNode* ExprNode::arrayBodyIdList(IdList* idList, Type type) {
 
 ExprNode* ExprNode::arrayBodyExprList(ExprListNode* exprList, Type type) {
     ExprNode* new_expr = new ExprNode();
+    new_expr->id = ++globId;
     new_expr->expr_list = exprList;
     new_expr->type = type;
     return new_expr;
@@ -124,6 +129,7 @@ ExprNode::ExprNode(Value* value, Type type) {
 
 ExprNode* ExprNode::ternarOp(Ternar* ternar, Type type) {
     ExprNode* expr = new ExprNode();
+    expr->id = ++globId;
     expr->_ternar = ternar;
     expr->type = type;
     return expr;
@@ -131,6 +137,7 @@ ExprNode* ExprNode::ternarOp(Ternar* ternar, Type type) {
 
 ExprNode* ExprNode::OperatorIdExpr(Type type, Identificator* left, ExprNode* right) {
     ExprNode* expr = new ExprNode();
+    expr->id = ++globId;
     expr->ident = left;
     expr->type = type;
     expr->expr_right = right;
@@ -139,6 +146,7 @@ ExprNode* ExprNode::OperatorIdExpr(Type type, Identificator* left, ExprNode* rig
 
 ExprNode* ExprNode::valueExpr(Type type, Identificator* ident, Value* value) {
     ExprNode* expr = new ExprNode();
+    expr->id = ++globId;
     expr->ident = ident;
     expr->_value = value;
     expr->type = type;
@@ -147,6 +155,7 @@ ExprNode* ExprNode::valueExpr(Type type, Identificator* ident, Value* value) {
 
 ExprNode* ExprNode::exprList(Type type, Identificator* ident, ExprListNode* expr_list) {
     ExprNode* expr = new ExprNode();
+    expr->id = ++globId;
     expr->ident = ident;
     expr->expr_list = expr_list;
     expr->type = type;
@@ -226,11 +235,13 @@ StmtNode* StmtNode::DeclarationContinueWhile(Type item_type){
 
 StmtNode* StmtNode::DeclarationDoOption(Type item_type){
     StmtNode* new_stmt = StmtNode::DeclarationContinueWhile(item_type);
+    new_stmt->id = ++globId;
     return new_stmt;
 }
 
 StmtNode* StmtNode::DeclarationContinueExitFor(Type item_type){
     StmtNode* new_stmt = StmtNode::DeclarationContinueWhile(item_type);
+    new_stmt->id = ++globId;
     return new_stmt;
 }
 
@@ -340,6 +351,7 @@ DimStmt* DimStmt::DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode
 
 void DimStmt::becomeStatic(){
     this->isStatic?false:true;
+    this->id = ++globId;
 }
 
 IdList::IdList(Identificator* identificator) {
