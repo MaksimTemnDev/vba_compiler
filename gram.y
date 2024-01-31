@@ -372,3 +372,8 @@ OptEndl: EndList
 	   ;
 	   
 %%
+
+void yyerror(char const *s)
+{
+    printf("%s\n",s);
+}
