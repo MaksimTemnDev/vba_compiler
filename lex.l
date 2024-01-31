@@ -40,7 +40,7 @@ DIGIT [0-9]
 \n { printf("Found TOKEN_LINE: \n"); lineNumber++; return TOKEN_LINE; }
 [\r\t\f\v ]+ {}
 
-As { printf("Found KW_AS: %s\n", yytext); return AS; }
+As { printf("Found KW_AS: %s\n", yytext); return As; }
 And { printf("Found KW_AND: %s\n", yytext); return AND; }
 AndAlso { printf("Found KW_AND_ALSO: %s\n", yytext); return ANDALSO; }
 Binary { printf("Found KW_BINARY: %s\n", yytext); }
@@ -60,7 +60,7 @@ Error { printf("Found KW_ERROR: %s\n", yytext); }
 Function { printf("Found KW_FUNCTION: %s\n", yytext); return Function; }
 For { printf("Found KW_FOR: %s\n", yytext); return FOR; }
 If { printf("Found KW_IF: %s\n", yytext); return IF; }
-Iif { printf("Found KW_IIF: %s\n", yytext); return Iif; }
+Iif { printf("Found KW_IIF: %s\n", yytext); }
 InStr { printf("Found KW_INSTR: %s\n", yytext); }
 Friend { printf("Found KW_FRIEND: %s\n", yytext); }
 Get { printf("Found KW_GET: %s\n", yytext); }

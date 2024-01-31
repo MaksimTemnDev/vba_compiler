@@ -190,11 +190,11 @@ Type: TYPE_BOOLEAN { $$ = new TypeNode($1); }
 	| TYPE_OBJECT { $$ = new TypeNode($1); }
 	;
 
-ArrayBody: '{' OptEndl ExpressionList OptEndl'}' { $$ = ExprNode::arrayBodyExprList($2, ExprNode::arr_expr_list); }
+ArrayBody: '{' OptEndl ExpressionList OptEndl'}' {  }
 		 ;
 
-ArrayIDdeclaration: CallArrOrFunc { $$ = new ArrayIdList($1); }
-				  | ArrayIDdeclaration ',' CallArrOrFunc { $$ = ArrayIdList::Append($1, $3); }
+ArrayIDdeclaration: CallArrOrFunc {  }
+				  | ArrayIDdeclaration ',' CallArrOrFunc {  }
 				  ;
 
 StatementList: Statement { $$ = new StmtListNode($1); }
@@ -202,7 +202,7 @@ StatementList: Statement { $$ = new StmtListNode($1); }
              ;
 		
 ExpressionList: Expression { $$ = new ExprListNode($1); }
-			  | ExpressionList ',' OptEndl Expression { $$ = ExprListNode::Append($1, $3); }
+			  | ExpressionList ',' OptEndl Expression {  }
 			  ;
 	
 Expression: Expression '=' OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::no_assign_part, $1, $4); }
@@ -226,30 +226,30 @@ Expression: Expression '=' OptEndl Expression { $$ = ExprNode::OperatorExpr(Expr
 		  | Not Expression { $$ = ExprNode::OperatorExpr(ExprNode::not_, 0, $2); }
 		  | ArrayBody { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $1, 0); }
           | '{'OptEndl'}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_empty, 0, 0); }
-	      | NEW Type '('OptEndl')' ArrayBody { $$ = new ExprNode($5, ExprNode::arr_body_type, $2); }
-		  | '('OptEndl Expression OptEndl')' {$$ = $2;}
-		  | Expression Like OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::like, $1, $3); }
-		  | Expression IsNot OptEndl Type { $$ = ExprNode::OperatorExpr(ExprNode::isnot, $1, $3); }
-		  | Expression Is OptEndl Type { $$ = ExprNode::OperatorExpr(ExprNode::is, $1, $3); }
+	      | NEW Type '('OptEndl')' ArrayBody {  }
+		  | '('OptEndl Expression OptEndl')' {}
+		  | Expression Like OptEndl Expression { }
+		  | Expression IsNot OptEndl Type {  }
+		  | Expression Is OptEndl Type {  }
 		  | TypeOf Expression { $$ = ExprNode::typeOfisnotIs(ExprNode::typof, $2); }
-		  | Expression OR OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::or_, $1, $3); }
-		  | Expression ORELSE OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::or_elase, $1, $3); }
-		  | Expression AND OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::and_, $1, $3); }
-		  | Expression ANDALSO OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::and_also, $1, $3); }
-		  | Expression PLUS_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::plus_assign, $1, $3); }
-		  | Expression MINUS_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::minus_assign, $1, $3); }
-		  | Expression MUL_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::mul_assign, $1, $3); }
-		  | Expression DIV_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::div_assign, $1, $3); }
-		  | Expression EXP_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::expr_assign, $1, $3); }
-		  | Expression BIT_AND_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_and_aassign, $1, $3); }
-		  | Expression DIV_NUM_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::div_num_assign, $1, $3); }
-		  | Expression BIT_LEFT_SHIFT_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_l_shift_assign, $1, $3); }
-		  | Expression BIT_RIGHT_SHIFT_ASSIGNMENT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_r_shift_assign, $1, $3); }
+		  | Expression OR OptEndl Expression { }
+		  | Expression ORELSE OptEndl Expression { }
+		  | Expression AND OptEndl Expression { }
+		  | Expression ANDALSO OptEndl Expression {  }
+		  | Expression PLUS_ASSIGNMENT OptEndl Expression {  }
+		  | Expression MINUS_ASSIGNMENT OptEndl Expression { }
+		  | Expression MUL_ASSIGNMENT OptEndl Expression {  }
+		  | Expression DIV_ASSIGNMENT OptEndl Expression {  }
+		  | Expression EXP_ASSIGNMENT OptEndl Expression {  }
+		  | Expression BIT_AND_ASSIGNMENT OptEndl Expression {  }
+		  | Expression DIV_NUM_ASSIGNMENT OptEndl Expression {  }
+		  | Expression BIT_LEFT_SHIFT_ASSIGNMENT OptEndl Expression {  }
+		  | Expression BIT_RIGHT_SHIFT_ASSIGNMENT OptEndl Expression {  }
 		  | Values
 		  | CallArrOrFunc { }
 		  ;
 		  
-CallArrOrFunc: IDENTIFIER '('OptEndl ExpressionList OptEndl')' { $$ = ExprNode::exprList(ExprNode::expr_start_id, $1, $3); }
+CallArrOrFunc: IDENTIFIER '('OptEndl ExpressionList OptEndl')' { }
 			 | IDENTIFIER '('OptEndl')'
 			 ;
 		
@@ -280,14 +280,14 @@ ArrInParam: '('OptEndl')'
 		  |
 		  ;
 
-FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList StatementList END Function EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, $7, 0, 0); }
-                   | Function IDENTIFIER '(' OptEndl ')' As Type EndList StatementList END Function EndList { $$ = FuncDecl::funcDeclare($2, $7, 0, $9, 0, 0); }
-                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' EndList StatementList END Function EndList { $$ = FuncDecl::funcDeclare($2, 0, $5, $8, 0, 0); }
-                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' As Type EndList StatementList END Function EndList { $$ = FuncDecl::funcDeclare($2, $8, $5, $10, 0, 0); }
+FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList StatementList END Function EndList {  }
+                   | Function IDENTIFIER '(' OptEndl ')' As Type EndList StatementList END Function EndList {  }
+                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' EndList StatementList END Function EndList {  }
+                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' As Type EndList StatementList END Function EndList {  }
                    ;
 				   
 SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, 0, 1, $7); }
-              | Sub IDENTIFIER '('OptEndl FuncParamList OptEndl')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, $5, 0, 1, $8); }
+              | Sub IDENTIFIER '('OptEndl FuncParamList OptEndl')' EndList StatementList END Sub EndList {  }
               ;
 
 IfStmt: IF Expression THEN EndList StatementList END IF { $$ = IfNode::IfClear($2, $5, IfNode::clear_); }
@@ -312,7 +312,7 @@ EXITDO: EXIT DO;
 CONTINUEDO: CONTINUE DO;
 
 OptionalStep: { $$ = OptionalStep::addStep(0, false); }
-			| STEP Expression { $$ = OptionalStep::addStep($2, true); }
+			| STEP Expression {  }
 			;
 			
 ContinueExitFor: CONTINUE FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::continue_for); }
