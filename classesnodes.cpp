@@ -1,33 +1,33 @@
 #include "classesnodes.h"
 int globId = 0;
 
-CodeNode::CodeNode(GlobalCodeList* globalcode){
+CodeNode::CodeNode(GlobalCodeList* globalcode) {
     this->id = ++globId;
     this->globalCode = globalcode;
 }
 
-GlobalCode* GlobalCode::addDim(DimStmt* dim){
+GlobalCode* GlobalCode::addDim(DimStmt* dim) {
     GlobalCode* new_code = new GlobalCode();
     new_code->id = ++globId;
     new_code->dim = dim;
     return new_code;
 }
 
-GlobalCode* GlobalCode::addSubFunc(FuncDecl* subfunc){
+GlobalCode* GlobalCode::addSubFunc(FuncDecl* subfunc) {
     GlobalCode* new_code = new GlobalCode();
     new_code->id = ++globId;
     new_code->subfunc = subfunc;
     return new_code;
 }
 
-GlobalCodeList::GlobalCodeList(GlobalCode* globalCode){
+GlobalCodeList::GlobalCodeList(GlobalCode* globalCode) {
     this->id = ++globId;
     this->globalCodes = new list<GlobalCode*>{ globalCode };
 }
 
-GlobalCodeList::GlobalCodeList(GlobalCodeList* globalCodes){
+GlobalCodeList::GlobalCodeList(GlobalCodeList* globalCodes) {
     this->id = ++globId;
-    if(globalCodes != NULL)
+    if (globalCodes != NULL)
     {
         this->globalCodes = globalCodes->globalCodes;
     }
@@ -37,12 +37,12 @@ GlobalCodeList::GlobalCodeList(GlobalCodeList* globalCodes){
     }
 }
 
-GlobalCodeList* GlobalCodeList::Append(GlobalCodeList* globalCodes, GlobalCode* globalCode){
+GlobalCodeList* GlobalCodeList::Append(GlobalCodeList* globalCodes, GlobalCode* globalCode) {
     globalCodes->globalCodes->push_back(globalCode);
     return globalCodes;
 }
 
-FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub, StmtListNode* stmtList){
+FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub, StmtListNode* stmtList) {
     FuncDecl* func = new FuncDecl();
     func->name = name;
     func->params = params;
@@ -53,27 +53,27 @@ FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdLis
     return func;
 }
 
-TypeNode::TypeNode(TypeNode* type){
+TypeNode::TypeNode(TypeNode* type) {
     this->id = ++globId;
     this->type = type->type;
 }
 
-TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr){
+TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr) {
     this->id = ++globId;
     this->type = type;
     this->typeArr = typeArr;
     this->exprArr = expr;
 }
 
-TypeNode::TypeNode(Type type, string *name){
+TypeNode::TypeNode(Type type, string* name) {
     this->id = ++globId;
     this->type = type;
     this->name = name;
 }
 
-ExprNode::ExprNode(){}
+ExprNode::ExprNode() {}
 
-ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
+ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right) {
     ExprNode* new_expr = new ExprNode();
     new_expr->id = ++globId;
     new_expr->type = type;
@@ -82,7 +82,7 @@ ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
     return new_expr;
 }
 
-ExprNode* ExprNode::IifExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body){
+ExprNode* ExprNode::IifExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body) {
     ExprNode* new_expr = new ExprNode();
     new_expr->id = ++globId;
     new_expr->type = type;
@@ -92,7 +92,7 @@ ExprNode* ExprNode::IifExpr(Type type, ExprNode* condition, ExprNode* body, Expr
     return new_expr;
 }
 
-ExprNode* ExprNode::typeOfisnotIs(Type type, ExprNode* isnotIs){
+ExprNode* ExprNode::typeOfisnotIs(Type type, ExprNode* isnotIs) {
     ExprNode* new_expr = new ExprNode();
     new_expr->id = ++globId;
     new_expr->type = type;
@@ -164,14 +164,14 @@ ExprNode* ExprNode::exprList(Type type, Identificator* ident, ExprListNode* expr
     return expr;
 }
 
-ExprListNode::ExprListNode(ExprNode* expr){
+ExprListNode::ExprListNode(ExprNode* expr) {
     this->id = ++globId;
-    this->exprs = new list<ExprNode*>{expr};
+    this->exprs = new list<ExprNode*>{ expr };
 }
 
-ExprListNode::ExprListNode(ExprListNode* exprs){
+ExprListNode::ExprListNode(ExprListNode* exprs) {
     this->id = ++globId;
-    if(exprs != NULL)
+    if (exprs != NULL)
     {
         this->exprs = exprs->exprs;
     }
@@ -187,7 +187,7 @@ ExprListNode* ExprListNode::Append(ExprListNode* exprList, ExprNode* expr) {
 }
 
 
-StmtNode* StmtNode::DeclarationExpression(ExprNode* expr, Type item_type){
+StmtNode* StmtNode::DeclarationExpression(ExprNode* expr, Type item_type) {
     StmtNode* new_stmt = new StmtNode();
     new_stmt->id = ++globId;
     new_stmt->expr = expr;
@@ -195,7 +195,7 @@ StmtNode* StmtNode::DeclarationExpression(ExprNode* expr, Type item_type){
     return new_stmt;
 }
 
-StmtNode* StmtNode::DeclarationDim(DimStmt* dim, Type item_type, bool isStatic){
+StmtNode* StmtNode::DeclarationDim(DimStmt* dim, Type item_type, bool isStatic) {
     StmtNode* new_stmt = new StmtNode();
     new_stmt->id = ++globId;
     new_stmt->dim = dim;
@@ -204,7 +204,7 @@ StmtNode* StmtNode::DeclarationDim(DimStmt* dim, Type item_type, bool isStatic){
     return new_stmt;
 }
 
-StmtNode* StmtNode::DeclarationIf(IfNode* ifNode, Type item_type){
+StmtNode* StmtNode::DeclarationIf(IfNode* ifNode, Type item_type) {
     StmtNode* new_stmt = new StmtNode();
     new_stmt->id = ++globId;
     new_stmt->ifNode = ifNode;
@@ -212,7 +212,7 @@ StmtNode* StmtNode::DeclarationIf(IfNode* ifNode, Type item_type){
     return new_stmt;
 }
 
-StmtNode* StmtNode::DeclarationWhile(While* while_stmt, Type item_type){
+StmtNode* StmtNode::DeclarationWhile(While* while_stmt, Type item_type) {
     StmtNode* new_stmt = new StmtNode();
     new_stmt->id = ++globId;
     new_stmt->while_stmt = while_stmt;
@@ -220,7 +220,7 @@ StmtNode* StmtNode::DeclarationWhile(While* while_stmt, Type item_type){
     return new_stmt;
 }
 
-StmtNode* StmtNode::DeclarationFor(ForNode* forstmt, Type item_type){
+StmtNode* StmtNode::DeclarationFor(ForNode* forstmt, Type item_type) {
     StmtNode* new_stmt = new StmtNode();
     new_stmt->id = ++globId;
     new_stmt->forstmt = forstmt;
@@ -228,30 +228,30 @@ StmtNode* StmtNode::DeclarationFor(ForNode* forstmt, Type item_type){
     return new_stmt;
 }
 
-StmtNode* StmtNode::DeclarationContinueWhile(Type item_type){
+StmtNode* StmtNode::DeclarationContinueWhile(Type item_type) {
     StmtNode* new_stmt = new StmtNode();
     new_stmt->id = ++globId;
     new_stmt->item_type = item_type;
     return new_stmt;
 }
 
-StmtNode* StmtNode::DeclarationDoOption(Type item_type){
+StmtNode* StmtNode::DeclarationDoOption(Type item_type) {
     StmtNode* new_stmt = StmtNode::DeclarationContinueWhile(item_type);
     new_stmt->id = ++globId;
     return new_stmt;
 }
 
-StmtNode* StmtNode::DeclarationContinueExitFor(Type item_type){
+StmtNode* StmtNode::DeclarationContinueExitFor(Type item_type) {
     StmtNode* new_stmt = StmtNode::DeclarationContinueWhile(item_type);
     new_stmt->id = ++globId;
     return new_stmt;
 }
 
-StmtNode::StmtNode(){
+StmtNode::StmtNode() {
     this->id = ++globId;
 }
 
-IfNode* IfNode::IfClear(ExprNode* exprNode, StmtListNode* stmtListNode, Type type){
+IfNode* IfNode::IfClear(ExprNode* exprNode, StmtListNode* stmtListNode, Type type) {
     IfNode* new_if = new IfNode();
     new_if->id = ++globId;
     new_if->condition = exprNode;
@@ -260,7 +260,7 @@ IfNode* IfNode::IfClear(ExprNode* exprNode, StmtListNode* stmtListNode, Type typ
     return new_if;
 }
 
-IfNode* IfNode::IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListNode* stmtElseListNode, Type type){
+IfNode* IfNode::IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListNode* stmtElseListNode, Type type) {
     IfNode* new_if = new IfNode();
     new_if->id = ++globId;
     new_if->condition = exprNode;
@@ -270,7 +270,7 @@ IfNode* IfNode::IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListN
     return new_if;
 }
 
-IfNode* IfNode::IfTernar(ExprNode* exprNode, Ternar* ternar, Type type){
+IfNode* IfNode::IfTernar(ExprNode* exprNode, Ternar* ternar, Type type) {
     IfNode* new_if = new IfNode();
     new_if->id = ++globId;
     new_if->condition = exprNode;
@@ -279,7 +279,7 @@ IfNode* IfNode::IfTernar(ExprNode* exprNode, Ternar* ternar, Type type){
     return new_if;
 }
 
-IfNode* IfNode::IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNode* conditionElse, StmtListNode* stmtElseIfListNode, Type type){
+IfNode* IfNode::IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNode* conditionElse, StmtListNode* stmtElseIfListNode, Type type) {
     IfNode* new_if = new IfNode();
     new_if->id = ++globId;
     new_if->condition = exprNode;
@@ -290,7 +290,7 @@ IfNode* IfNode::IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNod
     return new_if;
 }
 
-Ternar* Ternar::ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n){
+Ternar* Ternar::ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n) {
     Ternar* ternar = new Ternar();
     ternar->id = ++globId;
     ternar->condition = cond;
@@ -299,7 +299,7 @@ Ternar* Ternar::ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n){
     return ternar;
 }
 
-While* While::whileStmt(ExprNode* condition, StmtListNode* body, Type type){
+While* While::whileStmt(ExprNode* condition, StmtListNode* body, Type type) {
     While* while_stmt = new While();
     while_stmt->id = ++globId;
     while_stmt->body = body;
@@ -308,14 +308,14 @@ While* While::whileStmt(ExprNode* condition, StmtListNode* body, Type type){
     return while_stmt;
 }
 
-StaticDim* StaticDim::DeclareStatic(DimStmt* dim){
+StaticDim* StaticDim::DeclareStatic(DimStmt* dim) {
     StaticDim* _static = new StaticDim();
     _static->id = ++globId;
     _static->dim = dim;
     return _static;
 }
 
-DimStmt::DimStmt(){}
+DimStmt::DimStmt() {}
 
 DimStmt::DimStmt(DimStmt* dimStmt) {
     this->id = ++globId;
@@ -326,7 +326,7 @@ DimStmt::DimStmt(DimStmt* dimStmt) {
     this->arrayIdList = dimStmt->arrayIdList;
 }
 
-DimStmt* DimStmt::DeclarationSingleType(IdList* idList, Type type, TypeNode* typeNode){
+DimStmt* DimStmt::DeclarationSingleType(IdList* idList, Type type, TypeNode* typeNode) {
     DimStmt* dim = new DimStmt();
     dim->id = ++globId;
     dim->idList = idList;
@@ -335,7 +335,7 @@ DimStmt* DimStmt::DeclarationSingleType(IdList* idList, Type type, TypeNode* typ
     return dim;
 }
 
-DimStmt* DimStmt::DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode){
+DimStmt* DimStmt::DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode) {
     DimStmt* dim = new DimStmt();
     dim->id = ++globId;
     dim->idList = idList;
@@ -344,7 +344,7 @@ DimStmt* DimStmt::DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exp
     return dim;
 }
 
-DimStmt* DimStmt::DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode){
+DimStmt* DimStmt::DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode) {
     DimStmt* dim = new DimStmt();
     dim->id = ++globId;
     dim->arrayIdList = arrayIdList;
@@ -353,8 +353,8 @@ DimStmt* DimStmt::DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode
     return dim;
 }
 
-void DimStmt::becomeStatic(){
-    this->isStatic?false:true;
+void DimStmt::becomeStatic() {
+    this->isStatic ? false : true;
     this->id = ++globId;
 }
 
@@ -549,7 +549,7 @@ BodyStmt::BodyStmt(ExprNode* expr, StmtListNode* stmt) {
 void CodeNode::toDot(string& dot) {
     dot = "digraph vbCode {\n";
     createVertexDot(dot, this->id, "code");
-    
+
     if (this->globalCode != NULL) {
         connectVerticesDots(dot, this->id, this->globalCode->id);
         this->globalCode->toDot(dot);
@@ -575,11 +575,13 @@ void GlobalCode::toDot(string& dot) {
 void GlobalCodeList::toDot(string& dot) {
     createVertexDot(dot, this->id, "global_code_list");
 
-    for (auto elem : *this->globalCodes)
-    {
-        int exprNum = 1;
-        connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot);
+    if (this->globalCodes != NULL) {
+        for (auto elem : *this->globalCodes)
+        {
+            int exprNum = 1;
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot);
+        }
     }
 }
 
@@ -614,49 +616,49 @@ void FuncDecl::toDot(string& dot) {
 
 void TypeNode::toDot(string& dot) {
     switch (this->type) {
-        case TypeNode::date_:
-            createVertexDot(dot, this->id, "date_type", "", "");
-            break;
+    case TypeNode::date_:
+        createVertexDot(dot, this->id, "date_type", "", "");
+        break;
 
-        case TypeNode::int_:
-            createVertexDot(dot, this->id, "int_type", "", "");
-            break;
+    case TypeNode::int_:
+        createVertexDot(dot, this->id, "int_type", "", "");
+        break;
 
-        case TypeNode::byte_:
-            createVertexDot(dot, this->id, "byte_type", "", "");
-            break;
+    case TypeNode::byte_:
+        createVertexDot(dot, this->id, "byte_type", "", "");
+        break;
 
-        case TypeNode::single:
-            createVertexDot(dot, this->id, "single_type", "", "");
-            break;
+    case TypeNode::single:
+        createVertexDot(dot, this->id, "single_type", "", "");
+        break;
 
-        case TypeNode::char_:
-            createVertexDot(dot, this->id, "char_type", "", "");
-            break;
+    case TypeNode::char_:
+        createVertexDot(dot, this->id, "char_type", "", "");
+        break;
 
-        case TypeNode::string_:
-            createVertexDot(dot, this->id, "string_type", "", "");
-            break;
+    case TypeNode::string_:
+        createVertexDot(dot, this->id, "string_type", "", "");
+        break;
 
-        case TypeNode::short_:
-            createVertexDot(dot, this->id, "short_type", "", "");
-            break;
+    case TypeNode::short_:
+        createVertexDot(dot, this->id, "short_type", "", "");
+        break;
 
-        case TypeNode::bool_:
-            createVertexDot(dot, this->id, "bool_type", "", "");
-            break;
+    case TypeNode::bool_:
+        createVertexDot(dot, this->id, "bool_type", "", "");
+        break;
 
-        case TypeNode::obj_:
-            createVertexDot(dot, this->id, "obj_type", "", "");
-            break;
+    case TypeNode::obj_:
+        createVertexDot(dot, this->id, "obj_type", "", "");
+        break;
 
-        case TypeNode::decimal_:
-            createVertexDot(dot, this->id, "decimal_type", "", "");
-            break;
+    case TypeNode::decimal_:
+        createVertexDot(dot, this->id, "decimal_type", "", "");
+        break;
 
-        case TypeNode::double_:
-            createVertexDot(dot, this->id, "double_type", "", "");
-            break;
+    case TypeNode::double_:
+        createVertexDot(dot, this->id, "double_type", "", "");
+        break;
     }
 
     createVertexDot(dot, this->id, "type", "", "");
@@ -676,246 +678,246 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
     std::string type = "";
     std::string value = "";
 
-    switch (this->type){
-        case ExprNode::assign:
-            type = "assign";
-            break;
-        
-        case ExprNode::no_assign_part:
-            type = "no_assign_part";
-            break;
+    switch (this->type) {
+    case ExprNode::assign:
+        type = "assign";
+        break;
 
-        case ExprNode::or_:
-            type = "or";
-            break;
+    case ExprNode::no_assign_part:
+        type = "no_assign_part";
+        break;
 
-        case ExprNode::or_elase:
-            type = "or_else";
-            break;
+    case ExprNode::or_:
+        type = "or";
+        break;
 
-        case ExprNode::and_:
-            type = "and";
-            break;
+    case ExprNode::or_elase:
+        type = "or_else";
+        break;
 
-        case ExprNode::and_also:
-            type = "and_also";
-            break;
+    case ExprNode::and_:
+        type = "and";
+        break;
 
-        case ExprNode::plus_assign:
-            type = "plus_assign";
-            break;
+    case ExprNode::and_also:
+        type = "and_also";
+        break;
 
-        case ExprNode::minus_assign:
-            type = "minus_assign";
-            break;
+    case ExprNode::plus_assign:
+        type = "plus_assign";
+        break;
 
-        case ExprNode::mul_assign:
-            type = "mul_assign";
-            break;
+    case ExprNode::minus_assign:
+        type = "minus_assign";
+        break;
 
-        case ExprNode::div_assign:
-            type = "div_assign";
-            break;
+    case ExprNode::mul_assign:
+        type = "mul_assign";
+        break;
 
-        case ExprNode::expr_assign:
-            type = "expr_assign";
-            break;
+    case ExprNode::div_assign:
+        type = "div_assign";
+        break;
 
-        case ExprNode::bit_and_aassign:
-            type = "bit_and_assign";
-            break;
+    case ExprNode::expr_assign:
+        type = "expr_assign";
+        break;
 
-        case ExprNode::div_num_assign:
-            type = "div_num_assign";
-            break;
+    case ExprNode::bit_and_aassign:
+        type = "bit_and_assign";
+        break;
 
-        case ExprNode::bit_l_shift_assign:
-            type = "bit_l_shift_assign";
-            break;
+    case ExprNode::div_num_assign:
+        type = "div_num_assign";
+        break;
 
-        case ExprNode::bit_r_shift_assign:
-            type = "bit_r_shift_assign";
-            break;
+    case ExprNode::bit_l_shift_assign:
+        type = "bit_l_shift_assign";
+        break;
 
-        case ExprNode::b_plus:
-            type = "b_plus";
-            break;
+    case ExprNode::bit_r_shift_assign:
+        type = "bit_r_shift_assign";
+        break;
 
-        case ExprNode::str_plus:
-            type = "str_plus";
-            break;
+    case ExprNode::b_plus:
+        type = "b_plus";
+        break;
 
-        case ExprNode::b_minus:
-            type = "b_minus";
-            break;
+    case ExprNode::str_plus:
+        type = "str_plus";
+        break;
 
-        case ExprNode::b_div:
-            type = "b_div";
-            break;
+    case ExprNode::b_minus:
+        type = "b_minus";
+        break;
 
-        case ExprNode::b_mul:
-            type = "b_mul";
-            break;
+    case ExprNode::b_div:
+        type = "b_div";
+        break;
 
-        case ExprNode::degree:
-            type = "degree";
-            break;
+    case ExprNode::b_mul:
+        type = "b_mul";
+        break;
 
-        case ExprNode::int_div:
-            type = "int_div";
-            break;
+    case ExprNode::degree:
+        type = "degree";
+        break;
 
-        case ExprNode::mod_div:
-            type = "mod_div";
-            break;
+    case ExprNode::int_div:
+        type = "int_div";
+        break;
 
-        case ExprNode::more:
-            type = "more";
-            break;
+    case ExprNode::mod_div:
+        type = "mod_div";
+        break;
 
-        case ExprNode::less:
-            type = "less";
-            break;
+    case ExprNode::more:
+        type = "more";
+        break;
 
-        case ExprNode::more_s:
-            type = "more_s";
-            break;
+    case ExprNode::less:
+        type = "less";
+        break;
 
-        case ExprNode::less_s:
-            type = "less_s";
-            break;
+    case ExprNode::more_s:
+        type = "more_s";
+        break;
 
-        case ExprNode::_not_eq:
-            type = "not_eq";
-            break;
+    case ExprNode::less_s:
+        type = "less_s";
+        break;
 
-        case ExprNode::bit_l_shift:
-            type = "bit_l_shift";
-            break;
+    case ExprNode::_not_eq:
+        type = "not_eq";
+        break;
 
-        case ExprNode::bit_r_shift:
-            type = "bit_r_shift";
-            break;
+    case ExprNode::bit_l_shift:
+        type = "bit_l_shift";
+        break;
 
-        case ExprNode::u_plus:
-            type = "u_plus";
-            break;
+    case ExprNode::bit_r_shift:
+        type = "bit_r_shift";
+        break;
 
-        case ExprNode::u_minus:
-            type = "u_minus";
-            break;
+    case ExprNode::u_plus:
+        type = "u_plus";
+        break;
 
-        case ExprNode::not_:
-            type = "not";
-            break;
+    case ExprNode::u_minus:
+        type = "u_minus";
+        break;
 
-        case ExprNode::arr_body:
-            type = "arr_body";
-            break;
+    case ExprNode::not_:
+        type = "not";
+        break;
 
-        case ExprNode::arr_empty:
-            type = "arr_empty";
-            break;
+    case ExprNode::arr_body:
+        type = "arr_body";
+        break;
 
-        case ExprNode::arr_body_type:
-            type = "arr_body_type";
-            break;
+    case ExprNode::arr_empty:
+        type = "arr_empty";
+        break;
 
-        case ExprNode::iif:
-            type = "iif";
-            break;
+    case ExprNode::arr_body_type:
+        type = "arr_body_type";
+        break;
 
-        case ExprNode::array_access:
-            type = "array_access";
-            break;
+    case ExprNode::iif:
+        type = "iif";
+        break;
 
-        case ExprNode::like:
-            type = "like";
-            break;
+    case ExprNode::array_access:
+        type = "array_access";
+        break;
 
-        case ExprNode::is:
-            type = "is";
-            break;
+    case ExprNode::like:
+        type = "like";
+        break;
 
-        case ExprNode::isnot:
-            type = "isnot";
-            break;
+    case ExprNode::is:
+        type = "is";
+        break;
 
-        case ExprNode::typof:
-            type = "typeOf";
-            break;
+    case ExprNode::isnot:
+        type = "isnot";
+        break;
 
-        case ExprNode::arr_expr_list:
-            type = "arr_expr_list";
-            break;
+    case ExprNode::typof:
+        type = "typeOf";
+        break;
 
-        case ExprNode::ternar:
-            type = "ternar";
-            break;
+    case ExprNode::arr_expr_list:
+        type = "arr_expr_list";
+        break;
 
-        case ExprNode::single:
-            type = "single";
-            break;
+    case ExprNode::ternar:
+        type = "ternar";
+        break;
 
-        case ExprNode::string_:
-            type = "string";
-            break;
+    case ExprNode::single:
+        type = "single";
+        break;
 
-        case ExprNode::bool_val:
-            type = "bool_val";
-            break;
+    case ExprNode::string_:
+        type = "string";
+        break;
 
-        case ExprNode::double_val:
-            type = "double_val";
-            break;
+    case ExprNode::bool_val:
+        type = "bool_val";
+        break;
 
-        case ExprNode::date_:
-            type = "date";
-            break;
+    case ExprNode::double_val:
+        type = "double_val";
+        break;
 
-        case ExprNode::char_val:
-            type = "char_val";
-            break;
+    case ExprNode::date_:
+        type = "date";
+        break;
 
-        case ExprNode::obj:
-            type = "obj";
-            break;
+    case ExprNode::char_val:
+        type = "char_val";
+        break;
 
-        case ExprNode::dec_num:
-            type = "decimal_num";
-            break;
+    case ExprNode::obj:
+        type = "obj";
+        break;
 
-        case ExprNode::int_val:
-            type = "int_val";
-            break;
+    case ExprNode::dec_num:
+        type = "decimal_num";
+        break;
 
-        case ExprNode::byte_num:
-            type = "byte_num";
-            break;
+    case ExprNode::int_val:
+        type = "int_val";
+        break;
 
-        case ExprNode::short_val:
-            type = "short_val";
-            break;
+    case ExprNode::byte_num:
+        type = "byte_num";
+        break;
 
-        case ExprNode::identifier:
-            type = "identifier";
-            break;
+    case ExprNode::short_val:
+        type = "short_val";
+        break;
 
-        case ExprNode::expr_start_id:
-            type = "expr_start_id";
-            break;
+    case ExprNode::identifier:
+        type = "identifier";
+        break;
 
-        case ExprNode::value:
-            type = "value";
-            break;
+    case ExprNode::expr_start_id:
+        type = "expr_start_id";
+        break;
 
-        case ExprNode::expr_start_func:
-            type = "expr_start_func";
-            break;
+    case ExprNode::value:
+        type = "value";
+        break;
 
-        case ExprNode::values_with_id:
-            type = "values_with_id";
-            break;
+    case ExprNode::expr_start_func:
+        type = "expr_start_func";
+        break;
+
+    case ExprNode::values_with_id:
+        type = "values_with_id";
+        break;
     }
 
     createVertexDot(dot, this->id, "expr", type, value, pos);
@@ -1005,11 +1007,13 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
 void ExprListNode::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "expr_list", type);
 
-    for (auto elem : *this->exprs)
-    {
-        int exprNum = 1;
-        connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot, "condition" + to_string(exprNum++));
+    if (this->exprs != NULL) {
+        for (auto elem : *this->exprs)
+        {
+            int exprNum = 1;
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot, "condition" + to_string(exprNum++));
+        }
     }
 }
 
@@ -1018,57 +1022,57 @@ void StmtNode::toDot(string& dot) {
     string value = "";
 
     switch (this->item_type) {
-        case dim_:
-            type = "dim";
-            break;
+    case dim_:
+        type = "dim";
+        break;
 
-        case ifstmt_:
-            type = "ifstmt";
-            break;
+    case ifstmt_:
+        type = "ifstmt";
+        break;
 
-        case while_:
-            type = "while";
-            break;
+    case while_:
+        type = "while";
+        break;
 
-        case dowhile_:
-            type = "dowhile";
-            break;
+    case dowhile_:
+        type = "dowhile";
+        break;
 
-        case dountil_:
-            type = "dountil";
-            break;
-            
-        case for_:
-            type = "for";
-            break;
+    case dountil_:
+        type = "dountil";
+        break;
 
-        case static_:
-            type = "static";
-            break;
+    case for_:
+        type = "for";
+        break;
 
-        case expr_:
-            type = "expr";
-            break;
+    case static_:
+        type = "static";
+        break;
 
-        case continue_while:
-            type = "continue_while";
-            break;
+    case expr_:
+        type = "expr";
+        break;
 
-        case dooption_exit:
-            type = "dooption_exit";
-            break;
+    case continue_while:
+        type = "continue_while";
+        break;
 
-        case dooption_continue:
-            type = "dooption_continue";
-            break;
+    case dooption_exit:
+        type = "dooption_exit";
+        break;
 
-        case continue_for:
-            type = "continue_for";
-            break;
+    case dooption_continue:
+        type = "dooption_continue";
+        break;
 
-        case exit_for:
-            type = "exit_for";
-            break;
+    case continue_for:
+        type = "continue_for";
+        break;
+
+    case exit_for:
+        type = "exit_for";
+        break;
     }
 
     createVertexDot(dot, this->id, "stmt", type, value);
@@ -1102,11 +1106,13 @@ void StmtNode::toDot(string& dot) {
 void StmtListNode::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "stmt_list", type);
 
-    for (auto elem : *this->stmts)
-    {
-        int exprNum = 1;
-        connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot);
+    if (this->stmts != NULL) {
+        for (auto elem : *this->stmts)
+        {
+            int exprNum = 1;
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot);
+        }
     }
 }
 
@@ -1114,21 +1120,21 @@ void IfNode::toDot(string& dot) {
     string type = "";
 
     switch (this->type) {
-        case clear_:
-            type = "clear";
-            break;
+    case clear_:
+        type = "clear";
+        break;
 
-        case else_:
-            type = "else";
-            break;
+    case else_:
+        type = "else";
+        break;
 
-        case ternar_:
-            type = "ternar";
-            break;
+    case ternar_:
+        type = "ternar";
+        break;
 
-        case elseif:
-            type = "elseif";
-            break;
+    case elseif:
+        type = "elseif";
+        break;
     }
 
     createVertexDot(dot, this->id, "if_stmt", "", "");
@@ -1221,21 +1227,21 @@ void DimStmt::toDot(string& dot) {
     string type = "";
 
     switch (this->type) {
-        case single_expr:
-            type = "single_expr";
-            break;
+    case single_expr:
+        type = "single_expr";
+        break;
 
-        case single_type:
-            type = "single_type";
-            break;
+    case single_type:
+        type = "single_type";
+        break;
 
-        case array_with:
-            type = "array_with";
-            break;
+    case array_with:
+        type = "array_with";
+        break;
 
-        case array_without:
-            type = "array_without";
-            break;
+    case array_without:
+        type = "array_without";
+        break;
     }
 
     createVertexDot(dot, this->id, "dim_stmt", "", "");
@@ -1264,11 +1270,13 @@ void DimStmt::toDot(string& dot) {
 void IdList::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "id_list");
 
-    for (auto elem : *this->identificators)
-    {
-        int exprNum = 1;
-        connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot);
+    if (this->identificators != NULL) {
+        for (auto elem : *this->identificators)
+        {
+            int exprNum = 1;
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot);
+        }
     }
 }
 
@@ -1276,25 +1284,25 @@ void Identificator::toDot(string& dot) {
     string type = "";
 
     switch (this->type) {
-        case val_:
-            type = "val";
-            break;
+    case val_:
+        type = "val";
+        break;
 
-        case var_:
-            type = "var";
-            break;
+    case var_:
+        type = "var";
+        break;
 
-        case func_:
-            type = "func";
-            break;
+    case func_:
+        type = "func";
+        break;
 
-        case arr_:
-            type = "arr";
-            break;
+    case arr_:
+        type = "arr";
+        break;
 
-        case class_:
-            type = "class";
-            break;
+    case class_:
+        type = "class";
+        break;
     }
 
     createVertexDot(dot, this->id, "identificator", "", "");
@@ -1322,18 +1330,22 @@ void ArrayIdDeclare::toDot(string& dot) {
 void ArrayIdList::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "arr_id_list");
 
-    for (auto elem : *this->arrayId)
-    {
-        int exprNum = 1;
-        connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot);
+    if (this->arrayId != NULL) {
+        for (auto elem : *this->arrayId)
+        {
+            int exprNum = 1;
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot);
+        }
     }
 
-    for (auto elem : *this->arrayIdent)
-    {
-        int exprNum = 1;
-        connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot);
+    if (this->arrayIdent != NULL) {
+        for (auto elem : *this->arrayIdent)
+        {
+            int exprNum = 1;
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot);
+        }
     }
 }
 
@@ -1379,53 +1391,53 @@ void Value::toDot(string& dot) {
     string type = "";
 
     switch (this->type) {
-        case int_:
-            type = "int";
-            break;
+    case int_:
+        type = "int";
+        break;
 
-        case byte_num:
-            type = "byte_num";
-            break;
+    case byte_num:
+        type = "byte_num";
+        break;
 
-        case id_:
-            type = "id";
-            break;
+    case id_:
+        type = "id";
+        break;
 
-        case short_:
-            type = "short";
-            break;
+    case short_:
+        type = "short";
+        break;
 
-        case bool_:
-            type = "bool";
-            break;
+    case bool_:
+        type = "bool";
+        break;
 
-        case single_:
-            type = "single";
-            break;
+    case single_:
+        type = "single";
+        break;
 
-        case Double_:
-            type = "double";
-            break;
+    case Double_:
+        type = "double";
+        break;
 
-        case string_:
-            type = "string";
-            break;
+    case string_:
+        type = "string";
+        break;
 
-        case date_:
-            type = "date";
-            break;
+    case date_:
+        type = "date";
+        break;
 
-        case Char_:
-            type = "char";
-            break;
+    case Char_:
+        type = "char";
+        break;
 
-        case obj_:
-            type = "obj";
-            break;
+    case obj_:
+        type = "obj";
+        break;
 
-        case dec_num:
-            type = "dec_num";
-            break;
+    case dec_num:
+        type = "dec_num";
+        break;
     }
 
     createVertexDot(dot, this->id, "value", "", "", "");
@@ -1439,11 +1451,13 @@ void Value::toDot(string& dot) {
 void BodyStmt::toDot(std::string& dot) {
     createVertexDot(dot, this->id, "body", "", "", "");
 
-    for (auto elem : *this->stmts)
-    {
-        int exprNum = 1;
-        connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot);
+    if (this->stmts != NULL) {
+        for (auto elem : *this->stmts)
+        {
+            int exprNum = 1;
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot);
+        }
     }
 
     if (this->expr != NULL) {
@@ -1466,7 +1480,7 @@ void createVertexDot(string& s, int id, string name, string type, string value, 
         value = "value=" + value + " ";
     }
 
-    
+
 
     if (!pos.empty())
     {
