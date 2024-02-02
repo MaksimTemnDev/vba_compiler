@@ -123,8 +123,8 @@ public:
 class ExprNode {
 public:
     enum Type {
-        assign, no_assign_part, or_, or_elase, and_, and_also, plus_assign, minus_assign, mul_assign,
-        div_assign, expr_assign, bit_and_aassign, div_num_assign, bit_l_shift_assign, bit_r_shift_assign,
+        assign, no_assign_part, or_, or_else, and_, and_also, plus_assign, minus_assign, mul_assign,
+        div_assign, expr_assign, bit_and_assign, div_num_assign, bit_l_shift_assign, bit_r_shift_assign,
 
         b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, _not_eq, bit_l_shift, bit_r_shift,
         u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof, arr_expr_list, ternar,
