@@ -85,7 +85,6 @@
 
 #line 10 "gram.y"
 typedef union {
-    int int_literal;
     string* string_literal;
     string* identifier;
     bool bool_literal;
@@ -1339,6 +1338,10 @@ case 17:
 #line 154 "gram.y"
 { yyval.stmt = yyvsp[-1].stmt; ;
     break;}
+case 18:
+#line 155 "gram.y"
+{ ;
+    break;}
 case 19:
 #line 158 "gram.y"
 {yyval.dimStmt = yyvsp[0].dimStmt;;
@@ -1429,7 +1432,7 @@ case 40:
     break;}
 case 41:
 #line 193 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::arrayBodyExprList(yyvsp[-2].expr_list, ExprNode::arr_expr_list); ;
     break;}
 case 42:
 #line 196 "gram.y"
@@ -1453,7 +1456,7 @@ case 46:
     break;}
 case 47:
 #line 205 "gram.y"
-{  ;
+{ yyval.expr_list = ExprListNode::Append(yyvsp[-3].expr_list, yyvsp[0].expr); ;
     break;}
 case 48:
 #line 208 "gram.y"
@@ -1545,19 +1548,19 @@ case 69:
     break;}
 case 70:
 #line 230 "gram.y"
-{;
+{  ;
     break;}
 case 71:
 #line 231 "gram.y"
-{ ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::like, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 72:
 #line 232 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::typeOfisnotIs(ExprNode::isnot, yyvsp[-3].expr); ;
     break;}
 case 73:
 #line 233 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::typeOfisnotIs(ExprNode::is, yyvsp[-3].expr); ;
     break;}
 case 74:
 #line 234 "gram.y"
@@ -1565,63 +1568,71 @@ case 74:
     break;}
 case 75:
 #line 235 "gram.y"
-{ ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::or_, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 76:
 #line 236 "gram.y"
-{ ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::or_else, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 77:
 #line 237 "gram.y"
-{ ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::and_, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 78:
 #line 238 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::and_also, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 79:
 #line 239 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::plus_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 80:
 #line 240 "gram.y"
-{ ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::minus_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 81:
 #line 241 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::mul_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 82:
 #line 242 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::div_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 83:
 #line 243 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::expr_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 84:
 #line 244 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::bit_and_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 85:
 #line 245 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::div_num_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 86:
 #line 246 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::bit_l_shift_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 87:
 #line 247 "gram.y"
-{  ;
+{ yyval.expr = ExprNode::OperatorExpr(ExprNode::bit_r_shift_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
+    break;}
+case 88:
+#line 248 "gram.y"
+{ yyval.expr = new ExprNode(yyvsp[0].value, ExprNode::value); ;
     break;}
 case 89:
 #line 249 "gram.y"
-{ ;
+{ yyval.expr = yyvsp[0].expr; ;
     break;}
 case 90:
 #line 252 "gram.y"
-{ ;
+{ yyval.expr = ExprNode::exprList(ExprNode::arr_expr_list, yyvsp[-5].identificator, yyvsp[-2].expr_list); ;
+    break;}
+case 91:
+#line 253 "gram.y"
+{ yyval.expr = ExprNode::exprList(ExprNode::array_access, yyvsp[-3].identificator, 0); ;
     break;}
 case 92:
 #line 256 "gram.y"

@@ -60,7 +60,6 @@ Error { printf("Found KW_ERROR: %s\n", yytext); }
 Function { printf("Found KW_FUNCTION: %s\n", yytext); return Function; }
 For { printf("Found KW_FOR: %s\n", yytext); return FOR; }
 If { printf("Found KW_IF: %s\n", yytext); return IF; }
-Iif { printf("Found KW_IIF: %s\n", yytext); }
 InStr { printf("Found KW_INSTR: %s\n", yytext); }
 Friend { printf("Found KW_FRIEND: %s\n", yytext); }
 Get { printf("Found KW_GET: %s\n", yytext); }
@@ -192,21 +191,21 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 
 [0-9]+ {
 
-    printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
-	yylval.decimal_number = atoi(str);
+    printf("Found DECIMAL_NUMBER: %d\n", atoi(yytext));
+	yylval.decimal_number = atoi(yytext);
     return DECIMAL_NUMBER;
 }
 
 
 [0-9]+\.([0-9]+|([eE]?[+-]?[0-9]+)+)* {
-    printf("Found DOUBLE: %lf\n", atof(str), str);
-	yylval.double_literal = atof(str);
+    printf("Found DOUBLE: %lf\n", atof(yytext), yytext);
+	yylval.double_literal = atof(yytext);
     return DOUBLE;
 }
 
 [0-9]+([eE]?[+-]?[0-9]+)? {
-    printf("Found DOUBLE: %lf\n", atof(str));
-	yylval.double_literal = atof(str);
+    printf("Found DOUBLE: %lf\n", atof(yytext));
+	yylval.double_literal = atof(yytext);
     return DOUBLE;
 }
 
@@ -246,6 +245,7 @@ int main(int argc, char** argv) {
     fclose(file);
 
     string dot;
+	extern CodeNode* global_program_code;
     global_program_code->toDot(dot);
     std::cout << dot << "\n";
 

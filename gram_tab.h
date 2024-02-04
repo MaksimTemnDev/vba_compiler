@@ -1,7 +1,6 @@
 #pragma once
 #include "classesnodes.h"
 typedef union {
-	int int_literal;
 	string* string_literal;
 	string* identifier;
 	bool bool_literal;

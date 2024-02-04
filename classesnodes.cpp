@@ -495,6 +495,7 @@ Value::Value(int value, Type type, bool hasIntVal, Identificator* id) {
     this->type = type;
     this->hasIntVal = hasIntVal;
     this->identificator = id;
+    std::cout << value;
 }
 
 Value::Value(Identificator* ident, Type type) {
@@ -691,7 +692,7 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
         type = "or";
         break;
 
-    case ExprNode::or_elase:
+    case ExprNode::or_else:
         type = "or_else";
         break;
 
@@ -723,7 +724,7 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
         type = "expr_assign";
         break;
 
-    case ExprNode::bit_and_aassign:
+    case ExprNode::bit_and_assign:
         type = "bit_and_assign";
         break;
 
