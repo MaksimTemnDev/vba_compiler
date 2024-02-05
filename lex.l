@@ -40,49 +40,49 @@ DIGIT [0-9]
 \n { printf("Found TOKEN_LINE: \n"); lineNumber++; return TOKEN_LINE; }
 [\r\t\f\v ]+ {}
 
-As { printf("Found KW_AS: %s\n", yytext); return As; }
-And { printf("Found KW_AND: %s\n", yytext); return AND; }
-AndAlso { printf("Found KW_AND_ALSO: %s\n", yytext); return ANDALSO; }
+As|AS { printf("Found KW_AS: %s\n", yytext); return As; }
+And|AND { printf("Found KW_AND: %s\n", yytext); return AND; }
+AndAlso|ANDALSO { printf("Found KW_AND_ALSO: %s\n", yytext); return ANDALSO; }
 Binary { printf("Found KW_BINARY: %s\n", yytext); }
-Continue { printf("Found KW_CONTINUE: %s\n", yytext); return CONTINUE; }
-ByRef { printf("Found KW_BYREF: %s\n", yytext); }
-ByVal { printf("Found KW_BYVAL: %s\n", yytext); }
-Do { printf("Found KW_DO: %s\n", yytext); return DO; }
-Dim { printf("Found KW_DIM: %s\n", yytext); return DIM; }
-Else { printf("Found KW_ELSE: %s\n", yytext); return ELSE; }
-ElseIf { printf("Found KW_ELSEIF: %s\n", yytext); return ELSEIF; }
-End { printf("Found KW_END: %s\n", yytext); return END; }
+Continue|CONTINUE { printf("Found KW_CONTINUE: %s\n", yytext); return CONTINUE; }
+ByRef|BYREF { printf("Found KW_BYREF: %s\n", yytext); return ByRef; }
+ByVal|BYVAL { printf("Found KW_BYVAL: %s\n", yytext); return ByVal; }
+Do|DO { printf("Found KW_DO: %s\n", yytext); return DO; }
+Dim|DIM { printf("Found KW_DIM: %s\n", yytext); return DIM; }
+Else|ELSE { printf("Found KW_ELSE: %s\n", yytext); return ELSE; }
+ElseIf|ELSEIF { printf("Found KW_ELSEIF: %s\n", yytext); return ELSEIF; }
+End|END { printf("Found KW_END: %s\n", yytext); return END; }
 Enum { printf("Found KW_ENUM: %s\n", yytext); }
-Exit { printf("Found KW_EXIT: %s\n", yytext); return EXIT; }
+Exit|EXIT { printf("Found KW_EXIT: %s\n", yytext); return EXIT; }
 Empty { printf("Found KW_EMPTY: %s\n", yytext); }
-False { printf("Found KW_FALSE: %s\n", yytext); return KW_FALSE; }
+False|FALSE { printf("Found KW_FALSE: %s\n", yytext); return KW_FALSE; }
 Error { printf("Found KW_ERROR: %s\n", yytext); }
-Function { printf("Found KW_FUNCTION: %s\n", yytext); return Function; }
-For { printf("Found KW_FOR: %s\n", yytext); return FOR; }
-If { printf("Found KW_IF: %s\n", yytext); return IF; }
+Function|FUNCTION { printf("Found KW_FUNCTION: %s\n", yytext); return Function; }
+For|FOR { printf("Found KW_FOR: %s\n", yytext); return FOR; }
+If|IF { printf("Found KW_IF: %s\n", yytext); return IF; }
 InStr { printf("Found KW_INSTR: %s\n", yytext); }
 Friend { printf("Found KW_FRIEND: %s\n", yytext); }
 Get { printf("Found KW_GET: %s\n", yytext); }
 Let { printf("Found KW_LET: %s\n", yytext); }
-Is { printf("Found KW_IS: %s\n", yytext); return Is;}
+Is|IS { printf("Found KW_IS: %s\n", yytext); return Is;}
 Len { printf("Found KW_LEN: %s\n", yytext); }
 Left { printf("Found KW_LEFT: %s\n", yytext); }
-Like { printf("Found KW_LIKE: %s\n", yytext); return Like; }
+Like|LIKE { printf("Found KW_LIKE: %s\n", yytext); return Like; }
 Lock { printf("Found KW_Lock: %s\n", yytext); }
 Lcase { printf("Found KW_LCASE: %s\n", yytext); }
 Me { printf("Found KW_ME: %s\n", yytext); }
 Mid { printf("Found KW_MID: %s\n", yytext); }
-Mod { printf("Found KW_MOD: %s\n", yytext); return MOD; }
-New { printf("Found KW_NEW: %s\n", yytext); return NEW; }
-Next { printf("Found KW_NEXT: %s\n", yytext); return NEXT; }
-Not { printf("Found KW_NOT: %s\n", yytext); return Not; }
+Mod|MOD { printf("Found KW_MOD: %s\n", yytext); return MOD; }
+New|NEW { printf("Found KW_NEW: %s\n", yytext); return NEW; }
+Next|NEXT { printf("Found KW_NEXT: %s\n", yytext); return NEXT; }
+Not|NOT { printf("Found KW_NOT: %s\n", yytext); return Not; }
 Null { printf("Found KW_NULL: %s\n", yytext); }
-Return { printf("Found KW_RETURN: %s\n", yytext); return RETURN; }
+Return|RETURN { printf("Found KW_RETURN: %s\n", yytext); return RETURN; }
 On { printf("Found KW_ON: %s\n", yytext); }
 Option { printf("Found KW_OPTION: %s\n", yytext); }
 Optional { printf("Found KW_OPTIONAL: %s\n", yytext); }
-Or { printf("Found KW_OR: %s\n", yytext); return OR; }
-OrElse { printf("Found KW_OR_ELSE: %s\n", yytext); return ORELSE; }
+Or|OR { printf("Found KW_OR: %s\n", yytext); return OR; }
+OrElse|ORELSE { printf("Found KW_OR_ELSE: %s\n", yytext); return ORELSE; }
 ParamArray { printf("Found KW_PARAMARRAY: %s\n", yytext); }
 Print { printf("Found KW_PRINT: %s\n", yytext); }
 Private { printf("Found KW_PRIVATE: %s\n", yytext); }
@@ -95,34 +95,34 @@ Replace { printf("Found KW_REPLACE: %s\n", yytext); }
 Right { printf("Found KW_RIGHT: %s\n", yytext); }
 Seek { printf("Found KW_SEEK: %s\n", yytext); }
 Set { printf("Found KW_SET: %s\n", yytext); }
-Sub { printf("Found KW_SUB: %s\n", yytext); return Sub; }
+Sub|SUB { printf("Found KW_SUB: %s\n", yytext); return Sub; }
 Super { printf("Found KW_SUPER: %s\n", yytext); }
-Static { printf("Found KW_STATIC: %s\n", yytext); return KW_STATIC; }
-True  { printf("Found KW_TRUE: %s\n", yytext); return KW_TRUE; }
+Static|STATIC { printf("Found KW_STATIC: %s\n", yytext); return KW_STATIC; }
+True|TRUE  { printf("Found KW_TRUE: %s\n", yytext); return KW_TRUE; }
 Ucase  { printf("Found KW_UCASE: %s\n", yytext); }
-Step { printf("Found KW_STEP: %s\n", yytext); return STEP; }
-Then { printf("Found KW_THEN: %s\n", yytext); return THEN; }
+Step|STEP { printf("Found KW_STEP: %s\n", yytext); return STEP; }
+Then|THEN { printf("Found KW_THEN: %s\n", yytext); return THEN; }
 Time { printf("Found KW_TIME: %s\n", yytext); }
-To { printf("Found KW_TO: %s\n", yytext); return TO; }
-While { printf("Found KW_WHILE: %s\n", yytext); return WHILE; }
+To|TO { printf("Found KW_TO: %s\n", yytext); return TO; }
+While|WHILE { printf("Found KW_WHILE: %s\n", yytext); return WHILE; }
 Where { printf("Found KW_WHERE: %s\n", yytext); }
-Loop { printf("Found KW_LOOP: %s\n", yytext); return LOOP; }
+Loop|LOOP { printf("Found KW_LOOP: %s\n", yytext); return LOOP; }
 Xor { printf("Found KW_Xor: %s\n", yytext); }
 writeLine {printf("Found Console_Function_writeLine: %s\n", yytext);}
 readLine {printf("Found Console_Function_readLine: %s\n", yytext);}
 write {printf("Found Console_Function_write: %s\n", yytext);}
 
-Boolean { printf("Found TYPE_BOOLEAN: %s\n", yytext); return TYPE_BOOLEAN; }
-Byte { printf("Found TYPE_BYTE: %s\n", yytext); return TYPE_BYTE; }
-Integer { printf("Found TYPE_INTEGER: %s\n", yytext); return TYPE_INTEGER; }
-Single { printf("Found TYPE_SINGLE: %s\n", yytext); return TYPE_SINGLE; }
-Short { printf("Found TYPE_SHORT: %s\n", yytext); return TYPE_SHORT; }
-Double { printf("Found TYPE_DOUBLE: %s\n", yytext); return TYPE_DOUBLE; }
-Decimal { printf("Found TYPE_DECIMAL: %s\n", yytext); return TYPE_DECIMAL; }
-Date { printf("Found TYPE_DATE: %s\n", yytext); return TYPE_DATE; }
-Char { printf("Found TYPE_CHAR: %s\n", yytext); return TYPE_CHAR; }
-String { printf("Found TYPE_STRING: %s\n", yytext); return TYPE_STRING; }
-Object { printf("Found TYPE_OBJECT: %s\n", yytext); return TYPE_OBJECT; }
+Boolean|BOOLEAN { printf("Found TYPE_BOOLEAN: %s\n", yytext); return TYPE_BOOLEAN; }
+Byte|BYTE { printf("Found TYPE_BYTE: %s\n", yytext); return TYPE_BYTE; }
+Integer|INTEGER { printf("Found TYPE_INTEGER: %s\n", yytext); return TYPE_INTEGER; }
+Single|SINGLE { printf("Found TYPE_SINGLE: %s\n", yytext); return TYPE_SINGLE; }
+Short|SHORT { printf("Found TYPE_SHORT: %s\n", yytext); return TYPE_SHORT; }
+Double|DOUBLE { printf("Found TYPE_DOUBLE: %s\n", yytext); return TYPE_DOUBLE; }
+Decimal|DECIMAL { printf("Found TYPE_DECIMAL: %s\n", yytext); return TYPE_DECIMAL; }
+Date|DATE { printf("Found TYPE_DATE: %s\n", yytext); return TYPE_DATE; }
+Char|CHAR { printf("Found TYPE_CHAR: %s\n", yytext); return TYPE_CHAR; }
+String|STRING { printf("Found TYPE_STRING: %s\n", yytext); return TYPE_STRING; }
+Object|OBJECT { printf("Found TYPE_OBJECT: %s\n", yytext); return TYPE_OBJECT; }
 
 Chr\(\d+\) { printf("Found CHR_CODE: %s\n", yytext); }
 
@@ -210,6 +210,8 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 }
 
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext);  return IDENTIFIER; }
+
+<<EOF>> { printf("Found end file: %s\n", yytext); return TOKEN_LINE; }
 
 %%
 
