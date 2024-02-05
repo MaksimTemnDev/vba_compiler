@@ -19,14 +19,12 @@ class DimStmt;
 class Value;
 class ForNode;
 class ArrayIdList;
-class ArrayIdDeclare;
 class Identificator;
 class IdList;
 class While;
 class Ternar;
 class IfNode;
 class OptionalStep;
-class BodyStmt;
 
 class CodeNode {
 public:
@@ -70,7 +68,7 @@ public:
     StmtListNode* stmt_list = NULL;
     bool is_sub = false;
 
-    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub, StmtListNode* stmtList);
+    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, FuncParamListNode* params, bool is_sub, StmtListNode* stmtList);
 
     void toDot(std::string& dot);
 };
@@ -82,10 +80,11 @@ public:
     };
     int id;
     Type param_type;
-    std::string* name = NULL;
+    Identificator* name = NULL;
     TypeNode* type = NULL;
 
-    FuncParamNode(std::string* name, TypeNode* type, Type param_type);
+    FuncParamNode(Identificator* name, TypeNode* type, Type param_type);
+    static FuncParamNode* paramArray(Identificator* name, TypeNode* type);
 
     void toDot(std::string& dot);
 };
@@ -97,6 +96,7 @@ public:
 
     FuncParamListNode(FuncParamNode* item);
     FuncParamListNode(FuncParamListNode* list);
+    static FuncParamListNode* Append(FuncParamListNode* funcParams, FuncParamNode* funcParam);
 
     void toDot(std::string& dot);
 };
@@ -198,7 +198,7 @@ class StmtNode
 public:
     enum Type
     {
-        dim_, ifstmt_, while_, dowhile_, dountil_, for_, static_, expr_, continue_while, dooption_exit, dooption_continue, continue_for, exit_for
+        dim_, ifstmt_, while_, dowhile_, dountil_, for_, static_, expr_, continue_while, dooption_exit, dooption_continue, continue_for, exit_for, return_stmt
     };
 
     int id;
@@ -218,6 +218,7 @@ public:
     static StmtNode* DeclarationContinueWhile(Type item_type);
     static StmtNode* DeclarationDoOption(Type item_type);
     static StmtNode* DeclarationContinueExitFor(Type item_type);
+    static StmtNode* DeclarationReturn(ExprNode* expr, Type item_type);
     StmtNode();
 
     void toDot(std::string& dot);
@@ -348,31 +349,16 @@ public:
     void toDot(std::string& dot);
 };
 
-class ArrayIdDeclare
-{
-public:
-    int id;
-    std::string* identifier;
-    int index;
-    //И-тор переменнной внутри массива
-    Identificator* input_id = NULL;
-
-    ArrayIdDeclare(std::string* identifier, Identificator* input_id);
-
-    void toDot(std::string& dot);
-};
-
 class ArrayIdList
 {
 public:
     int id;
-    list<ArrayIdDeclare*>* arrayId = NULL;
     list<Identificator*>* arrayIdent = NULL;
 
     ArrayIdList(Identificator* ident);
-    ArrayIdList(ArrayIdDeclare* arrayIdDeclare);
     ArrayIdList(ArrayIdList* arrayIdList);
-    static ArrayIdList* Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId);
+    ArrayIdList(ExprNode* expr);
+    static ArrayIdList* Append(ArrayIdList* arrIdList, ExpNode* expr);
     static ArrayIdList* Append(ArrayIdList* arrIdList, Identificator* ident);
     void toDot(std::string& dot, const std::string& type = "arr_id_list");
 };
@@ -400,6 +386,7 @@ public:
     Value* stepval = NULL;
 
     static OptionalStep* addStep(Value* stepval, bool hasStep);
+    static OptionalStep* addStepExpr(ExprNode* expr, bool hasStep);
 
     void toDot(std::string& dot);
 };
@@ -441,19 +428,6 @@ public:
     static StmtListNode* Append(StmtListNode* stmtListNode, StmtNode* stmtNode);
 
     void toDot(std::string& dot, const std::string& type = "stmt_list");
-};
-
-class BodyStmt
-{
-public:
-    int id;
-
-    list<StmtNode*>* stmts = NULL;
-    ExprNode* expr = NULL;
-
-    BodyStmt(ExprNode* expr, StmtListNode* stmt);
-
-    void toDot(std::string& dot);
 };
 
 void connectVerticesDots(std::string& s, int parentId, int childId);
