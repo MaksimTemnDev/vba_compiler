@@ -42,17 +42,6 @@ GlobalCodeList* GlobalCodeList::Append(GlobalCodeList* globalCodes, GlobalCode* 
     return globalCodes;
 }
 
-FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, IdList* params, BodyStmt* body, bool is_sub, StmtListNode* stmtList) {
-    FuncDecl* func = new FuncDecl();
-    func->name = name;
-    func->params = params;
-    func->body = body;
-    func->is_sub = is_sub;
-    func->id = ++globId;
-    func->stmt_list = stmtList;
-    return func;
-}
-
 TypeNode::TypeNode(TypeNode* type) {
     this->id = ++globId;
     this->type = type->type;
@@ -432,38 +421,27 @@ Identificator* Identificator::id_func(Identificator* identifier, Type type, Expr
     return id;
 }
 
-ArrayIdDeclare::ArrayIdDeclare(string* identifier, Identificator* input_id) {
-    this->id = ++globId;
-    this->identifier = identifier;
-    this->input_id = input_id;
-}
-
 ArrayIdList::ArrayIdList(Identificator* ident) {
     this->id = ++globId;
     this->arrayIdent = new list<Identificator*>{ ident };
-}
-
-ArrayIdList::ArrayIdList(ArrayIdDeclare* arrayIdDeclare) {
-    this->id = ++globId;
-    this->arrayId = new list<ArrayIdDeclare*>{ arrayIdDeclare };
 }
 
 ArrayIdList::ArrayIdList(ArrayIdList* arrayIdList) {
     this->id = ++globId;
     if (arrayIdList != NULL)
     {
-        this->arrayId = arrayIdList->arrayId;
+        //this->arrayId = arrayIdList->arrayId; Серега исправляй!
     }
     else
     {
-        this->arrayId = new std::list<ArrayIdDeclare*>;
+        //this->arrayId = new std::list<ArrayIdDeclare*>;  Серега исправляй!
     }
 }
 
-ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId) {
-    arrIdList->arrayId->push_back(arrayId);
-    return arrIdList;
-}
+//ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId) { запусти увидишь тут косяк
+//    arrIdList->arrayId->push_back(arrayId);
+//    return arrIdList;
+//}
 
 ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, Identificator* ident) {
     arrIdList->arrayIdent->push_back(ident);
@@ -539,11 +517,6 @@ StmtListNode* StmtListNode::Append(StmtListNode* stmtListNode, StmtNode* stmtNod
     return stmtListNode;
 }
 
-BodyStmt::BodyStmt(ExprNode* expr, StmtListNode* stmt) {
-    this->id = ++globId;
-    this->expr = expr;
-    this->stmts = stmt->stmts;
-}
 
 //toDot функции
 
@@ -604,10 +577,10 @@ void FuncDecl::toDot(string& dot) {
         this->params->toDot(dot, "params");
     }
 
-    if (this->body != NULL) {
-        connectVerticesDots(dot, this->id, this->body->id);
+   /* if (this->body != NULL) {
+        connectVerticesDots(dot, this->id, this->body->id); это кал, но проверь прежде чем удалять
         this->body->toDot(dot);
-    }
+    }*/
 
     if (this->stmt_list != NULL) {
         connectVerticesDots(dot, this->id, this->stmt_list->id);
@@ -1319,26 +1292,26 @@ void Identificator::toDot(string& dot) {
     }
 }
 
-void ArrayIdDeclare::toDot(string& dot) {
-    createVertexDot(dot, this->id, "array_id_decl", "", "");
-
-    if (this->input_id != NULL) {
-        connectVerticesDots(dot, this->id, this->input_id->id);
-        this->input_id->toDot(dot);
-    }
-}
+//void ArrayIdDeclare::toDot(string& dot) {
+//    createVertexDot(dot, this->id, "array_id_decl", "", ""); ещё кал
+//
+//    if (this->input_id != NULL) {
+//        connectVerticesDots(dot, this->id, this->input_id->id);
+//        this->input_id->toDot(dot);
+//    }
+//}
 
 void ArrayIdList::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "arr_id_list");
 
-    if (this->arrayId != NULL) {
+    /*if (this->arrayId != NULL) { this->arrayId - ругается на это
         for (auto elem : *this->arrayId)
         {
             int exprNum = 1;
             connectVerticesDots(dot, this->id, elem->id);
             elem->toDot(dot);
         }
-    }
+    }*/
 
     if (this->arrayIdent != NULL) {
         for (auto elem : *this->arrayIdent)
@@ -1449,23 +1422,23 @@ void Value::toDot(string& dot) {
     }
 }
 
-void BodyStmt::toDot(std::string& dot) {
-    createVertexDot(dot, this->id, "body", "", "", "");
-
-    if (this->stmts != NULL) {
-        for (auto elem : *this->stmts)
-        {
-            int exprNum = 1;
-            connectVerticesDots(dot, this->id, elem->id);
-            elem->toDot(dot);
-        }
-    }
-
-    if (this->expr != NULL) {
-        connectVerticesDots(dot, this->id, this->expr->id);
-        this->expr->toDot(dot);
-    }
-}
+//void BodyStmt::toDot(std::string& dot) { body нет, ошибки есть, проверь
+//    createVertexDot(dot, this->id, "body", "", "", "");
+//
+//    if (this->stmts != NULL) {
+//        for (auto elem : *this->stmts)
+//        {
+//            int exprNum = 1;
+//            connectVerticesDots(dot, this->id, elem->id);
+//            elem->toDot(dot);
+//        }
+//    }
+//
+//    if (this->expr != NULL) {
+//        connectVerticesDots(dot, this->id, this->expr->id);
+//        this->expr->toDot(dot);
+//    }
+//}
 
 void connectVerticesDots(string& s, int parentId, int childId) {
     string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";\n";

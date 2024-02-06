@@ -153,7 +153,7 @@ Statement: DimStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::dim_, 0
 		 | ContinueWhile EndList { $$ = StmtNode::DeclarationContinueWhile(StmtNode::continue_while); }
 		 | DOOption EndList { $$ = $1; }
 		 | ContinueExitFor EndList { $$ = $1; }
-		 | RETURN Expression EndList { $$ = StmtNode::DeclarationReturn($2, StmtNode::return_stmt); }
+		 | RETURN Expression EndList { /*$$ = StmtNode::DeclarationReturn($2, StmtNode::return_stmt);*/ }
 		 ;
 
 DimStmt: DIM DimSingle {$$ = $2;}
@@ -194,8 +194,8 @@ Type: TYPE_BOOLEAN { $$ = new TypeNode($1); }
 ArrayBody: '{' OptEndl ExpressionList OptEndl'}' { $$ = ExprNode::arrayBodyExprList($3, ExprNode::arr_expr_list); }
 		 ;
 
-ArrayIDdeclaration: CallArrOrFunc { $$ = new ArrayIdList($1); }
-				  | ArrayIDdeclaration ',' CallArrOrFunc { $$ = ArrayIdList::Append($1, $3); }
+ArrayIDdeclaration: CallArrOrFunc { /*$$ = new ArrayIdList($1);*/ }
+				  | ArrayIDdeclaration ',' CallArrOrFunc { /*$$ = ArrayIdList::Append($1, $3);*/ }
 				  ;
 
 StatementList: Statement { $$ = new StmtListNode($1); }
@@ -266,11 +266,11 @@ Boolean: KW_FALSE { $$ = new Value($1, Value::bool_); }
 	   | KW_TRUE { $$ = new Value($1, Value::bool_); }
 	   ;
 		
-FuncParamList: FuncParam { $$ = new FuncParamListNode($1); }
-			 | FuncParamList ',' OptEndl FuncParam { $$ = FuncParamListNode::Append($1, $4); }
+FuncParamList: FuncParam { /*$$ = new FuncParamListNode($1);*/ }
+			 | FuncParamList ',' OptEndl FuncParam { /*$$ = FuncParamListNode::Append($1, $4);*/ }
 			 ;
 
-FuncParam: LinkOrValEmpty IDENTIFIER ArrInParam As Type { $$ = FuncParamNode::paramArray($2, $5); }
+FuncParam: LinkOrValEmpty IDENTIFIER ArrInParam As Type { /*$$ = FuncParamNode::paramArray($2, $5);*/ }
 		 ;
 
 LinkOrVal: ByVal
@@ -288,14 +288,14 @@ ArrInParam: '('OptEndl')'
 		  |
 		  ;
 
-FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList StatementList END Function EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, 0, $7); }
-                   | Function IDENTIFIER '(' OptEndl ')' As Type EndList StatementList END Function EndList { $$ = FuncDecl::funcDeclare($2, $7, 0, 0, $9); }
-                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' EndList StatementList END Function EndList { $$ = FuncDecl::funcDeclare($2, 0, $5, 0, $9); }
-                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' As Type EndList StatementList END Function EndList { $$ = FuncDecl::funcDeclare($2, $9, $5, 0, $11); }
+FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList StatementList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, 0, 0, 0, $7);*/ }
+                   | Function IDENTIFIER '(' OptEndl ')' As Type EndList StatementList END Function EndList {/* $$ = FuncDecl::funcDeclare($2, $7, 0, 0, $9);*/ }
+                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' EndList StatementList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, 0, $5, 0, $9);*/ }
+                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' As Type EndList StatementList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, $9, $5, 0, $11);*/ }
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, 1, $7); }
-              | Sub IDENTIFIER '('OptEndl FuncParamList OptEndl')' EndList StatementList END Sub EndList { $$ = FuncDecl::funcDeclare($2, 0, $5, 1, $9); }
+SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList StatementList END Sub EndList { /*$$ = FuncDecl::funcDeclare($2, 0, 0, 1, $7);*/ }
+              | Sub IDENTIFIER '('OptEndl FuncParamList OptEndl')' EndList StatementList END Sub EndList { /*$$ = FuncDecl::funcDeclare($2, 0, $5, 1, $9);*/ }
               ;
 
 IfStmt: IF Expression THEN EndList StatementList END IF { $$ = IfNode::IfClear($2, $5, IfNode::clear_); }
@@ -320,7 +320,7 @@ EXITDO: EXIT DO;
 CONTINUEDO: CONTINUE DO;
 
 OptionalStep: { $$ = OptionalStep::addStep(0, false); }
-			| STEP Expression { $$ = OptionalStep::addStepExpr($2, true); }
+			| STEP Expression { /*$$ = OptionalStep::addStepExpr($2, true);*/ }
 			;
 			
 ContinueExitFor: CONTINUE FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::continue_for); }

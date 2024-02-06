@@ -64,7 +64,6 @@ public:
     Identificator* name = NULL;
     TypeNode* returnType = NULL;
     IdList* params = NULL;
-    BodyStmt* body = NULL;
     StmtListNode* stmt_list = NULL;
     bool is_sub = false;
 
@@ -358,7 +357,7 @@ public:
     ArrayIdList(Identificator* ident);
     ArrayIdList(ArrayIdList* arrayIdList);
     ArrayIdList(ExprNode* expr);
-    static ArrayIdList* Append(ArrayIdList* arrIdList, ExpNode* expr);
+    static ArrayIdList* Append(ArrayIdList* arrIdList, ExprNode* expr);
     static ArrayIdList* Append(ArrayIdList* arrIdList, Identificator* ident);
     void toDot(std::string& dot, const std::string& type = "arr_id_list");
 };
