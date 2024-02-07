@@ -201,6 +201,10 @@ ArrayIDdeclaration: CallArrOrFunc { /*$$ = new ArrayIdList($1);*/ }
 StatementList: Statement { $$ = new StmtListNode($1); }
              | StatementList Statement { $$ = StmtListNode::Append($1, $2); }
              ;
+			 
+OptStmtList: 
+		   | StatementList
+		   ;
 		
 ExpressionList: Expression { $$ = new ExprListNode($1); }
 			  | ExpressionList ',' OptEndl Expression { $$ = ExprListNode::Append($1, $4); }
@@ -288,32 +292,32 @@ ArrInParam: '('OptEndl')'
 		  |
 		  ;
 
-FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList StatementList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, 0, 0, 0, $7);*/ }
-                   | Function IDENTIFIER '(' OptEndl ')' As Type EndList StatementList END Function EndList {/* $$ = FuncDecl::funcDeclare($2, $7, 0, 0, $9);*/ }
-                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' EndList StatementList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, 0, $5, 0, $9);*/ }
-                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' As Type EndList StatementList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, $9, $5, 0, $11);*/ }
+FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList OptStmtList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, 0, 0, 0, $7);*/ }
+                   | Function IDENTIFIER '(' OptEndl ')' As Type EndList OptStmtList END Function EndList {/* $$ = FuncDecl::funcDeclare($2, $7, 0, 0, $9);*/ }
+                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' EndList OptStmtList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, 0, $5, 0, $9);*/ }
+                   | Function IDENTIFIER '(' OptEndl FuncParamList OptEndl')' As Type EndList OptStmtList END Function EndList { /*$$ = FuncDecl::funcDeclare($2, $9, $5, 0, $11);*/ }
                    ;
 				   
-SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList StatementList END Sub EndList { /*$$ = FuncDecl::funcDeclare($2, 0, 0, 1, $7);*/ }
-              | Sub IDENTIFIER '('OptEndl FuncParamList OptEndl')' EndList StatementList END Sub EndList { /*$$ = FuncDecl::funcDeclare($2, 0, $5, 1, $9);*/ }
+SubDeclaration: Sub IDENTIFIER '('OptEndl')' EndList OptStmtList END Sub EndList { /*$$ = FuncDecl::funcDeclare($2, 0, 0, 1, $7);*/ }
+              | Sub IDENTIFIER '('OptEndl FuncParamList OptEndl')' EndList OptStmtList END Sub EndList { /*$$ = FuncDecl::funcDeclare($2, 0, $5, 1, $9);*/ }
               ;
 
-IfStmt: IF Expression THEN EndList StatementList END IF { $$ = IfNode::IfClear($2, $5, IfNode::clear_); }
-	| IF Expression THEN EndList StatementList ELSE EndList StatementList END IF { $$ = IfNode::IfElse($2, $5, $8, IfNode::else_); }
-	| IF Expression THEN EndList StatementList ELSEIF Expression THEN EndList StatementList END IF { $$ = IfNode::IfElseIf($2, $5, $7, $10, IfNode::else_); }
+IfStmt: IF Expression THEN EndList OptStmtList END IF { $$ = IfNode::IfClear($2, $5, IfNode::clear_); }
+	| IF Expression THEN EndList OptStmtList ELSE EndList OptStmtList END IF { $$ = IfNode::IfElse($2, $5, $8, IfNode::else_); }
+	| IF Expression THEN EndList OptStmtList ELSEIF Expression THEN EndList OptStmtList END IF { $$ = IfNode::IfElseIf($2, $5, $7, $10, IfNode::else_); }
 	;
 
-WhileStatement: WHILE Expression EndList StatementList END WHILE { $$ = While::whileStmt($2, $4, While::simple_); };
+WhileStatement: WHILE Expression EndList OptStmtList END WHILE { $$ = While::whileStmt($2, $4, While::simple_); };
 			
 ContinueWhile: CONTINUE WHILE;
 
-DoLoopUntilStatement: DO UNTIL Expression EndList StatementList LOOP { $$ = While::whileStmt($3, $5, While::doloopuntil); };
+DoLoopUntilStatement: DO UNTIL Expression EndList OptStmtList LOOP { $$ = While::whileStmt($3, $5, While::doloopuntil); };
 	
 DOOption: EXITDO { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_exit); }
 		| CONTINUEDO { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_continue); }
 		;
 
-DoLoopWhileStatement: DO WHILE Expression EndList StatementList LOOP { $$ = While::whileStmt($3, $5, While::doloopwhile_); };
+DoLoopWhileStatement: DO WHILE Expression EndList OptStmtList LOOP { $$ = While::whileStmt($3, $5, While::doloopwhile_); };
 	
 EXITDO: EXIT DO;
 
@@ -327,7 +331,7 @@ ContinueExitFor: CONTINUE FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNo
 			   | EXIT FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::exit_for); }
 			   ;
 
-ForStatement: FOR Expression TO Expression OptionalStep EndList StatementList NEXT { $$ = ForNode::fornode($2, $4, $5, 0, $7); }
+ForStatement: FOR Expression TO Expression OptionalStep EndList OptStmtList NEXT { $$ = ForNode::fornode($2, $4, $5, 0, $7); }
 			;
 				 
 EndList: TOKEN_LINE
