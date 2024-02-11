@@ -262,7 +262,7 @@ Values: STRING { $$ = new Value($1, Value::string_); }
 	  | Boolean { $$ = $1; }
 	  | DOUBLE { $$ = new Value($1, Value::Double_); }
 	  | CHAR { $$ = new Value($1, Value::Char_); }
-	  | DECIMAL_NUMBER { $$ = new Value($1, Value::dec_num, 1, 0); };
+	  | DECIMAL_NUMBER { $$ = new Value($1, Value::dec_num, 1, 0); }
 	  | IDENTIFIER { $$ = new Value($1, Value::id_); }
 	  ;
 	 
@@ -331,7 +331,7 @@ ContinueExitFor: CONTINUE FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNo
 			   | EXIT FOR { $$ = StmtNode::DeclarationContinueExitFor(StmtNode::exit_for); }
 			   ;
 
-ForStatement: FOR Expression TO Expression OptionalStep EndList OptStmtList NEXT { $$ = ForNode::fornode($2, $4, $5, 0, $7); }
+ForStatement: FOR Expression TO Expression OptionalStep EndList OptStmtList NEXT IDENTIFIER { $$ = ForNode::fornode($2, $4, $5, 0, $7); }
 			;
 				 
 EndList: TOKEN_LINE
