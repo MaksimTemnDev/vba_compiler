@@ -63,7 +63,7 @@ public:
     int id;
     Identificator* name = NULL;
     TypeNode* returnType = NULL;
-    IdList* params = NULL;
+    FuncParamListNode* params = NULL;
     StmtListNode* stmt_list = NULL;
     bool is_sub = false;
 
@@ -82,6 +82,7 @@ public:
     Identificator* name = NULL;
     TypeNode* type = NULL;
 
+    FuncParamNode();
     FuncParamNode(Identificator* name, TypeNode* type, Type param_type);
     static FuncParamNode* paramArray(Identificator* name, TypeNode* type);
 
@@ -129,7 +130,7 @@ public:
         u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, iif, array_access, like, is, isnot, typof, arr_expr_list, ternar,
 
         single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier, value, expr_start_func, values_with_id,
-        expr_start_id
+        expr_start_id, expr
 
     };
 
@@ -170,7 +171,7 @@ public:
     static ExprNode* OperatorIdExpr(Type type, Identificator* left, ExprNode* right);
     static ExprNode* IifExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body);
     static ExprNode* typeOfisnotIs(Type type, ExprNode* isnotIs);
-    static ExprNode* arrayBodyIdList(IdList* idList, Type type);
+    static ExprNode* arrayBodyExpr(TypeNode* typeArr, ExprNode* expr, Type type);
     static ExprNode* arrayBodyExprList(ExprListNode* exprList, Type type);
     static ExprNode* ternarOp(Ternar* ternar, Type type);
     static ExprNode* valueExpr(Type type, Identificator* ident, Value* value);
@@ -352,7 +353,9 @@ class ArrayIdList
 {
 public:
     int id;
+    ExprNode* expr = NULL;
     list<Identificator*>* arrayIdent = NULL;
+    list<ExprNode*>* arrayExpr = NULL;
 
     ArrayIdList(Identificator* ident);
     ArrayIdList(ArrayIdList* arrayIdList);
@@ -383,6 +386,7 @@ public:
     int id;
     bool hasStep = false;
     Value* stepval = NULL;
+    ExprNode* expr = NULL;
 
     static OptionalStep* addStep(Value* stepval, bool hasStep);
     static OptionalStep* addStepExpr(ExprNode* expr, bool hasStep);
@@ -424,6 +428,7 @@ public:
     list<StmtNode*>* stmts = NULL;
 
     StmtListNode(StmtNode* stmtNode);
+    StmtListNode(StmtListNode* stmtList);
     static StmtListNode* Append(StmtListNode* stmtListNode, StmtNode* stmtNode);
 
     void toDot(std::string& dot, const std::string& type = "stmt_list");
