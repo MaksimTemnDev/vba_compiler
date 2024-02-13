@@ -29,6 +29,7 @@ DIGIT [0-9]
 	char str[1024];
 	char strNew[1024];
     int lineNumber = 1;
+	bool finished = false;
 %}
 
 %%
@@ -100,6 +101,7 @@ Super { printf("Found KW_SUPER: %s\n", yytext); }
 Static|STATIC { printf("Found KW_STATIC: %s\n", yytext); return KW_STATIC; }
 True|TRUE  { printf("Found KW_TRUE: %s\n", yytext); return KW_TRUE; }
 Ucase  { printf("Found KW_UCASE: %s\n", yytext); }
+UNTIL|Until { printf("Found UNTIL: %s\n", yytext); return UNTIL; }
 Step|STEP { printf("Found KW_STEP: %s\n", yytext); return STEP; }
 Then|THEN { printf("Found KW_THEN: %s\n", yytext); return THEN; }
 Time { printf("Found KW_TIME: %s\n", yytext); }
@@ -211,7 +213,7 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext);  return IDENTIFIER; }
 
-<<EOF>> { printf("Found end file: %s\n", yytext); return TOKEN_LINE; }
+<<EOF>> { if(!finished){ finished = true; printf("Found end file: %s\n", yytext); return TOKEN_LINE; yyterminate(); }else{ yyterminate(); } }
 
 %%
 
