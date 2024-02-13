@@ -9,7 +9,7 @@ extern int yyparse();
 DIGIT [0-9]
 
 
-%x STRING
+%x STRING_VAL
 %x ARRAY
 %x NUMBER
 
@@ -180,12 +180,12 @@ vbBack { printf("Found TYPE_BACK: %s\n", yytext); }
 
 '.* { printf("Found COMMENT: %s\n", yytext); }
  
-\" { strcpy(str,""); BEGIN(STRING); }
-<STRING>\"\" { strcat(str, """"); }
-<STRING>([^\n\"]+)? { strcat(str,yytext); }
-<STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL); yylval.string_literal = new string(str); return STRING;}
-<STRING>\n { printf("STRING Error in line %d: there is line translation\n", lineNumber); BEGIN(INITIAL);}
-<STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+\" { strcpy(str,""); BEGIN(STRING_VAL); }
+<STRING_VAL>\"\" { strcat(str, """"); }
+<STRING_VAL>([^\n\"]+)? { strcat(str,yytext); }
+<STRING_VAL>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL); yylval.string_literal = new string(str); return STRING;}
+<STRING_VAL>\n { printf("STRING Error in line %d: there is line translation\n", lineNumber); BEGIN(INITIAL);}
+<STRING_VAL><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 
 
 
