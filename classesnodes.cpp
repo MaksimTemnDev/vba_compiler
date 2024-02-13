@@ -42,6 +42,58 @@ GlobalCodeList* GlobalCodeList::Append(GlobalCodeList* globalCodes, GlobalCode* 
     return globalCodes;
 }
 
+FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, FuncParamListNode* params, bool is_sub, StmtListNode* stmtList) {
+    FuncDecl* funcDecl = new FuncDecl();
+    funcDecl->id = ++globId;
+    funcDecl->name = name;
+    funcDecl->returnType = returnType;
+    funcDecl->params = params;
+    funcDecl->is_sub = is_sub;
+    funcDecl->stmt_list = stmtList;
+    return funcDecl;
+}
+
+FuncParamNode::FuncParamNode() {
+    this->id = ++globId;
+}
+
+FuncParamNode::FuncParamNode(Identificator* name, TypeNode* type, Type param_type) {
+    this->id = ++globId;
+    this->name = name;
+    this->type = type;
+    this->param_type = param_type;
+}
+
+FuncParamNode* FuncParamNode::paramArray(Identificator* name, TypeNode* type) {
+    FuncParamNode* funcParam = new FuncParamNode();
+    funcParam->id = ++globId;
+    funcParam->name = name;
+    funcParam->type = type;
+    return funcParam;
+}
+
+FuncParamListNode::FuncParamListNode(FuncParamNode* item) {
+    this->id = ++globId;
+    this->items = new list<FuncParamNode*>{ item };
+}
+
+FuncParamListNode::FuncParamListNode(FuncParamListNode* list) {
+    this->id = ++globId;
+    if (list != NULL)
+    {
+        this->items = list->items;
+    }
+    else
+    {
+        this->items = new std::list<FuncParamNode*>;
+    }
+}
+
+FuncParamListNode* FuncParamListNode::Append(FuncParamListNode* funcParams, FuncParamNode* funcParam) {
+    funcParams->items->push_back(funcParam);
+    return funcParams;
+}
+
 TypeNode::TypeNode(TypeNode* type) {
     this->id = ++globId;
     this->type = type->type;
@@ -60,7 +112,9 @@ TypeNode::TypeNode(Type type, string* name) {
     this->name = name;
 }
 
-ExprNode::ExprNode() {}
+ExprNode::ExprNode() {
+    this->id = ++globId;
+}
 
 ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right) {
     ExprNode* new_expr = new ExprNode();
@@ -89,11 +143,12 @@ ExprNode* ExprNode::typeOfisnotIs(Type type, ExprNode* isnotIs) {
     return new_expr;
 }
 
-ExprNode* ExprNode::arrayBodyIdList(IdList* idList, Type type) {
+ExprNode* ExprNode::arrayBodyExpr(TypeNode* typeArr, ExprNode* expr, Type type) {
     ExprNode* new_expr = new ExprNode();
     new_expr->id = ++globId;
-    new_expr->id_list = idList;
+    new_expr->type_node = typeArr;
     new_expr->type = type;
+    new_expr->body = expr;
     return new_expr;
 }
 
@@ -236,6 +291,14 @@ StmtNode* StmtNode::DeclarationContinueExitFor(Type item_type) {
     return new_stmt;
 }
 
+StmtNode* StmtNode::DeclarationReturn(ExprNode* expr, Type item_type) {
+    StmtNode* new_stmt = new StmtNode();
+    new_stmt->id = ++globId;
+    new_stmt->expr = expr;
+    new_stmt->item_type = item_type;
+    return new_stmt;
+}
+
 StmtNode::StmtNode() {
     this->id = ++globId;
 }
@@ -304,7 +367,9 @@ StaticDim* StaticDim::DeclareStatic(DimStmt* dim) {
     return _static;
 }
 
-DimStmt::DimStmt() {}
+DimStmt::DimStmt() {
+    this->id = ++globId;
+}
 
 DimStmt::DimStmt(DimStmt* dimStmt) {
     this->id = ++globId;
@@ -430,18 +495,23 @@ ArrayIdList::ArrayIdList(ArrayIdList* arrayIdList) {
     this->id = ++globId;
     if (arrayIdList != NULL)
     {
-        //this->arrayId = arrayIdList->arrayId; Серега исправляй!
+        this->arrayIdent = arrayIdList->arrayIdent;
     }
     else
     {
-        //this->arrayId = new std::list<ArrayIdDeclare*>;  Серега исправляй!
+        this->arrayIdent = new std::list<Identificator*>;
     }
 }
 
-//ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, ArrayIdDeclare* arrayId) { запусти увидишь тут косяк
-//    arrIdList->arrayId->push_back(arrayId);
-//    return arrIdList;
-//}
+ArrayIdList::ArrayIdList(ExprNode* expr) {
+    this->id = ++globId;
+    this->expr = expr;
+}
+
+ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, ExprNode* expr) {
+    arrIdList->arrayExpr->push_back(expr);
+    return arrIdList;
+}
 
 ArrayIdList* ArrayIdList::Append(ArrayIdList* arrIdList, Identificator* ident) {
     arrIdList->arrayIdent->push_back(ident);
@@ -467,13 +537,20 @@ OptionalStep* OptionalStep::addStep(Value* stepval, bool hasStep) {
     return optStep;
 }
 
+OptionalStep* OptionalStep::addStepExpr(ExprNode* expr, bool hasStep) {
+    OptionalStep* optStep = new OptionalStep();
+    optStep->id = ++globId;
+    optStep->expr = expr;
+    optStep->hasStep = hasStep;
+    return optStep;
+}
+
 Value::Value(int value, Type type, bool hasIntVal, Identificator* id) {
     this->id = ++globId;
     this->value = value;
     this->type = type;
     this->hasIntVal = hasIntVal;
     this->identificator = id;
-    std::cout << value;
 }
 
 Value::Value(Identificator* ident, Type type) {
@@ -510,6 +587,18 @@ Value::Value(bool bool_, Type type) {
 StmtListNode::StmtListNode(StmtNode* stmtNode) {
     this->id = ++globId;
     this->stmts = new list<StmtNode*>{ stmtNode };
+}
+
+StmtListNode::StmtListNode(StmtListNode* stmtList) {
+    this->id = ++globId;
+    if (stmtList != NULL)
+    {
+        this->stmts = stmtList->stmts;
+    }
+    else
+    {
+        this->stmts = new std::list<StmtNode*>;
+    }
 }
 
 StmtListNode* StmtListNode::Append(StmtListNode* stmtListNode, StmtNode* stmtNode) {
@@ -574,17 +663,81 @@ void FuncDecl::toDot(string& dot) {
 
     if (this->params != NULL) {
         connectVerticesDots(dot, this->id, this->params->id);
-        this->params->toDot(dot, "params");
+        this->params->toDot(dot);
     }
-
-   /* if (this->body != NULL) {
-        connectVerticesDots(dot, this->id, this->body->id); это кал, но проверь прежде чем удалять
-        this->body->toDot(dot);
-    }*/
 
     if (this->stmt_list != NULL) {
         connectVerticesDots(dot, this->id, this->stmt_list->id);
         this->stmt_list->toDot(dot);
+    }
+}
+
+void FuncParamNode::toDot(std::string& dot) {
+    switch (this->param_type) {
+        case date_:
+            createVertexDot(dot, this->id, "date_type", "", "");
+            break;
+
+        case int_:
+            createVertexDot(dot, this->id, "int_type", "", "");
+            break;
+
+        case byte_:
+            createVertexDot(dot, this->id, "byte_type", "", "");
+            break;
+
+        case single:
+            createVertexDot(dot, this->id, "single_type", "", "");
+            break;
+
+        case char_:
+            createVertexDot(dot, this->id, "char_type", "", "");
+            break;
+
+        case string_:
+            createVertexDot(dot, this->id, "string_type", "", "");
+            break;
+
+        case short_:
+            createVertexDot(dot, this->id, "short_type", "", "");
+            break;
+
+        case bool_:
+            createVertexDot(dot, this->id, "bool_type", "", "");
+            break;
+
+        case obj_:
+            createVertexDot(dot, this->id, "obj_type", "", "");
+            break;
+
+        case decimal_:
+            createVertexDot(dot, this->id, "decimal_type", "", "");
+            break;
+    }
+
+    createVertexDot(dot, this->id, "func_param", "", "");
+
+    if (this->name != NULL) {
+        connectVerticesDots(dot, this->id, this->name->id);
+        this->name->toDot(dot);
+    }
+
+    if (this->type != NULL) {
+        connectVerticesDots(dot, this->id, this->type->id);
+        this->type->toDot(dot);
+    }
+}
+
+void FuncParamListNode::toDot(std::string& dot) {
+    createVertexDot(dot, this->id, "global_code_list");
+
+    if (this->items != NULL) {
+        for (auto elem : *this->items)
+        {
+            int exprNum = 1;
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot);
+        }
     }
 }
 
@@ -892,6 +1045,10 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
     case ExprNode::values_with_id:
         type = "values_with_id";
         break;
+
+    case ExprNode::expr:
+        type = "expr";
+        break;
     }
 
     createVertexDot(dot, this->id, "expr", type, value, pos);
@@ -1046,6 +1203,10 @@ void StmtNode::toDot(string& dot) {
 
     case exit_for:
         type = "exit_for";
+        break;
+
+    case return_stmt:
+        type = "return";
         break;
     }
 
@@ -1292,26 +1453,17 @@ void Identificator::toDot(string& dot) {
     }
 }
 
-//void ArrayIdDeclare::toDot(string& dot) {
-//    createVertexDot(dot, this->id, "array_id_decl", "", ""); ещё кал
-//
-//    if (this->input_id != NULL) {
-//        connectVerticesDots(dot, this->id, this->input_id->id);
-//        this->input_id->toDot(dot);
-//    }
-//}
-
 void ArrayIdList::toDot(string& dot, const string& type) {
     createVertexDot(dot, this->id, "arr_id_list");
 
-    /*if (this->arrayId != NULL) { this->arrayId - ругается на это
-        for (auto elem : *this->arrayId)
+    if (this->arrayExpr != NULL) {
+        for (auto elem : *this->arrayExpr)
         {
             int exprNum = 1;
             connectVerticesDots(dot, this->id, elem->id);
             elem->toDot(dot);
         }
-    }*/
+    }
 
     if (this->arrayIdent != NULL) {
         for (auto elem : *this->arrayIdent)
@@ -1358,6 +1510,11 @@ void OptionalStep::toDot(string& dot) {
     if (this->stepval != NULL) {
         connectVerticesDots(dot, this->id, this->stepval->id);
         this->stepval->toDot(dot);
+    }
+
+    if (this->expr != NULL) {
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot);
     }
 }
 
@@ -1421,24 +1578,6 @@ void Value::toDot(string& dot) {
         this->identificator->toDot(dot);
     }
 }
-
-//void BodyStmt::toDot(std::string& dot) { body нет, ошибки есть, проверь
-//    createVertexDot(dot, this->id, "body", "", "", "");
-//
-//    if (this->stmts != NULL) {
-//        for (auto elem : *this->stmts)
-//        {
-//            int exprNum = 1;
-//            connectVerticesDots(dot, this->id, elem->id);
-//            elem->toDot(dot);
-//        }
-//    }
-//
-//    if (this->expr != NULL) {
-//        connectVerticesDots(dot, this->id, this->expr->id);
-//        this->expr->toDot(dot);
-//    }
-//}
 
 void connectVerticesDots(string& s, int parentId, int childId) {
     string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";\n";
