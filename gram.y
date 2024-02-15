@@ -162,11 +162,11 @@ DimStmt: DIM DimSingle {$$ = $2;}
 	   ;
 
 DimSingle: IDENTIFIERlist '=' Expression { $$ = DimStmt::DeclarationSingleExpr($1, DimStmt::single_expr, $3); }
-		 | IDENTIFIERlist As Type { $$ = DimStmt::DeclarationSingleType($1, DimStmt::single_type, $3); }
+		 | IDENTIFIERlist As Type '=' Expression { $$ = DimStmt::DeclarationSingleType($1, DimStmt::single_type, $3); }
 		 ;
 
-DimArray: ArrayIDdeclaration { $$ = DimStmt::DeclarationArray($1, DimStmt::array_without, 0); }
-	    | ArrayIDdeclaration As Type { $$ = DimStmt::DeclarationArray($1, DimStmt::array_with, $3); }
+DimArray: ArrayIDdeclaration '=' Expression { $$ = DimStmt::DeclarationArray($1, DimStmt::array_without, 0); }
+	    | ArrayIDdeclaration As Type '=' Expression { $$ = DimStmt::DeclarationArray($1, DimStmt::array_with, $3); }
 		;
 
 IDENTIFIERlist: IDENTIFIEREndl { $$ = new IdList($1); }
@@ -179,17 +179,17 @@ StaticStmt: KW_STATIC DimSingle { $$ = new DimStmt($2); }
 	      | KW_STATIC DimArray { $$ = new DimStmt($2); }
 	      ;
 
-Type: TYPE_BOOLEAN { $$ = new TypeNode($1); }
-	| TYPE_BYTE { $$ = new TypeNode($1); }
-	| TYPE_INTEGER { $$ = new TypeNode($1); }
-	| TYPE_SINGLE { $$ = new TypeNode($1); }
-	| TYPE_SHORT { $$ = new TypeNode($1); }
-	| TYPE_DOUBLE { $$ = new TypeNode($1); }
-	| TYPE_DECIMAL { $$ = new TypeNode($1); }
-	| TYPE_DATE { $$ = new TypeNode($1); }
-	| TYPE_CHAR { $$ = new TypeNode($1); }
-	| TYPE_STRING { $$ = new TypeNode($1); }
-	| TYPE_OBJECT { $$ = new TypeNode($1); }
+Type: TYPE_BOOLEAN { $$ = new TypeNode(TypeNode::bool_); }
+	| TYPE_BYTE { $$ = new TypeNode(TypeNode::byte_); }
+	| TYPE_INTEGER { $$ = new TypeNode(TypeNode::int_); }
+	| TYPE_SINGLE { $$ = new TypeNode(TypeNode::single); }
+	| TYPE_SHORT { $$ = new TypeNode(TypeNode::short_); }
+	| TYPE_DOUBLE { $$ = new TypeNode(TypeNode::double_); }
+	| TYPE_DECIMAL { $$ = new TypeNode(TypeNode::decimal_); }
+	| TYPE_DATE { $$ = new TypeNode(TypeNode::date_); }
+	| TYPE_CHAR { $$ = new TypeNode(TypeNode::char_); }
+	| TYPE_STRING { $$ = new TypeNode(TypeNode::string_); }
+	| TYPE_OBJECT { $$ = new TypeNode(TypeNode::obj_); }
 	;
 
 ArrayBody: '{' OptEndl ExpressionList OptEndl'}' { $$ = ExprNode::arrayBodyExprList($3, ExprNode::arr_expr_list); }

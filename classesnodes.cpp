@@ -94,9 +94,9 @@ FuncParamListNode* FuncParamListNode::Append(FuncParamListNode* funcParams, Func
     return funcParams;
 }
 
-TypeNode::TypeNode(TypeNode* type) {
+TypeNode::TypeNode(Type type) {
     this->id = ++globId;
-    this->type = type->type;
+    this->type = type;
 }
 
 TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr) {

@@ -113,7 +113,7 @@ public:
     TypeNode* typeArr = NULL;
     ExprNode* exprArr = NULL;
 
-    TypeNode(TypeNode* type);
+    TypeNode(Type type);
     TypeNode(Type type, TypeNode* type_node, ExprNode* expr);
     TypeNode(Type type, std::string* name);
     void toDot(std::string& dot);
