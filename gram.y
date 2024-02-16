@@ -70,7 +70,6 @@
 %type <arrayIdList> ArrayIDdeclaration
 %type <optStep> OptionalStep
 %type <string_literal> STRING
-%type <identificator> IDENTIFIER
 %type <value> Boolean
 %type <double_literal> DOUBLE
 %type <char_literal> CHAR
@@ -86,7 +85,7 @@
 %token ByRef ByVal
 %token NEW RETURN NEXT
 %token As
-%token IDENTIFIER
+%token <identifier> IDENTIFIER
 %token <type> TYPE_BOOLEAN
 %token <type> TYPE_BYTE
 %token <type> TYPE_INTEGER
@@ -173,7 +172,7 @@ IDENTIFIERlist: IDENTIFIEREndl { $$ = new IdList($1); }
  			  | IDENTIFIERlist ',' IDENTIFIEREndl { $$ = IdList::Append($1, $3); }
 			  ;
 			  
-IDENTIFIEREndl: IDENTIFIER OptEndl { $$ = $1; }
+IDENTIFIEREndl: IDENTIFIER OptEndl { $$ = new Identificator($1); }
 
 StaticStmt: KW_STATIC DimSingle { $$ = new DimStmt($2); }
 	      | KW_STATIC DimArray { $$ = new DimStmt($2); }

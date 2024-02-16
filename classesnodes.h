@@ -61,13 +61,14 @@ public:
 class FuncDecl {
 public:
     int id;
+    std::string* _name = NULL;
     Identificator* name = NULL;
     TypeNode* returnType = NULL;
     FuncParamListNode* params = NULL;
     StmtListNode* stmt_list = NULL;
     bool is_sub = false;
 
-    static FuncDecl* funcDeclare(Identificator* name, TypeNode* returnType, FuncParamListNode* params, bool is_sub, StmtListNode* stmtList);
+    static FuncDecl* funcDeclare(std::string* name, TypeNode* returnType, FuncParamListNode* params, bool is_sub, StmtListNode* stmtList);
 
     void toDot(std::string& dot);
 };
@@ -175,7 +176,7 @@ public:
     static ExprNode* arrayBodyExprList(ExprListNode* exprList, Type type);
     static ExprNode* ternarOp(Ternar* ternar, Type type);
     static ExprNode* valueExpr(Type type, Identificator* ident, Value* value);
-    static ExprNode* exprList(Type type, Identificator* ident, ExprListNode* expr_list);
+    static ExprNode* exprList(Type type, std::string* ident, ExprListNode* expr_list);
 
     void toDot(std::string& dot, const std::string& pos = "");
 };
@@ -339,6 +340,8 @@ public:
     Value* arrSize;
     ExprListNode* exprList;
 
+    Identificator();
+    Identificator(std::string* identifier);
     static Identificator* id_witout(std::string* identifier, Type type);
     static Identificator* id_with(std::string* identifier, Type type, Value* size);
     static Identificator* id_func(std::string* identifier, Type type, ExprListNode* exprs);

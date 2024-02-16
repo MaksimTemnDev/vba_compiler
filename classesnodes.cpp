@@ -42,10 +42,10 @@ GlobalCodeList* GlobalCodeList::Append(GlobalCodeList* globalCodes, GlobalCode* 
     return globalCodes;
 }
 
-FuncDecl* FuncDecl::funcDeclare(Identificator* name, TypeNode* returnType, FuncParamListNode* params, bool is_sub, StmtListNode* stmtList) {
+FuncDecl* FuncDecl::funcDeclare(std::string* name, TypeNode* returnType, FuncParamListNode* params, bool is_sub, StmtListNode* stmtList) {
     FuncDecl* funcDecl = new FuncDecl();
     funcDecl->id = ++globId;
-    funcDecl->name = name;
+    funcDecl->_name = name;
     funcDecl->returnType = returnType;
     funcDecl->params = params;
     funcDecl->is_sub = is_sub;
@@ -199,10 +199,10 @@ ExprNode* ExprNode::valueExpr(Type type, Identificator* ident, Value* value) {
     return expr;
 }
 
-ExprNode* ExprNode::exprList(Type type, Identificator* ident, ExprListNode* expr_list) {
+ExprNode* ExprNode::exprList(Type type, std::string* ident, ExprListNode* expr_list) {
     ExprNode* expr = new ExprNode();
     expr->id = ++globId;
-    expr->ident = ident;
+    expr->Name = ident;
     expr->expr_list = expr_list;
     expr->type = type;
     return expr;
@@ -432,6 +432,15 @@ IdList::IdList(IdList* IdList) {
 IdList* IdList::Append(IdList* idList, Identificator* Identificator) {
     idList->identificators->push_back(Identificator);
     return idList;
+}
+
+Identificator::Identificator() {
+    this->id = ++globId;
+}
+
+Identificator::Identificator(std::string* identifier) {
+    this->id = ++globId;
+    this->identifier = identifier;
 }
 
 Identificator* Identificator::id_witout(string* identifier, Type type) {
