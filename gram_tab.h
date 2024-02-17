@@ -1,22 +1,22 @@
 #pragma once
 #include "classesnodes.h"
 typedef union {
-    string* string_literal;
-    string* identifier;
-    bool bool_literal;
-    double double_literal;
-    char char_literal;
+	string* string_literal;
+	string* identifier;
+	bool bool_literal;
+	double double_literal;
+	char char_literal;
 	int decimal_number;
 
-    CodeNode* code;
-    ExprNode* expr;
-    ExprListNode* expr_list;
-    StmtNode* stmt;
-    StmtListNode* stmt_list;
-    FuncDecl* func_decl;
-    FuncParamNode* function_param;
-    FuncParamListNode* function_params;
-    TypeNode* type;
+	CodeNode* code;
+	ExprNode* expr;
+	ExprListNode* expr_list;
+	StmtNode* stmt;
+	StmtListNode* stmt_list;
+	FuncDecl* func_decl;
+	FuncParamNode* function_param;
+	FuncParamListNode* function_params;
+	TypeNode* type;
 	GlobalCodeList* globalCodeList;
 	GlobalCode* globalCode;
 	StaticDim* static_;

@@ -226,8 +226,8 @@ Expression: Expression '=' OptEndl Expression { $$ = ExprNode::OperatorExpr(Expr
 		  | Expression NOT_EQUAL OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::_not_eq, $1, $4); }
 		  | Expression BIT_LEFT_SHIFT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_l_shift, $1, $4); }
 		  | Expression BIT_RIGHT_SHIFT OptEndl Expression { $$ = ExprNode::OperatorExpr(ExprNode::bit_r_shift, $1, $4); }
-		  | UnarMinus Expression { $$ = ExprNode::OperatorExpr(ExprNode::u_minus, 0, $2); }
-		  | UnarPlus Expression { $$ = ExprNode::OperatorExpr(ExprNode::u_plus, 0, $2); }
+		  | '-' Expression %prec UnarMinus { $$ = ExprNode::OperatorExpr(ExprNode::u_minus, 0, $2); }
+		  | '+' Expression %prec UnarPlus { $$ = ExprNode::OperatorExpr(ExprNode::u_plus, 0, $2); }
 		  | Not Expression { $$ = ExprNode::OperatorExpr(ExprNode::not_, 0, $2); }
 		  | ArrayBody { $$ = ExprNode::OperatorExpr(ExprNode::arr_body, $1, 0); }
           | '{'OptEndl'}' { $$ = ExprNode::OperatorExpr(ExprNode::arr_empty, 0, 0); }
@@ -254,8 +254,8 @@ Expression: Expression '=' OptEndl Expression { $$ = ExprNode::OperatorExpr(Expr
 		  | CallArrOrFunc { $$ = $1; }
 		  ;
 		  
-CallArrOrFunc: IDENTIFIER '('OptEndl ExpressionList OptEndl')' { $$ = ExprNode::exprList(ExprNode::arr_expr_list, $1, $4); }
-			 | IDENTIFIER '('OptEndl')' { $$ = ExprNode::exprList(ExprNode::array_access, $1, 0); }
+CallArrOrFunc: IDENTIFIER '('OptEndl ExpressionList OptEndl')' { $$ = ExprNode::exprList(ExprNode::access_arr_or_call_func_params, $1, $4); }
+			 | IDENTIFIER '('OptEndl')' { $$ = ExprNode::exprList(ExprNode::access_arr_or_call_func, $1, 0); }
 			 ;
 		
 Values: STRING { $$ = new Value($1, Value::string_); }

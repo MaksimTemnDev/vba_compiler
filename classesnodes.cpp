@@ -683,45 +683,45 @@ void FuncDecl::toDot(string& dot) {
 
 void FuncParamNode::toDot(std::string& dot) {
     switch (this->param_type) {
-        case date_:
-            createVertexDot(dot, this->id, "date_type", "", "");
-            break;
+    case date_:
+        createVertexDot(dot, this->id, "date_type", "", "");
+        break;
 
-        case int_:
-            createVertexDot(dot, this->id, "int_type", "", "");
-            break;
+    case int_:
+        createVertexDot(dot, this->id, "int_type", "", "");
+        break;
 
-        case byte_:
-            createVertexDot(dot, this->id, "byte_type", "", "");
-            break;
+    case byte_:
+        createVertexDot(dot, this->id, "byte_type", "", "");
+        break;
 
-        case single:
-            createVertexDot(dot, this->id, "single_type", "", "");
-            break;
+    case single:
+        createVertexDot(dot, this->id, "single_type", "", "");
+        break;
 
-        case char_:
-            createVertexDot(dot, this->id, "char_type", "", "");
-            break;
+    case char_:
+        createVertexDot(dot, this->id, "char_type", "", "");
+        break;
 
-        case string_:
-            createVertexDot(dot, this->id, "string_type", "", "");
-            break;
+    case string_:
+        createVertexDot(dot, this->id, "string_type", "", "");
+        break;
 
-        case short_:
-            createVertexDot(dot, this->id, "short_type", "", "");
-            break;
+    case short_:
+        createVertexDot(dot, this->id, "short_type", "", "");
+        break;
 
-        case bool_:
-            createVertexDot(dot, this->id, "bool_type", "", "");
-            break;
+    case bool_:
+        createVertexDot(dot, this->id, "bool_type", "", "");
+        break;
 
-        case obj_:
-            createVertexDot(dot, this->id, "obj_type", "", "");
-            break;
+    case obj_:
+        createVertexDot(dot, this->id, "obj_type", "", "");
+        break;
 
-        case decimal_:
-            createVertexDot(dot, this->id, "decimal_type", "", "");
-            break;
+    case decimal_:
+        createVertexDot(dot, this->id, "decimal_type", "", "");
+        break;
     }
 
     createVertexDot(dot, this->id, "func_param", "", "");
@@ -959,12 +959,12 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
         type = "arr_body_type";
         break;
 
-    case ExprNode::iif:
-        type = "iif";
+    case ExprNode::access_arr_or_call_func_params:
+        type = "access_arr_or_call_func_params";
         break;
 
-    case ExprNode::array_access:
-        type = "array_access";
+    case ExprNode::access_arr_or_call_func:
+        type = "access_arr_or_call_func";
         break;
 
     case ExprNode::like:

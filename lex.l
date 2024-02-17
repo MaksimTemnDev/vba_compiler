@@ -66,6 +66,7 @@ Friend { printf("Found KW_FRIEND: %s\n", yytext); }
 Get { printf("Found KW_GET: %s\n", yytext); }
 Let { printf("Found KW_LET: %s\n", yytext); }
 Is|IS { printf("Found KW_IS: %s\n", yytext); return Is;}
+IsNot|ISNOT { printf("Found KW_ISNOT: %s\n", yytext); return IsNot;}
 Len { printf("Found KW_LEN: %s\n", yytext); }
 Left { printf("Found KW_LEFT: %s\n", yytext); }
 Like|LIKE { printf("Found KW_LIKE: %s\n", yytext); return Like; }
@@ -100,6 +101,7 @@ Sub|SUB { printf("Found KW_SUB: %s\n", yytext); return Sub; }
 Super { printf("Found KW_SUPER: %s\n", yytext); }
 Static|STATIC { printf("Found KW_STATIC: %s\n", yytext); return KW_STATIC; }
 True|TRUE  { printf("Found KW_TRUE: %s\n", yytext); return KW_TRUE; }
+TypeOf { printf("Found KW_TypeOf: %s\n", yytext); return TypeOf; }
 Ucase  { printf("Found KW_UCASE: %s\n", yytext); }
 UNTIL|Until { printf("Found UNTIL: %s\n", yytext); return UNTIL; }
 Step|STEP { printf("Found KW_STEP: %s\n", yytext); return STEP; }
