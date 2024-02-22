@@ -64,11 +64,20 @@ FuncParamNode::FuncParamNode(Identificator* name, TypeNode* type, Type param_typ
     this->param_type = param_type;
 }
 
-FuncParamNode* FuncParamNode::paramArray(Identificator* name, TypeNode* type) {
+FuncParamNode* FuncParamNode::paramArray(LinkOrVal* linkOrVal, std::string* name, FuncParamNode* arrParam, TypeNode* type) {
     FuncParamNode* funcParam = new FuncParamNode();
     funcParam->id = ++globId;
-    funcParam->name = name;
+    funcParam->_name = name;
     funcParam->type = type;
+    funcParam->linkOrVal = linkOrVal;
+    funcParam->param = arrParam;
+    return funcParam;
+}
+
+FuncParamNode* FuncParamNode::exprArray(ExprNode* expr) {
+    FuncParamNode* funcParam = new FuncParamNode();
+    funcParam->id = ++globId;
+    funcParam->expr = expr;
     return funcParam;
 }
 
@@ -593,6 +602,10 @@ Value::Value(bool bool_, Type type) {
     this->Bool_ = bool_;
 }
 
+StmtListNode::StmtListNode() {
+    this->id = ++globId;
+}
+
 StmtListNode::StmtListNode(StmtNode* stmtNode) {
     this->id = ++globId;
     this->stmts = new list<StmtNode*>{ stmtNode };
@@ -613,6 +626,17 @@ StmtListNode::StmtListNode(StmtListNode* stmtList) {
 StmtListNode* StmtListNode::Append(StmtListNode* stmtListNode, StmtNode* stmtNode) {
     stmtListNode->stmts->push_back(stmtNode);
     return stmtListNode;
+}
+
+LinkOrVal::LinkOrVal(Type type) {
+    this->id = ++globId;
+    this->type = type;
+}
+
+LinkOrVal::LinkOrVal(LinkOrVal* linkOrVal, Type type) {
+    this->id = ++globId;
+    this->linkOrVal = linkOrVal;
+    this->type = type;
 }
 
 
@@ -684,23 +708,23 @@ void FuncDecl::toDot(string& dot) {
 void FuncParamNode::toDot(std::string& dot) {
     switch (this->param_type) {
     case date_:
-        createVertexDot(dot, this->id, "date_type", "", "");
+        createVertexDot(dot, this->id, "date_type", "date", "");
         break;
 
     case int_:
-        createVertexDot(dot, this->id, "int_type", "", "");
+        createVertexDot(dot, this->id, "int_type", "int", "");
         break;
 
     case byte_:
-        createVertexDot(dot, this->id, "byte_type", "", "");
+        createVertexDot(dot, this->id, "byte_type", "byte", "");
         break;
 
     case single:
-        createVertexDot(dot, this->id, "single_type", "", "");
+        createVertexDot(dot, this->id, "single_type", "single", "");
         break;
 
     case char_:
-        createVertexDot(dot, this->id, "char_type", "", "");
+        createVertexDot(dot, this->id, "char_type", "char", "");
         break;
 
     case string_:
@@ -708,37 +732,56 @@ void FuncParamNode::toDot(std::string& dot) {
         break;
 
     case short_:
-        createVertexDot(dot, this->id, "short_type", "", "");
+        createVertexDot(dot, this->id, "short_type", "short", "");
         break;
 
     case bool_:
-        createVertexDot(dot, this->id, "bool_type", "", "");
+        createVertexDot(dot, this->id, "bool_type", "bool", "");
         break;
 
     case obj_:
-        createVertexDot(dot, this->id, "obj_type", "", "");
+        createVertexDot(dot, this->id, "obj_type", "obj", "");
         break;
 
     case decimal_:
-        createVertexDot(dot, this->id, "decimal_type", "", "");
+        createVertexDot(dot, this->id, "decimal_type", "decimal", "");
         break;
     }
-
-    createVertexDot(dot, this->id, "func_param", "", "");
+    
+    std::string as = "";
+    if (this->_name != NULL) {
+        as = *_name;
+    }
+    createVertexDot(dot, this->id, "func_param", "", as, "");
 
     if (this->name != NULL) {
         connectVerticesDots(dot, this->id, this->name->id);
         this->name->toDot(dot);
     }
 
+    if (this->param != NULL) {
+        connectVerticesDots(dot, this->id, this->param->id);
+        this->param->toDot(dot);
+    }
+
     if (this->type != NULL) {
         connectVerticesDots(dot, this->id, this->type->id);
         this->type->toDot(dot);
     }
+
+    if (this->linkOrVal != NULL) {
+        connectVerticesDots(dot, this->id, this->linkOrVal->id);
+        this->linkOrVal->toDot(dot);
+    }
+
+    if (this->expr != NULL) {
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot);
+    }
 }
 
 void FuncParamListNode::toDot(std::string& dot) {
-    createVertexDot(dot, this->id, "global_code_list");
+    createVertexDot(dot, this->id, "func_param_list");
 
     if (this->items != NULL) {
         for (auto elem : *this->items)
@@ -753,47 +796,47 @@ void FuncParamListNode::toDot(std::string& dot) {
 void TypeNode::toDot(string& dot) {
     switch (this->type) {
     case TypeNode::date_:
-        createVertexDot(dot, this->id, "date_type", "", "");
+        createVertexDot(dot, this->id, "date_type", "date", "");
         break;
 
     case TypeNode::int_:
-        createVertexDot(dot, this->id, "int_type", "", "");
+        createVertexDot(dot, this->id, "int_type", "int", "");
         break;
 
     case TypeNode::byte_:
-        createVertexDot(dot, this->id, "byte_type", "", "");
+        createVertexDot(dot, this->id, "byte_type", "byte", "");
         break;
 
     case TypeNode::single:
-        createVertexDot(dot, this->id, "single_type", "", "");
+        createVertexDot(dot, this->id, "single_type", "single", "");
         break;
 
     case TypeNode::char_:
-        createVertexDot(dot, this->id, "char_type", "", "");
+        createVertexDot(dot, this->id, "char_type", "char", "");
         break;
 
     case TypeNode::string_:
-        createVertexDot(dot, this->id, "string_type", "", "");
+        createVertexDot(dot, this->id, "string_type", "string", "");
         break;
 
     case TypeNode::short_:
-        createVertexDot(dot, this->id, "short_type", "", "");
+        createVertexDot(dot, this->id, "short_type", "short", "");
         break;
 
     case TypeNode::bool_:
-        createVertexDot(dot, this->id, "bool_type", "", "");
+        createVertexDot(dot, this->id, "bool_type", "bool", "");
         break;
 
     case TypeNode::obj_:
-        createVertexDot(dot, this->id, "obj_type", "", "");
+        createVertexDot(dot, this->id, "obj_type", "obj", "");
         break;
 
     case TypeNode::decimal_:
-        createVertexDot(dot, this->id, "decimal_type", "", "");
+        createVertexDot(dot, this->id, "decimal_type", "decimal", "");
         break;
 
     case TypeNode::double_:
-        createVertexDot(dot, this->id, "double_type", "", "");
+        createVertexDot(dot, this->id, "double_type", "double", "");
         break;
     }
 
@@ -993,18 +1036,22 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
 
     case ExprNode::single:
         type = "single";
+        value = to_string(this->single);
         break;
 
     case ExprNode::string_:
         type = "string";
+        value = *(this->string);
         break;
 
     case ExprNode::bool_val:
         type = "bool_val";
+        value = to_string(this->bool_val);
         break;
 
     case ExprNode::double_val:
         type = "double_val";
+        value = to_string(this->double_val);
         break;
 
     case ExprNode::date_:
@@ -1013,30 +1060,37 @@ void ExprNode::toDot(std::string& dot, const std::string& pos) {
 
     case ExprNode::char_val:
         type = "char_val";
+        value = to_string(this->char_val);
         break;
 
     case ExprNode::obj:
         type = "obj";
+        value = to_string(this->obj);
         break;
 
     case ExprNode::dec_num:
         type = "decimal_num";
+        value = to_string(this->dec_num);
         break;
 
     case ExprNode::int_val:
         type = "int_val";
+        value = to_string(this->int_val);
         break;
 
     case ExprNode::byte_num:
         type = "byte_num";
+        value = to_string(this->byte_num);
         break;
 
     case ExprNode::short_val:
         type = "short_val";
+        value = to_string(this->short_val);
         break;
 
     case ExprNode::identifier:
         type = "identifier";
+        value = (this->identifier);
         break;
 
     case ExprNode::expr_start_id:
@@ -1585,6 +1639,31 @@ void Value::toDot(string& dot) {
     if (this->identificator != NULL) {
         connectVerticesDots(dot, this->id, this->identificator->id);
         this->identificator->toDot(dot);
+    }
+}
+
+void LinkOrVal::toDot(std::string& dot) {
+    string type = "";
+
+    switch (this->type) {
+    case byRef:
+        type = "byRef";
+        break;
+
+    case byVal:
+        type = "byVal";
+        break;
+        
+    case nothing:
+        type = "nothing";
+        break;
+    }
+
+    createVertexDot(dot, this->id, "linkOrVal", "", "", "");
+
+    if (this->linkOrVal != NULL) {
+        connectVerticesDots(dot, this->id, this->linkOrVal->id);
+        this->linkOrVal->toDot(dot);
     }
 }
 
