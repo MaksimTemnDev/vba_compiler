@@ -210,12 +210,12 @@ public:
 
     int id;
     Type item_type;
-    ExprNode* expr;
+    ExprNode* expr = NULL;
     bool isStatic;
-    DimStmt* dim;
-    IfNode* ifNode;
-    While* while_stmt;
-    ForNode* forstmt;
+    DimStmt* dim = NULL;
+    IfNode* ifNode = NULL;
+    While* while_stmt = NULL;
+    ForNode* forstmt = NULL;
 
     static StmtNode* DeclarationExpression(ExprNode* expr, Type item_type);
     static StmtNode* DeclarationDim(DimStmt* dim, Type item_type, bool isStatic);
@@ -239,11 +239,11 @@ public:
         clear_, else_, ternar_, elseif
     };
     int id;
-    ExprNode* condition;
-    ExprNode* conditionElseIF;
-    StmtListNode* stmtListNode;
-    StmtListNode* stmtElse;
-    Ternar* ternar;
+    ExprNode* condition = NULL;
+    ExprNode* conditionElseIF = NULL;
+    StmtListNode* stmtListNode = NULL;
+    StmtListNode* stmtElse = NULL;
+    Ternar* ternar = NULL;
     Type type;
 
     static IfNode* IfClear(ExprNode* exprNode, StmtListNode* stmtListNode, Type type);
@@ -258,9 +258,9 @@ class Ternar
 {
 public:
     int id;
-    ExprNode* condition;
-    ExprNode* yes;
-    ExprNode* not_;
+    ExprNode* condition = NULL;
+    ExprNode* yes = NULL;
+    ExprNode* not_ = NULL;
 
     static Ternar* ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n);
 
@@ -274,8 +274,8 @@ public:
         simple_, doloopwhile_, doloopuntil
     };
     int id;
-    ExprNode* condition;
-    StmtListNode* body;
+    ExprNode* condition = NULL;
+    StmtListNode* body = NULL;
     Type type;
 
     static While* whileStmt(ExprNode* condition, StmtListNode* body, Type type);
@@ -287,7 +287,7 @@ class StaticDim
 {
 public:
     int id;
-    DimStmt* dim;
+    DimStmt* dim = NULL;
 
     static StaticDim* DeclareStatic(DimStmt* dim);
 
@@ -343,8 +343,8 @@ public:
     int id;
     std::string* identifier;
     Type type;
-    Value* arrSize;
-    ExprListNode* exprList;
+    Value* arrSize = NULL;
+    ExprListNode* exprList = NULL;
 
     Identificator();
     Identificator(std::string* identifier);
@@ -378,11 +378,11 @@ class ForNode
 {
 public:
     int id;
-    ExprNode* startExpr;
-    ExprNode* endExpr;
-    OptionalStep* step;
-    ExprNode* assignExpVar;
-    StmtListNode* body;
+    ExprNode* startExpr = NULL;
+    ExprNode* endExpr = NULL;
+    OptionalStep* step = NULL;
+    ExprNode* assignExpVar = NULL;
+    StmtListNode* body = NULL;
 
     static ForNode* fornode(ExprNode* startExpr, ExprNode* endExpr, OptionalStep* step, ExprNode* assignExpVar, StmtListNode* body);
 
@@ -416,7 +416,7 @@ public:
     std::string str;
     double double_;
     bool Bool_;
-    Identificator* identificator;
+    Identificator* identificator = NULL;
     Type type;
     bool hasIntVal = false;
 
@@ -453,7 +453,7 @@ public:
     };
     int id;
     Type type;
-    LinkOrVal* linkOrVal;
+    LinkOrVal* linkOrVal = NULL;
 
     LinkOrVal(Type type);
     LinkOrVal(LinkOrVal* linkOrVal, Type type);
