@@ -25,6 +25,7 @@ class While;
 class Ternar;
 class IfNode;
 class OptionalStep;
+class LinkOrVal;
 
 class CodeNode {
 public:
@@ -80,12 +81,17 @@ public:
     };
     int id;
     Type param_type;
+    std::string* _name = NULL;
     Identificator* name = NULL;
+    FuncParamNode* param = NULL;
     TypeNode* type = NULL;
+    LinkOrVal* linkOrVal = NULL;
+    ExprNode* expr = NULL;
 
     FuncParamNode();
     FuncParamNode(Identificator* name, TypeNode* type, Type param_type);
-    static FuncParamNode* paramArray(Identificator* name, TypeNode* type);
+    static FuncParamNode* paramArray(LinkOrVal* linkOrVal, std::string* name, FuncParamNode* arrParam, TypeNode* type);
+    static FuncParamNode* exprArray(ExprNode* expr);
 
     void toDot(std::string& dot);
 };
@@ -430,11 +436,29 @@ public:
     int id;
     list<StmtNode*>* stmts = NULL;
 
+    StmtListNode();
     StmtListNode(StmtNode* stmtNode);
     StmtListNode(StmtListNode* stmtList);
     static StmtListNode* Append(StmtListNode* stmtListNode, StmtNode* stmtNode);
 
     void toDot(std::string& dot, const std::string& type = "stmt_list");
+};
+
+class LinkOrVal
+{
+public:
+    enum Type
+    {
+        byVal, byRef, nothing
+    };
+    int id;
+    Type type;
+    LinkOrVal* linkOrVal;
+
+    LinkOrVal(Type type);
+    LinkOrVal(LinkOrVal* linkOrVal, Type type);
+
+    void toDot(std::string& dot);
 };
 
 void connectVerticesDots(std::string& s, int parentId, int childId);

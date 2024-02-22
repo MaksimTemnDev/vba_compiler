@@ -37,6 +37,7 @@
 	Ternar* ternar;
 	IfNode* ifNode;
 	OptionalStep* optStep;
+	LinkOrVal* linkOrVal;
 }
 
 %type <code> Program
@@ -77,6 +78,10 @@
 %type <value> Values
 %type <function_params> FuncParamList
 %type <function_param> FuncParam
+%type <linkOrVal> LinkOrVal
+%type <linkOrVal> LinkOrValEmpty
+
+%type <function_param> ArrInParam
 
 %token END
 %token WHILE DO LOOP UNTIL FOR TO STEP CONTINUE EXIT
@@ -202,8 +207,8 @@ StatementList: Statement { $$ = new StmtListNode($1); }
              | StatementList Statement { $$ = StmtListNode::Append($1, $2); }
              ;
 			 
-OptStmtList: { }
-		   | StatementList
+OptStmtList: { $$ = new StmtListNode(); }
+		   | StatementList { $$ = $1; }
 		   ;
 		
 ExpressionList: Expression { $$ = new ExprListNode($1); }
@@ -274,22 +279,22 @@ FuncParamList: FuncParam { $$ = new FuncParamListNode($1); }
 			 | FuncParamList ',' OptEndl FuncParam { $$ = FuncParamListNode::Append($1, $4); }
 			 ;
 
-FuncParam: LinkOrValEmpty IDENTIFIER ArrInParam As Type { }
+FuncParam: LinkOrValEmpty IDENTIFIER ArrInParam As Type { $$ = FuncParamNode::paramArray($1, $2, $3, $5); }
 		 ;
 
-LinkOrVal: ByVal
-		 | ByRef
-		 | LinkOrVal ByRef
-		 | LinkOrVal ByVal
+LinkOrVal: ByVal { $$ = new LinkOrVal(LinkOrVal::byVal); }
+		 | ByRef { $$ = new LinkOrVal(LinkOrVal::byRef); }
+		 | LinkOrVal ByRef { $$ = new LinkOrVal($1, LinkOrVal::byRef); }
+		 | LinkOrVal ByVal { $$ = new LinkOrVal($1, LinkOrVal::byVal); }
 		 ;
 
-LinkOrValEmpty: 
-			  | LinkOrVal
+LinkOrValEmpty: { $$ = new LinkOrVal(LinkOrVal::nothing); }
+			  | LinkOrVal { $$ = $1; }
 			  ;
 		 
-ArrInParam: '('OptEndl')'
-		  | '('OptEndl Expression OptEndl')'
-		  |
+ArrInParam: '('OptEndl')' { $$ = FuncParamNode::exprArray(0); }
+		  | '('OptEndl Expression OptEndl')' { $$ = FuncParamNode::exprArray($3); }
+		  | { $$ = new FuncParamNode(); }
 		  ;
 
 FunctionDeclaration: Function IDENTIFIER '(' OptEndl ')' EndList OptStmtList END Function EndList { $$ = FuncDecl::funcDeclare($2, 0, 0, 0, $7); }

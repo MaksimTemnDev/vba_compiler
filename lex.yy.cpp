@@ -2575,8 +2575,11 @@ void eraseType(char* typeName)
 	}
 }
 
+#define release
+
 int main(int argc, char** argv) {
 
+#ifdef release
 	if (argc != 2) {
 		printf("Filename is not found");
 		return 1;
@@ -2584,6 +2587,9 @@ int main(int argc, char** argv) {
 
 	const char* filename = argv[1];
 
+#else
+	const char* filename = "C:\\Compiler\\vba_compiler\\prog5.vb";
+#endif
 	FILE* file = fopen(filename, "r");
 	if (file == NULL) {
 		printf("File opening error");
