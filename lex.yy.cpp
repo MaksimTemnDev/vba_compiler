@@ -2588,7 +2588,7 @@ int main(int argc, char** argv) {
 	const char* filename = argv[1];
 
 #else
-	const char* filename = "C:\\Compiler\\vba_compiler\\prog5.vb";
+	const char* filename = "C:\\Compiler\\vba_compiler\\prog11.vb";
 #endif
 	FILE* file = fopen(filename, "r");
 	if (file == NULL) {

@@ -22,7 +22,6 @@ class ArrayIdList;
 class Identificator;
 class IdList;
 class While;
-class Ternar;
 class IfNode;
 class OptionalStep;
 class LinkOrVal;
@@ -116,7 +115,11 @@ public:
 
     int id;
     Type type;
-    std::string* name;
+    std::string* name = NULL;
+    int Int = 0;
+    bool Bool;
+    char Char = 0;
+    double Double = 0;
     TypeNode* typeArr = NULL;
     ExprNode* exprArr = NULL;
 
@@ -134,7 +137,7 @@ public:
         div_assign, expr_assign, bit_and_assign, div_num_assign, bit_l_shift_assign, bit_r_shift_assign,
 
         b_plus, str_plus, b_minus, b_div, b_mul, degree, int_div, mod_div, more, less, more_s, less_s, _not_eq, bit_l_shift, bit_r_shift,
-        u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, access_arr_or_call_func_params, access_arr_or_call_func, like, is, isnot, typof, arr_expr_list, ternar,
+        u_plus, u_minus, not_, arr_body, arr_empty, arr_body_type, access_arr_or_call_func_params, access_arr_or_call_func, like, is, isnot, typof, arr_expr_list,
 
         single, string_, bool_val, double_val, date_, char_val, obj, dec_num, int_val, byte_num, short_val, identifier, value, expr_start_func, values_with_id,
         expr_start_id, expr
@@ -158,7 +161,6 @@ public:
     StmtListNode* stmt_list = NULL;
     IdList* id_list = NULL;
     TypeNode* type_node = NULL;
-    Ternar* _ternar = NULL;
     Identificator* ident = NULL;
     Value* _value = NULL;
 
@@ -180,7 +182,6 @@ public:
     static ExprNode* typeOfisnotIs(Type type, ExprNode* isnotIs);
     static ExprNode* arrayBodyExpr(TypeNode* typeArr, ExprNode* expr, Type type);
     static ExprNode* arrayBodyExprList(ExprListNode* exprList, Type type);
-    static ExprNode* ternarOp(Ternar* ternar, Type type);
     static ExprNode* valueExpr(Type type, Identificator* ident, Value* value);
     static ExprNode* exprList(Type type, std::string* ident, ExprListNode* expr_list);
 
@@ -236,33 +237,18 @@ class IfNode
 {
 public:
     enum Type {
-        clear_, else_, ternar_, elseif
+        clear_, else_, elseif
     };
     int id;
     ExprNode* condition = NULL;
     ExprNode* conditionElseIF = NULL;
     StmtListNode* stmtListNode = NULL;
     StmtListNode* stmtElse = NULL;
-    Ternar* ternar = NULL;
     Type type;
 
     static IfNode* IfClear(ExprNode* exprNode, StmtListNode* stmtListNode, Type type);
     static IfNode* IfElse(ExprNode* exprNode, StmtListNode* stmtListNode, StmtListNode* stmtElseListNode, Type type);
-    static IfNode* IfTernar(ExprNode* exprNode, Ternar* ternar, Type type);
     static IfNode* IfElseIf(ExprNode* exprNode, StmtListNode* stmtListNode, ExprNode* conditionElse, StmtListNode* stmtElseIfListNode, Type type);
-
-    void toDot(std::string& dot);
-};
-
-class Ternar
-{
-public:
-    int id;
-    ExprNode* condition = NULL;
-    ExprNode* yes = NULL;
-    ExprNode* not_ = NULL;
-
-    static Ternar* ternarOp(ExprNode* cond, ExprNode* y, ExprNode* n);
 
     void toDot(std::string& dot);
 };
@@ -313,7 +299,7 @@ public:
     DimStmt();
     DimStmt(DimStmt* dimStmt);
 
-    static DimStmt* DeclarationSingleType(IdList* idList, Type type, TypeNode* typeNode);
+    static DimStmt* DeclarationSingleType(IdList* idList, Type type, TypeNode* typeNode, ExprNode* exprNode);
     static DimStmt* DeclarationSingleExpr(IdList* idList, Type type, ExprNode* exprNode);
     static DimStmt* DeclarationArray(ArrayIdList* arrayIdList, Type type, TypeNode* typeNode);
     void becomeStatic();
@@ -413,7 +399,7 @@ public:
     int id;
     int value;
     char char_;
-    std::string str;
+    std::string* str = NULL;
     double double_;
     bool Bool_;
     Identificator* identificator = NULL;
@@ -422,7 +408,7 @@ public:
 
     Value(Identificator* ident, Type type);
     Value(double double_, Type type);
-    Value(std::string str, Type type);
+    Value(std::string* str, Type type);
     Value(char char_, Type type);
     Value(bool bool_, Type type);
     Value(int value, Type type, bool hasIntVal, Identificator* id);
