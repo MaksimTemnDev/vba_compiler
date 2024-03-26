@@ -62,13 +62,11 @@
 %type <globalCodeList> GlobalCodeList
 %type <globalCode> GlobalCode
 %type <dimStmt> DimStmt
-%type <dimStmt> DimSingle
-%type <dimStmt> DimArray
+%type <dimStmt> DimMeasure
 %type <dimStmt> StaticStmt
 %type <ifNode> IfStmt
-%type <idList> IDENTIFIERlist
-%type <identificator> IDENTIFIEREndl
-%type <arrayIdList> ArrayIDdeclaration
+%type <arrayIdList> IdOrArrList
+%type <arrayIdList> ArrFuncOrIdentifier
 %type <optStep> OptionalStep
 %type <string_literal> STRING
 %type <value> Boolean
@@ -161,27 +159,27 @@ Statement: DimStmt EndList { $$ = StmtNode::DeclarationDim($1, StmtNode::dim_, 0
 		 | RETURN Expression EndList { $$ = StmtNode::DeclarationReturn($2, StmtNode::return_stmt); }
 		 ;
 
-DimStmt: DIM DimSingle {$$ = $2;}
-	   | DIM DimArray {$$ = $2;}
+DimStmt: DIM DimMeasure {$$ = $2;}
 	   ;
+	   
+DimMeasure: IdOrArrList '=' Expression { $$ = DimStmt::DeclarationSingleExpr($1, DimStmt::single_expr, $3); }
+		  | IdOrArrList As Type '=' Expression { $$ = DimStmt::DeclarationSingleType($1, DimStmt::single_type, $3); }
+		  | IdOrArrList As Type { $$ = DimStmt::DeclarationSingleType($1, DimStmt::single_type, 0); }
+		  | IdOrArrList { $$ = DimStmt::DeclarationSingleExpr($1, DimStmt::single_expr, 0); }
+		  ;
 
-DimSingle: IDENTIFIERlist '=' Expression { $$ = DimStmt::DeclarationSingleExpr($1, DimStmt::single_expr, $3); }
-		 | IDENTIFIERlist As Type '=' Expression { $$ = DimStmt::DeclarationSingleType($1, DimStmt::single_type, $3); }
-		 ;
 
-DimArray: ArrayIDdeclaration '=' Expression { $$ = DimStmt::DeclarationArray($1, DimStmt::array_without, 0); }
-	    | ArrayIDdeclaration As Type '=' Expression { $$ = DimStmt::DeclarationArray($1, DimStmt::array_with, $3); }
-		;
+IdOrArrList: ArrFuncOrIdentifier {}
+		   | IdOrArrList ',' OptEndl ArrFuncOrIdentifier {}
+		   ;
+		   
+ArrFuncOrIdentifier: IDENTIFIER { $$ = new Identificator($1); }
+				   | CallArrOrFunc { $$ = new ArrayIdList($1); }
+				   ;
 
-IDENTIFIERlist: IDENTIFIEREndl { $$ = new IdList($1); }
- 			  | IDENTIFIERlist ',' IDENTIFIEREndl { $$ = IdList::Append($1, $3); }
-			  ;
 			  
-IDENTIFIEREndl: IDENTIFIER OptEndl { $$ = new Identificator($1); }
 
-StaticStmt: KW_STATIC DimSingle { $$ = new DimStmt($2); }
-	      | KW_STATIC DimArray { $$ = new DimStmt($2); }
-	      ;
+StaticStmt: KW_STATIC DimMeasure { $$ = new DimStmt($2); };
 
 Type: TYPE_BOOLEAN { $$ = new TypeNode(TypeNode::bool_); }
 	| TYPE_BYTE { $$ = new TypeNode(TypeNode::byte_); }
@@ -198,10 +196,6 @@ Type: TYPE_BOOLEAN { $$ = new TypeNode(TypeNode::bool_); }
 
 ArrayBody: '{' OptEndl ExpressionList OptEndl'}' { $$ = ExprNode::arrayBodyExprList($3, ExprNode::arr_expr_list); }
 		 ;
-
-ArrayIDdeclaration: CallArrOrFunc { $$ = new ArrayIdList($1); }
-				  | ArrayIDdeclaration ',' CallArrOrFunc { $$ = ArrayIdList::Append($1, $3); }
-				  ;
 
 StatementList: Statement { $$ = new StmtListNode($1); }
              | StatementList Statement { $$ = StmtListNode::Append($1, $2); }
