@@ -111,7 +111,6 @@ typedef union {
 	Identificator* identificator;
 	IdList* idList;
 	While* whileSt;
-	Ternar* ternar;
 	IfNode* ifNode;
 	OptionalStep* optStep;
 	LinkOrVal* linkOrVal;
@@ -268,20 +267,20 @@ static const short yyrhs[] = {   126,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-   138,   141,   142,   145,   146,   147,   150,   151,   152,   153,
-   154,   155,   156,   157,   158,   159,   160,   161,   164,   165,
-   168,   169,   172,   173,   176,   177,   180,   182,   183,   186,
-   187,   188,   189,   190,   191,   192,   193,   194,   195,   196,
-   199,   202,   203,   206,   207,   210,   211,   214,   215,   218,
-   219,   220,   221,   222,   223,   224,   225,   226,   227,   228,
-   229,   230,   231,   232,   233,   234,   235,   236,   237,   238,
-   239,   240,   241,   242,   243,   244,   245,   246,   247,   248,
-   249,   250,   251,   252,   253,   254,   255,   256,   257,   258,
-   259,   262,   263,   266,   267,   268,   269,   270,   271,   274,
-   275,   278,   279,   282,   285,   286,   287,   288,   291,   292,
-   295,   296,   297,   300,   301,   302,   303,   306,   307,   310,
-   311,   312,   315,   317,   319,   321,   322,   325,   327,   329,
-   331,   332,   335,   336,   339,   342,   343,   346,   347
+   137,   140,   141,   144,   145,   146,   149,   150,   151,   152,
+   153,   154,   155,   156,   157,   158,   159,   160,   163,   164,
+   167,   168,   171,   172,   175,   176,   179,   181,   182,   185,
+   186,   187,   188,   189,   190,   191,   192,   193,   194,   195,
+   198,   201,   202,   205,   206,   209,   210,   213,   214,   217,
+   218,   219,   220,   221,   222,   223,   224,   225,   226,   227,
+   228,   229,   230,   231,   232,   233,   234,   235,   236,   237,
+   238,   239,   240,   241,   242,   243,   244,   245,   246,   247,
+   248,   249,   250,   251,   252,   253,   254,   255,   256,   257,
+   258,   261,   262,   265,   266,   267,   268,   269,   270,   273,
+   274,   277,   278,   281,   284,   285,   286,   287,   290,   291,
+   294,   295,   296,   299,   300,   301,   302,   305,   306,   309,
+   310,   311,   314,   316,   318,   320,   321,   324,   326,   328,
+   330,   331,   334,   335,   338,   341,   342,   345,   346
 };
 
 static const char * const yytname[] = {   "$","error","$undefined.","STRING",
@@ -1138,531 +1137,531 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 138 "gram.y"
+#line 137 "gram.y"
 { yyval.code = global_program_code = new CodeNode(yyvsp[0].globalCodeList); ;
     break;}
 case 2:
-#line 141 "gram.y"
+#line 140 "gram.y"
 { yyval.globalCodeList = new GlobalCodeList(yyvsp[0].globalCode); ;
     break;}
 case 3:
-#line 142 "gram.y"
+#line 141 "gram.y"
 { yyval.globalCodeList = GlobalCodeList::Append(yyvsp[-1].globalCodeList, yyvsp[0].globalCode); ;
     break;}
 case 4:
-#line 145 "gram.y"
+#line 144 "gram.y"
 { yyval.globalCode = GlobalCode::addSubFunc(yyvsp[0].func_decl); ;
     break;}
 case 5:
-#line 146 "gram.y"
+#line 145 "gram.y"
 { yyval.globalCode = GlobalCode::addSubFunc(yyvsp[0].func_decl); ;
     break;}
 case 6:
-#line 147 "gram.y"
+#line 146 "gram.y"
 { yyval.globalCode = GlobalCode::addDim(yyvsp[-1].dimStmt); ;
     break;}
 case 7:
-#line 150 "gram.y"
+#line 149 "gram.y"
 { yyval.stmt = StmtNode::DeclarationDim(yyvsp[-1].dimStmt, StmtNode::dim_, 0); ;
     break;}
 case 8:
-#line 151 "gram.y"
+#line 150 "gram.y"
 { yyval.stmt = StmtNode::DeclarationIf(yyvsp[-1].ifNode, StmtNode::ifstmt_); ;
     break;}
 case 9:
-#line 152 "gram.y"
+#line 151 "gram.y"
 { yyval.stmt = StmtNode::DeclarationWhile(yyvsp[-1].whileSt, StmtNode::while_); ;
     break;}
 case 10:
-#line 153 "gram.y"
+#line 152 "gram.y"
 { yyval.stmt = StmtNode::DeclarationWhile(yyvsp[-1].whileSt, StmtNode::dowhile_); ;
     break;}
 case 11:
-#line 154 "gram.y"
+#line 153 "gram.y"
 { yyval.stmt = StmtNode::DeclarationWhile(yyvsp[-1].whileSt, StmtNode::dountil_); ;
     break;}
 case 12:
-#line 155 "gram.y"
+#line 154 "gram.y"
 { yyval.stmt = StmtNode::DeclarationFor(yyvsp[-1].forNode, StmtNode::for_); ;
     break;}
 case 13:
-#line 156 "gram.y"
+#line 155 "gram.y"
 { yyval.stmt = StmtNode::DeclarationDim(yyvsp[-1].dimStmt, StmtNode::static_, 1); ;
     break;}
 case 14:
-#line 157 "gram.y"
+#line 156 "gram.y"
 { yyval.stmt = StmtNode::DeclarationExpression(yyvsp[-1].expr, StmtNode::expr_); ;
     break;}
 case 15:
-#line 158 "gram.y"
+#line 157 "gram.y"
 { yyval.stmt = StmtNode::DeclarationContinueWhile(StmtNode::continue_while); ;
     break;}
 case 16:
-#line 159 "gram.y"
+#line 158 "gram.y"
 { yyval.stmt = yyvsp[-1].stmt; ;
     break;}
 case 17:
-#line 160 "gram.y"
+#line 159 "gram.y"
 { yyval.stmt = yyvsp[-1].stmt; ;
     break;}
 case 18:
-#line 161 "gram.y"
+#line 160 "gram.y"
 { yyval.stmt = StmtNode::DeclarationReturn(yyvsp[-1].expr, StmtNode::return_stmt); ;
     break;}
 case 19:
-#line 164 "gram.y"
+#line 163 "gram.y"
 {yyval.dimStmt = yyvsp[0].dimStmt;;
     break;}
 case 20:
-#line 165 "gram.y"
+#line 164 "gram.y"
 {yyval.dimStmt = yyvsp[0].dimStmt;;
     break;}
 case 21:
-#line 168 "gram.y"
+#line 167 "gram.y"
 { yyval.dimStmt = DimStmt::DeclarationSingleExpr(yyvsp[-2].idList, DimStmt::single_expr, yyvsp[0].expr); ;
     break;}
 case 22:
-#line 169 "gram.y"
-{ yyval.dimStmt = DimStmt::DeclarationSingleType(yyvsp[-4].idList, DimStmt::single_type, yyvsp[-2].type); ;
+#line 168 "gram.y"
+{ yyval.dimStmt = DimStmt::DeclarationSingleType(yyvsp[-4].idList, DimStmt::single_type, yyvsp[-2].type, yyvsp[0].expr); ;
     break;}
 case 23:
-#line 172 "gram.y"
+#line 171 "gram.y"
 { yyval.dimStmt = DimStmt::DeclarationArray(yyvsp[-2].arrayIdList, DimStmt::array_without, 0); ;
     break;}
 case 24:
-#line 173 "gram.y"
+#line 172 "gram.y"
 { yyval.dimStmt = DimStmt::DeclarationArray(yyvsp[-4].arrayIdList, DimStmt::array_with, yyvsp[-2].type); ;
     break;}
 case 25:
-#line 176 "gram.y"
+#line 175 "gram.y"
 { yyval.idList = new IdList(yyvsp[0].identificator); ;
     break;}
 case 26:
-#line 177 "gram.y"
+#line 176 "gram.y"
 { yyval.idList = IdList::Append(yyvsp[-2].idList, yyvsp[0].identificator); ;
     break;}
 case 27:
-#line 180 "gram.y"
+#line 179 "gram.y"
 { yyval.identificator = new Identificator(yyvsp[-1].identifier); ;
     break;}
 case 28:
-#line 182 "gram.y"
+#line 181 "gram.y"
 { yyval.dimStmt = new DimStmt(yyvsp[0].dimStmt); ;
     break;}
 case 29:
-#line 183 "gram.y"
+#line 182 "gram.y"
 { yyval.dimStmt = new DimStmt(yyvsp[0].dimStmt); ;
     break;}
 case 30:
-#line 186 "gram.y"
+#line 185 "gram.y"
 { yyval.type = new TypeNode(TypeNode::bool_); ;
     break;}
 case 31:
-#line 187 "gram.y"
+#line 186 "gram.y"
 { yyval.type = new TypeNode(TypeNode::byte_); ;
     break;}
 case 32:
-#line 188 "gram.y"
+#line 187 "gram.y"
 { yyval.type = new TypeNode(TypeNode::int_); ;
     break;}
 case 33:
-#line 189 "gram.y"
+#line 188 "gram.y"
 { yyval.type = new TypeNode(TypeNode::single); ;
     break;}
 case 34:
-#line 190 "gram.y"
+#line 189 "gram.y"
 { yyval.type = new TypeNode(TypeNode::short_); ;
     break;}
 case 35:
-#line 191 "gram.y"
+#line 190 "gram.y"
 { yyval.type = new TypeNode(TypeNode::double_); ;
     break;}
 case 36:
-#line 192 "gram.y"
+#line 191 "gram.y"
 { yyval.type = new TypeNode(TypeNode::decimal_); ;
     break;}
 case 37:
-#line 193 "gram.y"
+#line 192 "gram.y"
 { yyval.type = new TypeNode(TypeNode::date_); ;
     break;}
 case 38:
-#line 194 "gram.y"
+#line 193 "gram.y"
 { yyval.type = new TypeNode(TypeNode::char_); ;
     break;}
 case 39:
-#line 195 "gram.y"
+#line 194 "gram.y"
 { yyval.type = new TypeNode(TypeNode::string_); ;
     break;}
 case 40:
-#line 196 "gram.y"
+#line 195 "gram.y"
 { yyval.type = new TypeNode(TypeNode::obj_); ;
     break;}
 case 41:
-#line 199 "gram.y"
+#line 198 "gram.y"
 { yyval.expr = ExprNode::arrayBodyExprList(yyvsp[-2].expr_list, ExprNode::arr_expr_list); ;
     break;}
 case 42:
-#line 202 "gram.y"
+#line 201 "gram.y"
 { yyval.arrayIdList = new ArrayIdList(yyvsp[0].expr); ;
     break;}
 case 43:
-#line 203 "gram.y"
+#line 202 "gram.y"
 { yyval.arrayIdList = ArrayIdList::Append(yyvsp[-2].arrayIdList, yyvsp[0].expr); ;
     break;}
 case 44:
-#line 206 "gram.y"
+#line 205 "gram.y"
 { yyval.stmt_list = new StmtListNode(yyvsp[0].stmt); ;
     break;}
 case 45:
-#line 207 "gram.y"
+#line 206 "gram.y"
 { yyval.stmt_list = StmtListNode::Append(yyvsp[-1].stmt_list, yyvsp[0].stmt); ;
     break;}
 case 46:
-#line 210 "gram.y"
+#line 209 "gram.y"
 { yyval.stmt_list = new StmtListNode(); ;
     break;}
 case 47:
-#line 211 "gram.y"
+#line 210 "gram.y"
 { yyval.stmt_list = yyvsp[0].stmt_list; ;
     break;}
 case 48:
-#line 214 "gram.y"
+#line 213 "gram.y"
 { yyval.expr_list = new ExprListNode(yyvsp[0].expr); ;
     break;}
 case 49:
-#line 215 "gram.y"
+#line 214 "gram.y"
 { yyval.expr_list = ExprListNode::Append(yyvsp[-3].expr_list, yyvsp[0].expr); ;
     break;}
 case 50:
-#line 218 "gram.y"
+#line 217 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::no_assign_part, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 51:
-#line 219 "gram.y"
+#line 218 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::b_plus, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 52:
-#line 220 "gram.y"
+#line 219 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::str_plus, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 53:
-#line 221 "gram.y"
+#line 220 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::b_minus, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 54:
-#line 222 "gram.y"
+#line 221 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::b_div, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 55:
-#line 223 "gram.y"
+#line 222 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::b_mul, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 56:
-#line 224 "gram.y"
+#line 223 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::degree, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 57:
-#line 225 "gram.y"
+#line 224 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::int_div, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 58:
-#line 226 "gram.y"
+#line 225 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::mod_div, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 59:
-#line 227 "gram.y"
+#line 226 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::more, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 60:
-#line 228 "gram.y"
+#line 227 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::less, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 61:
-#line 229 "gram.y"
+#line 228 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::more_s, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 62:
-#line 230 "gram.y"
+#line 229 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::less_s, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 63:
-#line 231 "gram.y"
+#line 230 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::_not_eq, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 64:
-#line 232 "gram.y"
+#line 231 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::bit_l_shift, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 65:
-#line 233 "gram.y"
+#line 232 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::bit_r_shift, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 66:
-#line 234 "gram.y"
+#line 233 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::u_minus, 0, yyvsp[0].expr); ;
     break;}
 case 67:
-#line 235 "gram.y"
+#line 234 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::u_plus, 0, yyvsp[0].expr); ;
     break;}
 case 68:
-#line 236 "gram.y"
+#line 235 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::not_, 0, yyvsp[0].expr); ;
     break;}
 case 69:
-#line 237 "gram.y"
+#line 236 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::arr_body, yyvsp[0].expr, 0); ;
     break;}
 case 70:
-#line 238 "gram.y"
+#line 237 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::arr_empty, 0, 0); ;
     break;}
 case 71:
-#line 239 "gram.y"
+#line 238 "gram.y"
 { yyval.expr = ExprNode::arrayBodyExpr(yyvsp[-4].type, yyvsp[0].expr, ExprNode::arr_body); ;
     break;}
 case 72:
-#line 240 "gram.y"
+#line 239 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::expr, yyvsp[-2].expr, 0); ;
     break;}
 case 73:
-#line 241 "gram.y"
+#line 240 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::like, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 74:
-#line 242 "gram.y"
+#line 241 "gram.y"
 { yyval.expr = ExprNode::typeOfisnotIs(ExprNode::isnot, yyvsp[-3].expr); ;
     break;}
 case 75:
-#line 243 "gram.y"
+#line 242 "gram.y"
 { yyval.expr = ExprNode::typeOfisnotIs(ExprNode::is, yyvsp[-3].expr); ;
     break;}
 case 76:
-#line 244 "gram.y"
+#line 243 "gram.y"
 { yyval.expr = ExprNode::typeOfisnotIs(ExprNode::typof, yyvsp[0].expr); ;
     break;}
 case 77:
-#line 245 "gram.y"
+#line 244 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::or_, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 78:
-#line 246 "gram.y"
+#line 245 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::or_else, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 79:
-#line 247 "gram.y"
+#line 246 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::and_, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 80:
-#line 248 "gram.y"
+#line 247 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::and_also, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 81:
-#line 249 "gram.y"
+#line 248 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::plus_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 82:
-#line 250 "gram.y"
+#line 249 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::minus_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 83:
-#line 251 "gram.y"
+#line 250 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::mul_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 84:
-#line 252 "gram.y"
+#line 251 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::div_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 85:
-#line 253 "gram.y"
+#line 252 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::expr_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 86:
-#line 254 "gram.y"
+#line 253 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::bit_and_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 87:
-#line 255 "gram.y"
+#line 254 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::div_num_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 88:
-#line 256 "gram.y"
+#line 255 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::bit_l_shift_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 89:
-#line 257 "gram.y"
+#line 256 "gram.y"
 { yyval.expr = ExprNode::OperatorExpr(ExprNode::bit_r_shift_assign, yyvsp[-3].expr, yyvsp[0].expr); ;
     break;}
 case 90:
-#line 258 "gram.y"
+#line 257 "gram.y"
 { yyval.expr = new ExprNode(yyvsp[0].value, ExprNode::value); ;
     break;}
 case 91:
-#line 259 "gram.y"
+#line 258 "gram.y"
 { yyval.expr = yyvsp[0].expr; ;
     break;}
 case 92:
-#line 262 "gram.y"
+#line 261 "gram.y"
 { yyval.expr = ExprNode::exprList(ExprNode::access_arr_or_call_func_params, yyvsp[-5].identifier, yyvsp[-2].expr_list); ;
     break;}
 case 93:
-#line 263 "gram.y"
+#line 262 "gram.y"
 { yyval.expr = ExprNode::exprList(ExprNode::access_arr_or_call_func, yyvsp[-3].identifier, 0); ;
     break;}
 case 94:
-#line 266 "gram.y"
-{ yyval.value = new Value(yyvsp[0].string_literal, Value::string_); ;
+#line 265 "gram.y"
+{ yyval.value = new Value((string*)yyvsp[0].string_literal, Value::string_); ;
     break;}
 case 95:
-#line 267 "gram.y"
+#line 266 "gram.y"
 { yyval.value = yyvsp[0].value; ;
     break;}
 case 96:
-#line 268 "gram.y"
-{ yyval.value = new Value(yyvsp[0].double_literal, Value::Double_); ;
+#line 267 "gram.y"
+{ yyval.value = new Value((double)yyvsp[0].double_literal, Value::Double_); ;
     break;}
 case 97:
-#line 269 "gram.y"
-{ yyval.value = new Value(yyvsp[0].char_literal, Value::Char_); ;
+#line 268 "gram.y"
+{ yyval.value = new Value((char)yyvsp[0].char_literal, Value::Char_); ;
     break;}
 case 98:
-#line 270 "gram.y"
-{ yyval.value = new Value(yyvsp[0].decimal_number, Value::dec_num, 1, 0); ;
+#line 269 "gram.y"
+{ yyval.value = new Value((int)yyvsp[0].decimal_number, Value::dec_num, 1, 0); ;
     break;}
 case 99:
-#line 271 "gram.y"
+#line 270 "gram.y"
 { yyval.value = new Value(yyvsp[0].identifier, Value::id_); ;
     break;}
 case 100:
-#line 274 "gram.y"
-{ yyval.value = new Value(yyvsp[0].bool_literal, Value::bool_); ;
+#line 273 "gram.y"
+{ yyval.value = new Value(false, Value::bool_); ;
     break;}
 case 101:
-#line 275 "gram.y"
-{ yyval.value = new Value(yyvsp[0].bool_literal, Value::bool_); ;
+#line 274 "gram.y"
+{ yyval.value = new Value(true, Value::bool_); ;
     break;}
 case 102:
-#line 278 "gram.y"
+#line 277 "gram.y"
 { yyval.function_params = new FuncParamListNode(yyvsp[0].function_param); ;
     break;}
 case 103:
-#line 279 "gram.y"
+#line 278 "gram.y"
 { yyval.function_params = FuncParamListNode::Append(yyvsp[-3].function_params, yyvsp[0].function_param); ;
     break;}
 case 104:
-#line 282 "gram.y"
+#line 281 "gram.y"
 { yyval.function_param = FuncParamNode::paramArray(yyvsp[-4].linkOrVal, yyvsp[-3].identifier, yyvsp[-2].function_param, yyvsp[0].type); ;
     break;}
 case 105:
-#line 285 "gram.y"
+#line 284 "gram.y"
 { yyval.linkOrVal = new LinkOrVal(LinkOrVal::byVal); ;
     break;}
 case 106:
-#line 286 "gram.y"
+#line 285 "gram.y"
 { yyval.linkOrVal = new LinkOrVal(LinkOrVal::byRef); ;
     break;}
 case 107:
-#line 287 "gram.y"
+#line 286 "gram.y"
 { yyval.linkOrVal = new LinkOrVal(yyvsp[-1].linkOrVal, LinkOrVal::byRef); ;
     break;}
 case 108:
-#line 288 "gram.y"
+#line 287 "gram.y"
 { yyval.linkOrVal = new LinkOrVal(yyvsp[-1].linkOrVal, LinkOrVal::byVal); ;
     break;}
 case 109:
-#line 291 "gram.y"
+#line 290 "gram.y"
 { yyval.linkOrVal = new LinkOrVal(LinkOrVal::nothing); ;
     break;}
 case 110:
-#line 292 "gram.y"
+#line 291 "gram.y"
 { yyval.linkOrVal = yyvsp[0].linkOrVal; ;
     break;}
 case 111:
-#line 295 "gram.y"
+#line 294 "gram.y"
 { yyval.function_param = FuncParamNode::exprArray(0); ;
     break;}
 case 112:
-#line 296 "gram.y"
+#line 295 "gram.y"
 { yyval.function_param = FuncParamNode::exprArray(yyvsp[-2].expr); ;
     break;}
 case 113:
-#line 297 "gram.y"
+#line 296 "gram.y"
 { yyval.function_param = new FuncParamNode(); ;
     break;}
 case 114:
-#line 300 "gram.y"
+#line 299 "gram.y"
 { yyval.func_decl = FuncDecl::funcDeclare(yyvsp[-8].identifier, 0, 0, 0, yyvsp[-3].stmt_list); ;
     break;}
 case 115:
-#line 301 "gram.y"
+#line 300 "gram.y"
 { yyval.func_decl = FuncDecl::funcDeclare(yyvsp[-10].identifier, yyvsp[-5].type, 0, 0, yyvsp[-3].stmt_list); ;
     break;}
 case 116:
-#line 302 "gram.y"
+#line 301 "gram.y"
 { yyval.func_decl = FuncDecl::funcDeclare(yyvsp[-10].identifier, 0, yyvsp[-7].function_params, 0, yyvsp[-3].stmt_list); ;
     break;}
 case 117:
-#line 303 "gram.y"
+#line 302 "gram.y"
 { yyval.func_decl = FuncDecl::funcDeclare(yyvsp[-12].identifier, yyvsp[-5].type, yyvsp[-9].function_params, 0, yyvsp[-3].stmt_list); ;
     break;}
 case 118:
-#line 306 "gram.y"
+#line 305 "gram.y"
 { yyval.func_decl = FuncDecl::funcDeclare(yyvsp[-8].identifier, 0, 0, 1, yyvsp[-3].stmt_list); ;
     break;}
 case 119:
-#line 307 "gram.y"
+#line 306 "gram.y"
 { yyval.func_decl = FuncDecl::funcDeclare(yyvsp[-10].identifier, 0, yyvsp[-7].function_params, 1, yyvsp[-3].stmt_list); ;
     break;}
 case 120:
-#line 310 "gram.y"
+#line 309 "gram.y"
 { yyval.ifNode = IfNode::IfClear(yyvsp[-5].expr, yyvsp[-2].stmt_list, IfNode::clear_); ;
     break;}
 case 121:
-#line 311 "gram.y"
+#line 310 "gram.y"
 { yyval.ifNode = IfNode::IfElse(yyvsp[-8].expr, yyvsp[-5].stmt_list, yyvsp[-2].stmt_list, IfNode::else_); ;
     break;}
 case 122:
-#line 312 "gram.y"
+#line 311 "gram.y"
 { yyval.ifNode = IfNode::IfElseIf(yyvsp[-10].expr, yyvsp[-7].stmt_list, yyvsp[-5].expr, yyvsp[-2].stmt_list, IfNode::else_); ;
     break;}
 case 123:
-#line 315 "gram.y"
+#line 314 "gram.y"
 { yyval.whileSt = While::whileStmt(yyvsp[-4].expr, yyvsp[-2].stmt_list, While::simple_); ;
     break;}
 case 125:
-#line 319 "gram.y"
+#line 318 "gram.y"
 { yyval.whileSt = While::whileStmt(yyvsp[-3].expr, yyvsp[-1].stmt_list, While::doloopuntil); ;
     break;}
 case 126:
-#line 321 "gram.y"
+#line 320 "gram.y"
 { yyval.stmt = StmtNode::DeclarationDoOption(StmtNode::dooption_exit); ;
     break;}
 case 127:
-#line 322 "gram.y"
+#line 321 "gram.y"
 { yyval.stmt = StmtNode::DeclarationDoOption(StmtNode::dooption_continue); ;
     break;}
 case 128:
-#line 325 "gram.y"
+#line 324 "gram.y"
 { yyval.whileSt = While::whileStmt(yyvsp[-3].expr, yyvsp[-1].stmt_list, While::doloopwhile_); ;
     break;}
 case 131:
-#line 331 "gram.y"
+#line 330 "gram.y"
 { yyval.optStep = OptionalStep::addStep(0, false); ;
     break;}
 case 132:
-#line 332 "gram.y"
+#line 331 "gram.y"
 { yyval.optStep = OptionalStep::addStepExpr(yyvsp[0].expr, true); ;
     break;}
 case 133:
-#line 335 "gram.y"
+#line 334 "gram.y"
 { yyval.stmt = StmtNode::DeclarationContinueExitFor(StmtNode::continue_for); ;
     break;}
 case 134:
-#line 336 "gram.y"
+#line 335 "gram.y"
 { yyval.stmt = StmtNode::DeclarationContinueExitFor(StmtNode::exit_for); ;
     break;}
 case 135:
-#line 339 "gram.y"
+#line 338 "gram.y"
 { yyval.forNode = ForNode::fornode(yyvsp[-7].expr, yyvsp[-5].expr, yyvsp[-4].optStep, 0, yyvsp[-2].stmt_list); ;
     break;}
 }
@@ -1863,7 +1862,7 @@ yyerrhandle:
   yystate = yyn;
   goto yynewstate;
 }
-#line 350 "gram.y"
+#line 349 "gram.y"
 
 
 void yyerror(char const *s)

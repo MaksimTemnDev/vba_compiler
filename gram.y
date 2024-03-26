@@ -34,7 +34,6 @@
 	Identificator* identificator;
 	IdList* idList;
 	While* whileSt;
-	Ternar* ternar;
 	IfNode* ifNode;
 	OptionalStep* optStep;
 	LinkOrVal* linkOrVal;
@@ -168,7 +167,6 @@ DimMeasure: IdOrArrList '=' Expression { $$ = DimStmt::DeclarationSingleExpr($1,
 		  | IdOrArrList { $$ = DimStmt::DeclarationSingleExpr($1, DimStmt::single_expr, 0); }
 		  ;
 
-
 IdOrArrList: ArrFuncOrIdentifier {}
 		   | IdOrArrList ',' OptEndl ArrFuncOrIdentifier {}
 		   ;
@@ -257,16 +255,16 @@ CallArrOrFunc: IDENTIFIER '('OptEndl ExpressionList OptEndl')' { $$ = ExprNode::
 			 | IDENTIFIER '('OptEndl')' { $$ = ExprNode::exprList(ExprNode::access_arr_or_call_func, $1, 0); }
 			 ;
 		
-Values: STRING { $$ = new Value($1, Value::string_); }
+Values: STRING { $$ = new Value((string*)$1, Value::string_); }
 	  | Boolean { $$ = $1; }
-	  | DOUBLE { $$ = new Value($1, Value::Double_); }
-	  | CHAR { $$ = new Value($1, Value::Char_); }
-	  | DECIMAL_NUMBER { $$ = new Value($1, Value::dec_num, 1, 0); }
+	  | DOUBLE { $$ = new Value((double)$1, Value::Double_); }
+	  | CHAR { $$ = new Value((char)$1, Value::Char_); }
+	  | DECIMAL_NUMBER { $$ = new Value((int)$1, Value::dec_num, 1, 0); }
 	  | IDENTIFIER { $$ = new Value($1, Value::id_); }
 	  ;
 	 
-Boolean: KW_FALSE { $$ = new Value($1, Value::bool_); }
-	   | KW_TRUE { $$ = new Value($1, Value::bool_); }
+Boolean: KW_FALSE { $$ = new Value(false, Value::bool_); }
+	   | KW_TRUE { $$ = new Value(true, Value::bool_); }
 	   ;
 		
 FuncParamList: FuncParam { $$ = new FuncParamListNode($1); }

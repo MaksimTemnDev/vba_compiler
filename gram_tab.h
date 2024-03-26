@@ -27,7 +27,6 @@ typedef union {
 	Identificator* identificator;
 	IdList* idList;
 	While* whileSt;
-	Ternar* ternar;
 	IfNode* ifNode;
 	OptionalStep* optStep;
 	LinkOrVal* linkOrVal;
