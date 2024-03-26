@@ -312,15 +312,12 @@ ContinueWhile: CONTINUE WHILE;
 
 DoLoopUntilStatement: DO UNTIL Expression EndList OptStmtList LOOP { $$ = While::whileStmt($3, $5, While::doloopuntil); };
 	
-DOOption: EXITDO { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_exit); }
-		| CONTINUEDO { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_continue); }
+DOOption: EXIT DO { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_exit); }
+		| CONTINUE DO { $$ = StmtNode::DeclarationDoOption(StmtNode::dooption_continue); }
 		;
 
 DoLoopWhileStatement: DO WHILE Expression EndList OptStmtList LOOP { $$ = While::whileStmt($3, $5, While::doloopwhile_); };
-	
-EXITDO: EXIT DO;
 
-CONTINUEDO: CONTINUE DO;
 
 OptionalStep: { $$ = OptionalStep::addStep(0, false); }
 			| STEP Expression { $$ = OptionalStep::addStepExpr($2, true); }
